@@ -16,6 +16,7 @@
     "url": "https://github.com/mthli/better-youtube-summary-extension"
   },
   "dependencies": {
+    "@fczbkk/url-match": "^3.5.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
