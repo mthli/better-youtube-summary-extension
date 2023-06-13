@@ -3,13 +3,13 @@ import { createRoot } from 'react-dom/client'
 
 import UrlMatch from '@fczbkk/url-match'
 
-// https://github.com/fczbkk/UrlMatch
-const videoUrlMatch = new UrlMatch([
-  'https://*.youtube.com/watch*?v=*',
-])
+interface Chapter {
+  title: string,
+  timestamp: string,
+}
 
 // https://stackoverflow.com/a/75704708
-const parseChapters = () => {
+const parseChapters = (): Chapter[] => {
   const elements = Array.from(
     document.querySelectorAll(
       '#panels ytd-engagement-panel-section-list-renderer:nth-child(2) #content ytd-macro-markers-list-renderer #contents ytd-macro-markers-list-item-renderer #endpoint #details'
@@ -21,18 +21,22 @@ const parseChapters = () => {
     timestamp: node.querySelector('#time')?.textContent,
   }))
 
-  const filtered = chapters.filter(
-    (element) =>
-      element.title !== undefined &&
-      element.title !== null &&
-      element.timestamp !== undefined &&
-      element.timestamp !== null
-  );
+  const filtered = chapters.filter(c =>
+    c.title !== undefined &&
+    c.title !== null &&
+    c.timestamp !== undefined &&
+    c.timestamp !== null
+  )
 
   return [
-    ...new Map(filtered.map((node) => [node.timestamp, node])).values(),
-  ]
+    ...new Map(filtered.map(c => [c.timestamp, c])).values(),
+  ] as Chapter[]
 }
+
+// https://github.com/fczbkk/UrlMatch
+const videoUrlMatch = new UrlMatch([
+  'https://*.youtube.com/watch*?v=*',
+])
 
 const App = () => {
   const [pageUrl, setPageUrl] = useState(location.href)
