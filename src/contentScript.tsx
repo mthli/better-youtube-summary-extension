@@ -75,6 +75,7 @@ const App = () => {
     return () => observer.disconnect()
   }, [])
 
+  /*
   useEffect(() => {
     const match = videoUrlMatch.test(pageUrl)
     console.log(`useEffect, pageUrl=${pageUrl}, match=${match}`)
@@ -90,8 +91,10 @@ const App = () => {
   useEffect(() => {
     if (pageChapters == undefined) return
     console.log(`useEffect, pageChapters=${JSON.stringify(pageChapters)}`)
+
     // TODO
   }, [pageChapters])
+  */
 
   return (
     <div />
