@@ -8,6 +8,11 @@ interface Chapter {
   timestamp: string,
 }
 
+interface PageChapters {
+  pageUrl: string,
+  chapters: Chapter[],
+}
+
 // https://stackoverflow.com/a/75704708
 const parseChapters = (): Chapter[] => {
   const elements = Array.from(
@@ -40,9 +45,32 @@ const videoUrlMatch = new UrlMatch([
 
 const App = () => {
   const [pageUrl, setPageUrl] = useState(location.href)
+  const [pageChapters, setPageChapters] = useState<PageChapters>()
 
   useEffect(() => {
-    const observer = new MutationObserver(() => setPageUrl(location.href))
+    const observer = new MutationObserver(mutationList => {
+      setPageUrl(location.href)
+
+      for (const mutation of mutationList) {
+        let found = false
+
+        for (const node of mutation.addedNodes) {
+          if (node instanceof HTMLDivElement) {
+            if (node.className.includes('ytp-chapter-hover-container')) {
+              setPageChapters({
+                pageUrl: location.href,
+                chapters: parseChapters(),
+              })
+              found = true
+              break
+            }
+          }
+        }
+
+        if (found) break
+      }
+    })
+
     observer.observe(document, { subtree: true, childList: true })
     return () => observer.disconnect()
   }, [])
@@ -58,6 +86,12 @@ const App = () => {
 
     // TODO
   }, [pageUrl])
+
+  useEffect(() => {
+    if (pageChapters == undefined) return
+    console.log(`useEffect, pageChapters=${JSON.stringify(pageChapters)}`)
+    // TODO
+  }, [pageChapters])
 
   return (
     <div />
