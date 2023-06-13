@@ -1,5 +1,7 @@
 # better-youtube-summary-extension
 
+Literally Better YouTube Summary 🎯
+
 **UNDER DEVELOPMENT.**
 
 ## License

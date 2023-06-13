@@ -2,7 +2,7 @@
   "manifest_version": 3,
 
   "name": "Better YouTube Summary",
-  "description": "Literally Better YouTube Summary",
+  "description": "Literally Better YouTube Summary 🎯",
   "version": "1.0.0",
 
   "options_ui": {
@@ -16,8 +16,13 @@
 
   "content_scripts": [
       {
-          "matches": ["<all_urls>"],
-          "js": ["js/vendor.js", "js/content_script.js"]
+          "matches": [
+            "https://*.youtube.com/watch*"
+          ],
+          "js": [
+            "js/vendor.js",
+            "js/content_script.js"
+          ]
       }
   ],
 
@@ -30,6 +35,6 @@
   ],
 
   "host_permissions": [
-    "<all_urls>"
+    "https://bys.mthli.com/*"
   ]
 }
