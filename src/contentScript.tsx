@@ -1,7 +1,12 @@
-import React from 'react'
-import ReactDOM from 'react-dom'
+import React, { useEffect } from 'react'
+import { createRoot } from 'react-dom/client'
 
 const App = () => {
+
+  useEffect(() => {
+    // TODO
+  }, [])
+
   return (
     <div />
   )
@@ -9,4 +14,4 @@ const App = () => {
 
 const root = document.createElement('div')
 document.body.appendChild(root)
-ReactDOM.render(<App />, root)
+createRoot(root).render(<App />)
