@@ -17,12 +17,6 @@
             "args": ["update"]
         },
         {
-            "label": "test",
-            "type": "shell",
-            "command": "npm",
-            "args": ["run", "test"]
-        },
-        {
             "label": "build",
             "type": "shell",
             "group": "build",
