@@ -21,7 +21,7 @@
           ],
           "js": [
             "js/vendor.js",
-            "js/content_script.js"
+            "js/contentScript.js"
           ]
       }
   ],
@@ -35,6 +35,6 @@
   ],
 
   "host_permissions": [
-    "https://bys.mthli.com/*"
+    "https://bys.mthli.com/api/*"
   ]
 }
