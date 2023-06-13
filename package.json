@@ -18,7 +18,8 @@
   "dependencies": {
     "@fczbkk/url-match": "^3.5.0",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "swr": "^2.1.5"
   },
   "devDependencies": {
     "@types/chrome": "0.0.158",
