@@ -1,20 +1,19 @@
 {
-  "name": "chrome-extension-typescript-starter",
+  "name": "better-youtube-summary-extension",
   "version": "1.0.0",
-  "description": "chrome-extension-typescript-starter",
+  "description": "Literally Better YouTube Summary",
   "main": "index.js",
   "scripts": {
     "watch": "webpack --config webpack/webpack.dev.js --watch",
     "build": "webpack --config webpack/webpack.prod.js",
     "clean": "rimraf dist",
-    "test": "npx jest",
     "style": "prettier --write \"src/**/*.{ts,tsx}\""
   },
-  "author": "",
-  "license": "MIT",
+  "author": "matthewlee0725@gmail.com",
+  "license": "AGPL-3.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/chibat/chrome-extension-typescript-starter.git"
+    "url": "https://github.com/mthli/better-youtube-summary-extension"
   },
   "dependencies": {
     "react": "^18.2.0",
