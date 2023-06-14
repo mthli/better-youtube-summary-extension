@@ -90,6 +90,7 @@ const App = () => {
                 pageUrl: location.href,
                 chapters: parseChapters(),
               })
+
               found = true
               break
             }
@@ -103,7 +104,12 @@ const App = () => {
     // Receive messages from iframe child.
     const listener = (e: MessageEvent) => {
       log(TAG, `useEffect, onMessage, data=${JSON.stringify(e.data)}`)
-      // TODO
+
+      const { type, data } = e.data as Message
+      if (type == MessageType.IFRAME_HEIGHT) {
+        const height = data as number
+        // TODO
+      }
     }
 
     observer.observe(document, { subtree: true, childList: true })

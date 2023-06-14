@@ -23,7 +23,7 @@ const App = () => {
   const [pageChapters, setPageChapters] = useState<PageChapters>()
 
   useEffect(() => {
-    // Receive message from parent.
+    // Receive messages from parent.
     const listener = (e: MessageEvent) => {
       log(TAG, `useEffect, onMessage, data=${JSON.stringify(e.data)}`)
 

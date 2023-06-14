@@ -13,11 +13,12 @@ export interface PageChapters {
 export enum MessageType {
   PAGE_URL = 'page_url',
   PAGE_CHAPTERS = 'page_chapters',
+  IFRAME_HEIGHT = 'iframe_height',
 }
 
 export interface Message {
   type: MessageType,
-  data: string | PageChapters,
+  data: number | string | PageChapters,
 }
 
 // https://github.com/fczbkk/UrlMatch
