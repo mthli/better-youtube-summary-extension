@@ -2,6 +2,10 @@ import React, { useEffect, useState } from 'react'
 import { createRoot } from 'react-dom/client'
 import { useTranslation } from 'react-i18next'
 
+import AppBar from '@mui/material/AppBar'
+import Paper from '@mui/material/Paper';
+import Toolbar from '@mui/material/Toolbar'
+import Typography from '@mui/material/Typography'
 import ScopedCssBaseline from '@mui/material/ScopedCssBaseline'
 import { ThemeProvider } from '@mui/material/styles'
 
@@ -46,8 +50,14 @@ const App = () => {
 
   return (
     <ThemeProvider theme={theme}>
-      <ScopedCssBaseline>
-        {/* TODO */}
+      <ScopedCssBaseline sx={{ backgroundColor: 'transparent' }}>
+        <Paper variant='outlined'>
+          <AppBar position='static' color='transparent' elevation={0}>
+            <Toolbar>
+              {/* TODO */}
+            </Toolbar>
+          </AppBar>
+        </Paper>
       </ScopedCssBaseline>
     </ThemeProvider>
   )
