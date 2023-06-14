@@ -100,8 +100,19 @@ const App = () => {
       }
     })
 
+    // Receive messages from iframe child.
+    const listener = (e: MessageEvent) => {
+      log(TAG, `useEffect, onMessage, data=${JSON.stringify(e.data)}`)
+      // TODO
+    }
+
     observer.observe(document, { subtree: true, childList: true })
-    return () => observer.disconnect()
+    window.addEventListener('message', listener)
+
+    return () => {
+      observer.disconnect()
+      window.removeEventListener('message', listener)
+    }
   }, [])
 
   useEffect(() => {
