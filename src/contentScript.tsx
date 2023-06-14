@@ -3,15 +3,12 @@ import { createRoot } from 'react-dom/client'
 
 import UrlMatch from '@fczbkk/url-match'
 
-interface Chapter {
-  title: string,
-  timestamp: string,
-}
-
-interface PageChapters {
-  pageUrl: string,
-  chapters: Chapter[],
-}
+import {
+  Chapter,
+  PageChapters,
+  MessageType,
+  Message,
+} from './message'
 
 // https://stackoverflow.com/a/75704708
 const parseChapters = (): Chapter[] => {
