@@ -11,6 +11,9 @@ import {
 } from './message'
 
 const TAG = 'contentScript'
+const BLOCK_ID = 'better-youtube-summary-block'
+const IFRAME_ID = 'better-youtube-summary-iframe'
+const IFRAME_SRC = chrome.runtime.getURL('index.html')
 
 // https://stackoverflow.com/a/75704708
 const parseChapters = (): Chapter[] => {
@@ -38,23 +41,29 @@ const parseChapters = (): Chapter[] => {
 }
 
 const sendPageUrl = (pageUrl: string) => {
+  const iframe = document.getElementById(IFRAME_ID)
+  if (!(iframe instanceof HTMLIFrameElement)) return
+
   const message: Message = {
     type: MessageType.PAGE_URL,
     data: pageUrl,
   }
 
-  chrome.runtime.sendMessage(message)
+  iframe.contentWindow?.postMessage(message, IFRAME_SRC)
 }
 
 const sendPageChapters = (pageChapters?: PageChapters) => {
   if (!pageChapters) return
+
+  const iframe = document.getElementById(IFRAME_ID)
+  if (!(iframe instanceof HTMLIFrameElement)) return
 
   const message: Message = {
     type: MessageType.PAGE_CHAPTERS,
     data: pageChapters,
   }
 
-  chrome.runtime.sendMessage(message)
+  iframe.contentWindow?.postMessage(message, IFRAME_SRC)
 }
 
 const App = () => {
@@ -97,7 +106,6 @@ const App = () => {
 
   useEffect(() => {
     panelObserver?.disconnect()
-    const blockId = 'better-youtube-summary-block'
 
     const match = pageUrlMatch.test(pageUrl)
     if (!match) return
@@ -106,7 +114,7 @@ const App = () => {
     const vid = params.get('v') ?? ''
     if (!vid) return
 
-    if (document.querySelector(`#${blockId}`)) {
+    if (document.getElementById(BLOCK_ID)) {
       log(TAG, 'useEffect, send when pageUrl changed')
       sendPageUrl(pageUrl)
       sendPageChapters(pageChapters)
@@ -117,7 +125,8 @@ const App = () => {
       if (!parent) return
 
       const iframe = document.createElement('iframe')
-      iframe.src = chrome.runtime.getURL('index.html')
+      iframe.id = IFRAME_ID
+      iframe.src = IFRAME_SRC
       iframe.style.width = '100%'
       iframe.style.border = 'none'
       iframe.onload = () => {
@@ -127,7 +136,7 @@ const App = () => {
       }
 
       const block = document.createElement('div')
-      block.id = blockId
+      block.id = BLOCK_ID
       block.className = 'style-scope ytd-watch-flexy'
       block.style.marginBottom = '8px'
       block.appendChild(iframe)
@@ -171,7 +180,6 @@ const App = () => {
 
   useEffect(() => {
     log(TAG, 'useEffect, send when pageChapters changed')
-    sendPageUrl(pageUrl)
     sendPageChapters(pageChapters)
   }, [pageChapters])
 

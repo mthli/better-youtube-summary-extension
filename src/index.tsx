@@ -7,11 +7,9 @@ import { ThemeProvider } from '@mui/material/styles'
 
 import log from './log'
 import {
-  Chapter,
   PageChapters,
   MessageType,
   Message,
-  pageUrlMatch,
 } from './message'
 
 import theme from './theme'
@@ -21,20 +19,27 @@ const TAG = 'index'
 
 const App = () => {
   const { t } = useTranslation()
+  const [pageUrl, setPageUrl] = useState('')
+  const [pageChapters, setPageChapters] = useState<PageChapters>()
 
   useEffect(() => {
-    // @ts-ignore
-    const listener = (message, sender, _) => {
-      const { id: senderId, url: senderUrl = '' } = sender
-      if (senderId !== chrome.runtime.id) return // not our event.
-      if (!pageUrlMatch.test(senderUrl)) return // not video url.
-
-      log(TAG, `useEffect, onMessage, senderUrl=${senderUrl}, message=${JSON.stringify(message)}`)
-      // TODO
+    const listener = (e: MessageEvent) => {
+      log(TAG, `useEffect, onMessage, data=${JSON.stringify(e.data)}`)
+      const { type, data } = e.data as Message
+      switch (type) {
+        case MessageType.PAGE_URL:
+          setPageUrl(data as string)
+          break
+        case MessageType.PAGE_CHAPTERS:
+          setPageChapters(data as PageChapters)
+          break
+        default:
+          break
+      }
     }
 
-    chrome.runtime.onMessage.addListener(listener)
-    return () => chrome.runtime.onMessage.removeListener(listener)
+    window.addEventListener('message', listener)
+    return () => window.removeEventListener('message', listener)
   })
 
   return (
