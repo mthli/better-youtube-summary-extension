@@ -46,6 +46,7 @@ const videoUrlMatch = new UrlMatch([
 const App = () => {
   const [pageUrl, setPageUrl] = useState(location.href)
   const [pageChapters, setPageChapters] = useState<PageChapters>()
+  const [panelObserver, setPanelObserver] = useState<MutationObserver>()
   const [noTranscript, setNoTranscript] = useState(false)
 
   useEffect(() => {
@@ -80,26 +81,54 @@ const App = () => {
     return () => observer.disconnect()
   }, [])
 
-  /*
   useEffect(() => {
+    panelObserver?.disconnect()
+    const iframeId = 'better-youtube-summary-iframe'
+
     const match = videoUrlMatch.test(pageUrl)
-    console.log(`useEffect, pageUrl=${pageUrl}, match=${match}`)
     if (!match) return
 
     const params = new URLSearchParams(location.search)
     const vid = params.get('v') ?? ''
     if (!vid) return
 
-    // TODO
+    if (document.querySelector(`#${iframeId}`)) {
+      // TODO
+      return
+    }
+
+    const observer = new MutationObserver(mutationList => {
+      for (const mutation of mutationList) {
+        let found = false
+
+        for (const node of mutation.addedNodes) {
+          if (node instanceof HTMLDivElement) {
+            if (node.id === 'panels') {
+              const iframe = document.createElement('iframe')
+              iframe.id = iframeId
+              iframe.className = 'style-scope ytd-watch-flexy'
+              iframe.src = chrome.runtime.getURL('index.html')
+              iframe.style.width = '100%'
+              iframe.style.border = 'none'
+              // TODO
+
+              node.parentNode?.insertBefore(iframe, node)
+              found = true
+              break
+            }
+          }
+        }
+
+        if (found) {
+          observer.disconnect()
+          break
+        }
+      }
+    })
+
+    setPanelObserver(observer)
+    observer.observe(document, { subtree: true, childList: true })
   }, [pageUrl])
-
-  useEffect(() => {
-    if (pageChapters == undefined) return
-    console.log(`useEffect, pageChapters=${JSON.stringify(pageChapters)}`)
-
-    // TODO
-  }, [pageChapters])
-  */
 
   return (
     <div />
@@ -107,5 +136,6 @@ const App = () => {
 }
 
 const root = document.createElement('div')
+root.id = 'better-youtube-summary-root'
 document.body.appendChild(root)
 createRoot(root).render(<App />)
