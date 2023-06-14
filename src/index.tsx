@@ -3,10 +3,11 @@ import { createRoot } from 'react-dom/client'
 import { useTranslation } from 'react-i18next'
 
 import AppBar from '@mui/material/AppBar'
-import Paper from '@mui/material/Paper';
-import Toolbar from '@mui/material/Toolbar'
-import Typography from '@mui/material/Typography'
+import IconButton from '@mui/material/IconButton'
+import Paper from '@mui/material/Paper'
 import ScopedCssBaseline from '@mui/material/ScopedCssBaseline'
+import Toolbar from '@mui/material/Toolbar'
+import Tooltip from '@mui/material/Tooltip'
 import { ThemeProvider } from '@mui/material/styles'
 
 import log from './log'
@@ -53,8 +54,19 @@ const App = () => {
       <ScopedCssBaseline sx={{ backgroundColor: 'transparent' }}>
         <Paper variant='outlined'>
           <AppBar position='static' color='transparent' elevation={0}>
-            <Toolbar>
-              {/* TODO */}
+            <Toolbar variant='dense'>
+              <Tooltip title={t('summarize').toString()}>
+                <IconButton
+                  aria-label={t('summarize').toString()}
+                  color='inherit'
+                  edge='start'
+                  onClick={() => {
+                    // TODO
+                  }}
+                >
+                  <span className='material-symbols-outlined'>summarize</span>
+                </IconButton>
+              </Tooltip>
             </Toolbar>
           </AppBar>
         </Paper>

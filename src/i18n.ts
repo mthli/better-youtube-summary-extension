@@ -5,8 +5,12 @@ import { initReactI18next } from 'react-i18next'
 const resources = {
   en: {
     translation: {
-      'chat': 'Chat ...',
-      'processing': 'Processing ...',
+      'summarize': 'Summarize',
+    },
+  },
+  zh: {
+    translation: {
+      'summarize': '总结',
     },
   },
 }
