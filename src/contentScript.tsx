@@ -3,12 +3,15 @@ import { createRoot } from 'react-dom/client'
 
 import UrlMatch from '@fczbkk/url-match'
 
+import log from './log'
 import {
   Chapter,
   PageChapters,
   MessageType,
   Message,
 } from './message'
+
+const TAG = 'contentScript'
 
 // https://stackoverflow.com/a/75704708
 const parseChapters = (): Chapter[] => {
@@ -39,6 +42,26 @@ const parseChapters = (): Chapter[] => {
 const videoUrlMatch = new UrlMatch([
   'https://*.youtube.com/watch*?v=*',
 ])
+
+const sendPageUrl = (pageUrl: string) => {
+  const message: Message = {
+    type: MessageType.PAGE_URL,
+    data: pageUrl,
+  }
+
+  chrome.runtime.sendMessage(message)
+}
+
+const sendPageChapters = (pageChapters?: PageChapters) => {
+  if (!pageChapters) return
+
+  const message: Message = {
+    type: MessageType.PAGE_CHAPTERS,
+    data: pageChapters,
+  }
+
+  chrome.runtime.sendMessage(message)
+}
 
 const App = () => {
   const [pageUrl, setPageUrl] = useState(location.href)
@@ -90,7 +113,39 @@ const App = () => {
     if (!vid) return
 
     if (document.querySelector(`#${blockId}`)) {
-      // TODO
+      log(TAG, 'useEffect, send when pageUrl changed')
+      sendPageUrl(pageUrl)
+      sendPageChapters(pageChapters)
+      return
+    }
+
+    const insertBlock = (parent: Node | null) => {
+      if (!parent) return
+
+      const iframe = document.createElement('iframe')
+      iframe.src = chrome.runtime.getURL('index.html')
+      iframe.style.width = '100%'
+      iframe.style.border = 'none'
+      iframe.onload = () => {
+        log(TAG, 'useEffect, send when iframe onload')
+        sendPageUrl(pageUrl)
+        setPageChapters(pageChapters)
+      }
+
+      const block = document.createElement('div')
+      block.id = blockId
+      block.className = 'style-scope ytd-watch-flexy'
+      block.style.marginBottom = '8px'
+      block.appendChild(iframe)
+
+      const ref = parent.childNodes.length > 0 ? parent.childNodes[0] : null
+      parent.insertBefore(block, ref)
+    }
+
+    const panels = document.querySelector('#secondary-inner')
+    if (panels) {
+      log(TAG, 'useEffect, insert block with selector')
+      insertBlock(panels)
       return
     }
 
@@ -101,21 +156,8 @@ const App = () => {
         for (const node of mutation.addedNodes) {
           if (node instanceof HTMLDivElement) {
             if (node.id === 'panels') {
-              const iframe = document.createElement('iframe')
-              iframe.src = chrome.runtime.getURL('index.html')
-              iframe.style.width = '100%'
-              iframe.style.border = 'none'
-              iframe.onload = () => {
-                // TODO
-              }
-
-              const block = document.createElement('div')
-              block.id = blockId
-              block.className = 'style-scope ytd-watch-flexy'
-              block.style.marginBottom = '8px'
-              block.appendChild(iframe)
-
-              node.parentNode?.insertBefore(block, node)
+              log(TAG, 'useEffect, insert block with observer')
+              insertBlock(node.parentNode)
               found = true
               break
             }
@@ -132,6 +174,12 @@ const App = () => {
     setPanelObserver(observer)
     observer.observe(document, { subtree: true, childList: true })
   }, [pageUrl])
+
+  useEffect(() => {
+    log(TAG, 'useEffect, send when pageChapters changed')
+    sendPageUrl(pageUrl)
+    sendPageChapters(pageChapters)
+  }, [pageChapters])
 
   return (
     <div />

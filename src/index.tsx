@@ -5,15 +5,19 @@ import { useTranslation } from 'react-i18next'
 import ScopedCssBaseline from '@mui/material/ScopedCssBaseline'
 import { ThemeProvider } from '@mui/material/styles'
 
+import log from './log'
 import theme from './theme'
 import './i18n'
+
+const TAG = 'index'
 
 const App = () => {
   const { t } = useTranslation()
 
   useEffect(() => {
     // @ts-ignore
-    const listener = (message, sender, sendResponse) => {
+    const listener = (message, sender, _) => {
+      log(TAG, `useEffect, onMessage, sender=${sender}, message=${JSON.stringify(message)}`)
       // TODO
     }
 
