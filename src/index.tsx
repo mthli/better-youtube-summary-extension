@@ -6,6 +6,14 @@ import ScopedCssBaseline from '@mui/material/ScopedCssBaseline'
 import { ThemeProvider } from '@mui/material/styles'
 
 import log from './log'
+import {
+  Chapter,
+  PageChapters,
+  MessageType,
+  Message,
+  pageUrlMatch,
+} from './message'
+
 import theme from './theme'
 import './i18n'
 
@@ -17,7 +25,11 @@ const App = () => {
   useEffect(() => {
     // @ts-ignore
     const listener = (message, sender, _) => {
-      log(TAG, `useEffect, onMessage, sender=${sender}, message=${JSON.stringify(message)}`)
+      const { id: senderId, url: senderUrl = '' } = sender
+      if (senderId !== chrome.runtime.id) return // not our event.
+      if (!pageUrlMatch.test(senderUrl)) return // not video url.
+
+      log(TAG, `useEffect, onMessage, senderUrl=${senderUrl}, message=${JSON.stringify(message)}`)
       // TODO
     }
 

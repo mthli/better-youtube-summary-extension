@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import { createRoot } from 'react-dom/client'
 
-import UrlMatch from '@fczbkk/url-match'
-
 import log from './log'
 import {
   Chapter,
   PageChapters,
   MessageType,
   Message,
+  pageUrlMatch,
 } from './message'
 
 const TAG = 'contentScript'
@@ -37,11 +36,6 @@ const parseChapters = (): Chapter[] => {
     ...new Map(filtered.map(c => [c.timestamp, c])).values(),
   ] as Chapter[]
 }
-
-// https://github.com/fczbkk/UrlMatch
-const videoUrlMatch = new UrlMatch([
-  'https://*.youtube.com/watch*?v=*',
-])
 
 const sendPageUrl = (pageUrl: string) => {
   const message: Message = {
@@ -105,7 +99,7 @@ const App = () => {
     panelObserver?.disconnect()
     const blockId = 'better-youtube-summary-block'
 
-    const match = videoUrlMatch.test(pageUrl)
+    const match = pageUrlMatch.test(pageUrl)
     if (!match) return
 
     const params = new URLSearchParams(location.search)
