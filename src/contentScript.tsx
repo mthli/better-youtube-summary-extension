@@ -83,7 +83,7 @@ const App = () => {
 
   useEffect(() => {
     panelObserver?.disconnect()
-    const iframeId = 'better-youtube-summary-iframe'
+    const blockId = 'better-youtube-summary-block'
 
     const match = videoUrlMatch.test(pageUrl)
     if (!match) return
@@ -92,7 +92,7 @@ const App = () => {
     const vid = params.get('v') ?? ''
     if (!vid) return
 
-    if (document.querySelector(`#${iframeId}`)) {
+    if (document.querySelector(`#${blockId}`)) {
       // TODO
       return
     }
@@ -105,14 +105,20 @@ const App = () => {
           if (node instanceof HTMLDivElement) {
             if (node.id === 'panels') {
               const iframe = document.createElement('iframe')
-              iframe.id = iframeId
-              iframe.className = 'style-scope ytd-watch-flexy'
               iframe.src = chrome.runtime.getURL('index.html')
               iframe.style.width = '100%'
               iframe.style.border = 'none'
-              // TODO
+              iframe.onload = () => {
+                // TODO
+              }
 
-              node.parentNode?.insertBefore(iframe, node)
+              const block = document.createElement('div')
+              block.id = blockId
+              block.className = 'style-scope ytd-watch-flexy'
+              block.style.marginBottom = '8px'
+              block.appendChild(iframe)
+
+              node.parentNode?.insertBefore(block, node)
               found = true
               break
             }
