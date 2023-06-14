@@ -46,8 +46,13 @@ const videoUrlMatch = new UrlMatch([
 const App = () => {
   const [pageUrl, setPageUrl] = useState(location.href)
   const [pageChapters, setPageChapters] = useState<PageChapters>()
+  const [noTranscript, setNoTranscript] = useState(false)
 
   useEffect(() => {
+    const subtitles = document.querySelector('svg.ytp-subtitles-button-icon')
+    const opacity = subtitles?.attributes?.getNamedItem('fill-opacity')?.value ?? '1.0'
+    setNoTranscript(parseFloat(opacity) < 1.0)
+
     const observer = new MutationObserver(mutationList => {
       setPageUrl(location.href)
 
