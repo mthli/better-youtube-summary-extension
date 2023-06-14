@@ -1,34 +1,46 @@
-import { red } from '@mui/material/colors';
-import { createTheme, PaletteColor, PaletteColorOptions } from '@mui/material/styles';
+import { createTheme, PaletteColor, PaletteColorOptions } from '@mui/material/styles'
 
 // https://mui.com/material-ui/customization/palette/#adding-new-colors
 declare module '@mui/material/styles' {
+
   interface Palette {
-    iconTintDefault: PaletteColor;
-    iconTintActive: PaletteColor;
+    iconColorActive: PaletteColor
+    iconColorDisabled: PaletteColor
+    textColorPrimary: PaletteColor
+    textColorSecondary: PaletteColor
   }
+
   interface PaletteOptions {
-    iconTintDefault: PaletteColorOptions;
-    iconTintActive: PaletteColorOptions;
+    iconColorActive: PaletteColorOptions
+    iconColorDisabled: PaletteColorOptions
+    textColorPrimary: PaletteColorOptions
+    textColorSecondary: PaletteColorOptions
   }
 }
 
+// YouTube Light.
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#556cd6',
+      main: '#c5cae9',
     },
     secondary: {
-      main: '#19857b',
+      main: '#737373',
     },
     error: {
-      main: red.A400,
+      main: '#dd2c00',
     },
-    iconTintDefault: {
-      main: 'rgba(0, 0, 0, 0.38)',
+    iconColorActive: {
+      main: '#030303',
     },
-    iconTintActive: {
-      main: 'rgba(0, 0, 0, 0.87)',
+    iconColorDisabled: {
+      main: '#909090',
+    },
+    textColorPrimary: {
+      main: '#030303',
+    },
+    textColorSecondary: {
+      main: '#606060',
     },
   },
 })

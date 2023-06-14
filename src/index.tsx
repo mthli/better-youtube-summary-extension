@@ -10,6 +10,8 @@ import Toolbar from '@mui/material/Toolbar'
 import Tooltip from '@mui/material/Tooltip'
 import { ThemeProvider } from '@mui/material/styles'
 
+import { GooSpinner } from 'react-spinners-kit'
+
 import log from './log'
 import {
   PageChapters,
@@ -24,6 +26,8 @@ const TAG = 'index'
 
 const App = () => {
   const { t } = useTranslation()
+
+  const [loading, setLoading] = useState(false)
   const [pageUrl, setPageUrl] = useState('')
   const [pageChapters, setPageChapters] = useState<PageChapters>()
 
@@ -55,16 +59,25 @@ const App = () => {
         <Paper variant='outlined'>
           <AppBar position='static' color='transparent' elevation={0}>
             <Toolbar variant='dense'>
-              <Tooltip title={t('summarize').toString()}>
+              <Tooltip title={t(loading ? 'cancel' : 'summarize').toString()}>
                 <IconButton
-                  aria-label={t('summarize').toString()}
+                  aria-label={t(loading ? 'cancel' : 'summarize').toString()}
                   color='inherit'
                   edge='start'
-                  onClick={() => {
-                    // TODO
-                  }}
+                  onClick={() => setLoading(!loading)}
                 >
-                  <span className='material-symbols-outlined'>summarize</span>
+                  {
+                    !loading &&
+                    <span className='material-symbols-outlined'>summarize</span>
+                  }
+                  {
+                    loading &&
+                    <GooSpinner
+                      size={24}
+                      color={theme.palette.iconColorActive.main}
+                      loading={loading}
+                    />
+                  }
                 </IconButton>
               </Tooltip>
             </Toolbar>

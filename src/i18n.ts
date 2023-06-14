@@ -6,11 +6,13 @@ const resources = {
   en: {
     translation: {
       'summarize': 'Summarize',
+      'cancel': 'Cancel',
     },
   },
   zh: {
     translation: {
       'summarize': '总结',
+      'cancel': '取消',
     },
   },
 }
