@@ -20,8 +20,11 @@
     "@emotion/styled": "^11.11.0",
     "@fczbkk/url-match": "^3.5.0",
     "@mui/material": "^5.13.5",
+    "i18next": "^22.5.1",
+    "i18next-browser-languagedetector": "^7.0.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-i18next": "^12.3.1",
     "swr": "^2.1.5"
   },
   "devDependencies": {
