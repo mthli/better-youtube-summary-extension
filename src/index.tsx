@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next'
 
 import AppBar from '@mui/material/AppBar'
 import Box from '@mui/material/Box'
+import Button from '@mui/material/Button'
 import Divider from '@mui/material/Divider'
 import IconButton from '@mui/material/IconButton'
 import List from '@mui/material/List'
@@ -32,6 +33,18 @@ import './i18n'
 
 const TAG = 'index'
 
+const formatSeconds = (seconds: number): string => {
+  const pad = (num: number, size: number): string => ('000' + num).slice(size * -1)
+
+  const h = Math.floor(seconds / 60 / 60)
+  const m = Math.floor(seconds / 60) % 60
+  const s = Math.floor(seconds % 60)
+
+  let res = pad(m, (h > 0 || m >= 10) ? 2 : 1) + ':' + pad(s, 2)
+  if (h > 0) res = pad(h, h >= 10 ? 2 : 1) + ':' + res
+  return res
+}
+
 const App = () => {
   const [toggled, setToggled] = useState(0)
   const [pageUrl, setPageUrl] = useState('')
@@ -44,10 +57,11 @@ const App = () => {
 
   // TODO
   const { state = SummaryState.NOTHING, chapters = [] } = (data || {}) as Summary
-  const list = chapters.map(({ cid, chapter }) => {
+  const list = chapters.map(({ cid, seconds, chapter }) => {
     return (
       <ListItem key={cid}>
         <ListItemText>{chapter}</ListItemText>
+        <Button size='small'>{formatSeconds(seconds)}</Button>
       </ListItem>
     )
   })
