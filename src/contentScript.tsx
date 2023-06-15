@@ -70,12 +70,12 @@ const App = () => {
   const [pageUrl, setPageUrl] = useState(location.href)
   const [pageChapters, setPageChapters] = useState<PageChapters>()
   const [panelObserver, setPanelObserver] = useState<MutationObserver>()
-  const [noTranscript, setNoTranscript] = useState(false)
+  // const [noTranscript, setNoTranscript] = useState(false)
 
   useEffect(() => {
-    const subtitles = document.querySelector('svg.ytp-subtitles-button-icon')
-    const opacity = subtitles?.attributes?.getNamedItem('fill-opacity')?.value ?? '1.0'
-    setNoTranscript(parseFloat(opacity) < 1.0)
+    // const subtitles = document.querySelector('svg.ytp-subtitles-button-icon')
+    // const opacity = subtitles?.attributes?.getNamedItem('fill-opacity')?.value ?? '1.0'
+    // setNoTranscript(parseFloat(opacity) < 1.0)
 
     const observer = new MutationObserver(mutationList => {
       setPageUrl(location.href)
@@ -103,13 +103,15 @@ const App = () => {
 
     // Receive messages from iframe child.
     const listener = (e: MessageEvent) => {
-      log(TAG, `useEffect, onMessage, data=${JSON.stringify(e.data)}`)
+      // log(TAG, `useEffect, onMessage, data=${JSON.stringify(e.data)}`)
 
       const { type, data } = e.data as Message
-      if (type == MessageType.IFRAME_HEIGHT) {
-        const height = data as number
-        // TODO
-      }
+      if (type !== MessageType.IFRAME_HEIGHT) return
+      const height = data as number
+
+      const block = document.getElementById(BLOCK_ID)
+      if (!(block instanceof HTMLDivElement)) return
+      block.style.height = `${height}px`
     }
 
     observer.observe(document, { subtree: true, childList: true })
@@ -132,7 +134,7 @@ const App = () => {
     if (!vid) return
 
     if (document.getElementById(BLOCK_ID)) {
-      log(TAG, 'useEffect, send when pageUrl changed')
+      // log(TAG, 'useEffect, send when pageUrl changed')
       sendPageUrl(pageUrl)
       sendPageChapters(pageChapters)
       return
@@ -147,7 +149,7 @@ const App = () => {
       iframe.style.width = '100%'
       iframe.style.border = 'none'
       iframe.onload = () => {
-        log(TAG, 'useEffect, send when iframe onload')
+        // log(TAG, 'useEffect, send when iframe onload')
         sendPageUrl(pageUrl)
         setPageChapters(pageChapters)
       }
@@ -155,6 +157,7 @@ const App = () => {
       const block = document.createElement('div')
       block.id = BLOCK_ID
       block.className = 'style-scope ytd-watch-flexy'
+      block.style.height = '0px'
       block.style.marginBottom = '8px'
       block.appendChild(iframe)
 
@@ -196,7 +199,7 @@ const App = () => {
   }, [pageUrl])
 
   useEffect(() => {
-    log(TAG, 'useEffect, send when pageChapters changed')
+    // log(TAG, 'useEffect, send when pageChapters changed')
     sendPageChapters(pageChapters)
   }, [pageChapters])
 

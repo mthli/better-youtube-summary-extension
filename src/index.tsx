@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { createRoot } from 'react-dom/client'
+
+import useResizeObserver from 'use-resize-observer'
 import { useTranslation } from 'react-i18next'
 
 import AppBar from '@mui/material/AppBar'
@@ -28,6 +30,7 @@ const TAG = 'index'
 
 const App = () => {
   const { t } = useTranslation()
+  const { ref, height = /* minimal */ 50 } = useResizeObserver<HTMLDivElement>()
 
   const [loading, setLoading] = useState(false)
   const [pageUrl, setPageUrl] = useState('')
@@ -56,6 +59,17 @@ const App = () => {
   })
 
   useEffect(() => {
+    log(TAG, `useEffect, height has changed, height=${height}`)
+
+    const message: Message = {
+      type: MessageType.IFRAME_HEIGHT,
+      data: height,
+    }
+
+    window.parent.postMessage(message, '*')
+  }, [height])
+
+  useEffect(() => {
     log(TAG, `useEffect, pageUrl has changed, pageUrl=${pageUrl}`)
     setLoading(false) // cancel all requests before.
   }, [pageUrl])
@@ -73,7 +87,7 @@ const App = () => {
 
   return (
     <ThemeProvider theme={theme}>
-      <ScopedCssBaseline sx={{ backgroundColor: 'transparent' }}>
+      <ScopedCssBaseline ref={ref} sx={{ backgroundColor: 'transparent' }}>
         <Paper variant='outlined'>
           <AppBar position='static' color='transparent' elevation={0}>
             <Toolbar variant='dense'>
