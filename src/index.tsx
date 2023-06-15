@@ -42,7 +42,7 @@ const App = () => {
   const { ref, height = 0 } = useResizeObserver<HTMLDivElement>()
   const { data, error, isLoading } = useSWR(
     toggled ? [parseVid(pageUrl), matchPageChapters(pageUrl, pageChapters)?.chapters] : null,
-    summarize,
+    ([vid, chapters]) => summarize(vid, chapters),
   )
 
   useEffect(() => {

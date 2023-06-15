@@ -1,10 +1,14 @@
 import UrlMatch from '@fczbkk/url-match'
 
+import log from './log'
 import { Chapter } from './message'
 
+const TAG = 'api'
 const BASE_URL = 'https://bys.mthli.com'
 
 export const parseVid = (pageUrl: string): string => {
+    // log(TAG, `parseVid, pageUrl=${pageUrl}`)
+
     // https://github.com/fczbkk/UrlMatch
     const pageUrlMatch = new UrlMatch([
         'https://*.youtube.com/watch*?v=*',
@@ -13,7 +17,8 @@ export const parseVid = (pageUrl: string): string => {
     const match = pageUrlMatch.test(pageUrl)
     if (!match) return ''
 
-    const params = new URLSearchParams(location.search)
+    const url = new URL(pageUrl)
+    const params = new URLSearchParams(url.search)
     const vid = params.get('v') ?? ''
     if (!vid) return ''
 
@@ -21,6 +26,8 @@ export const parseVid = (pageUrl: string): string => {
 }
 
 export const summarize = async (vid: string, chapters?: Chapter[]): Promise<Response> => {
+    log(TAG, `summarize, vid=${vid}, chapters=${JSON.stringify(chapters)}`)
+
     const res = await fetch(`${BASE_URL}/api/summarize/${vid}`, {
         method: 'POST',
         headers: {
