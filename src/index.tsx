@@ -14,7 +14,6 @@ import ListItem from '@mui/material/ListItem'
 import ListItemText from '@mui/material/ListItemText'
 import Toolbar from '@mui/material/Toolbar'
 
-import ScopedCssBaseline from '@mui/material/ScopedCssBaseline'
 import { ThemeProvider } from '@mui/material/styles'
 import { GooSpinner } from 'react-spinners-kit'
 
@@ -109,46 +108,44 @@ const App = () => {
 
   return (
     <ThemeProvider theme={theme}>
-      <ScopedCssBaseline ref={ref} sx={{ backgroundColor: 'transparent' }}>
-        <Box>
-          <AppBar
-            position='fixed'
-            color='transparent'
-            elevation={0}
-            sx={{
-              borderRadius: '12px',
-              backgroundColor: theme.palette.background.default,
-            }}
-          >
-            <Toolbar variant='dense'>
-              <IconButton
-                aria-label={t('summarize').toString()}
-                color='inherit'
-                edge='start'
-                sx={{ mr: 1 }}
-                disabled={isLoading}
-                onClick={() => setToggled(toggled + 1)}
-              >
-                {
-                  !isLoading &&
-                  <span className='material-symbols-outlined'>summarize</span>
-                }
-                {
-                  isLoading &&
-                  <GooSpinner
-                    size={24}
-                    color={theme.palette.text.primary}
-                    loading
-                  />
-                }
-              </IconButton>
-            </Toolbar>
-            {list.length > 0 && <Divider light />}
-          </AppBar>
-          <Toolbar /> {/* as placeholder because of the app bar is fixed */}
-          {list.length > 0 && <List>{list}</List>}
-        </Box>
-      </ScopedCssBaseline>
+      <Box ref={ref} sx={{ backgroundColor: 'transparent' }}>
+        <AppBar
+          position='fixed'
+          color='transparent'
+          elevation={0}
+          sx={{
+            borderRadius: '12px',
+            backgroundColor: theme.palette.background.default,
+          }}
+        >
+          <Toolbar variant='dense'>
+            <IconButton
+              aria-label={t('summarize').toString()}
+              color='inherit'
+              edge='start'
+              sx={{ mr: 1 }}
+              disabled={isLoading}
+              onClick={() => setToggled(toggled + 1)}
+            >
+              {
+                !isLoading &&
+                <span className='material-symbols-outlined'>summarize</span>
+              }
+              {
+                isLoading &&
+                <GooSpinner
+                  size={24}
+                  color={theme.palette.text.primary}
+                  loading
+                />
+              }
+            </IconButton>
+          </Toolbar>
+          {list.length > 0 && <Divider light />}
+        </AppBar>
+        <Toolbar /> {/* as placeholder because of the app bar is fixed */}
+        {list.length > 0 && <List>{list}</List>}
+      </Box>
     </ThemeProvider>
   )
 }
