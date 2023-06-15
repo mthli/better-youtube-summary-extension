@@ -6,17 +6,15 @@ import { useTranslation } from 'react-i18next'
 
 import AppBar from '@mui/material/AppBar'
 import Box from '@mui/material/Box'
-import Button from '@mui/material/Button'
 import Divider from '@mui/material/Divider'
 import IconButton from '@mui/material/IconButton'
 import List from '@mui/material/List'
-import ListItem from '@mui/material/ListItem'
-import ListItemButton from '@mui/material/ListItemButton'
-import ListItemText from '@mui/material/ListItemText'
 import Toolbar from '@mui/material/Toolbar'
 
 import { ThemeProvider } from '@mui/material/styles'
 import { GooSpinner } from 'react-spinners-kit'
+
+import ChapterItem from './chapterItem'
 
 import { useSummarize } from './api'
 import {
@@ -33,18 +31,6 @@ import './i18n'
 
 const TAG = 'index'
 
-const formatSeconds = (seconds: number): string => {
-  const pad = (num: number, size: number): string => ('000' + num).slice(size * -1)
-
-  const h = Math.floor(seconds / 60 / 60)
-  const m = Math.floor(seconds / 60) % 60
-  const s = Math.floor(seconds % 60)
-
-  let res = pad(m, (h > 0 || m >= 10) ? 2 : 1) + ':' + pad(s, 2)
-  if (h > 0) res = pad(h, h >= 10 ? 2 : 1) + ':' + res
-  return res
-}
-
 const App = () => {
   const [toggled, setToggled] = useState(0)
   const [pageUrl, setPageUrl] = useState('')
@@ -57,41 +43,7 @@ const App = () => {
 
   // TODO
   const { state = SummaryState.NOTHING, chapters = [] } = (data || {}) as Summary
-  const list = chapters.map(({ cid, seconds, chapter }) => {
-    return (
-      <ListItem
-        key={cid}
-        disablePadding
-        secondaryAction={
-          <Button
-            size='small'
-            sx={{
-              minWidth: 0,
-              paddingLeft: '8px',
-              paddingRight: '8px',
-            }}
-            onClick={() => {
-              const message: Message = {
-                type: MessageType.PLAY_SECONDS,
-                data: seconds,
-              }
-              window.parent.postMessage(message, '*')
-            }}
-          >
-            {formatSeconds(seconds)}
-          </Button>
-        }
-      >
-        <ListItemButton
-          onClick={() => {
-            // TODO
-          }}
-        >
-          <ListItemText>{chapter}</ListItemText>
-        </ListItemButton>
-      </ListItem>
-    )
-  })
+  const list = chapters.map(c => <ChapterItem key={c.cid} {...c} />)
 
   useEffect(() => {
     // Receive messages from parent.
