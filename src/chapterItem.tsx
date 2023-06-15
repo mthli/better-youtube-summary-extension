@@ -1,17 +1,16 @@
 import React, { useState } from 'react'
 
+import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
+import Collapse from '@mui/material/Collapse'
 import ListItem from '@mui/material/ListItem'
 import ListItemButton from '@mui/material/ListItemButton'
 import ListItemText from '@mui/material/ListItemText'
+import Typography from '@mui/material/Typography'
 
-import {
-  MessageType,
-  Message,
-  Chapter,
-} from './data'
-
+import { MessageType, Message, Chapter } from './data'
 import './i18n'
+import theme from './theme'
 
 const formatSeconds = (seconds: number): string => {
   const pad = (num: number, size: number): string => ('000' + num).slice(size * -1)
@@ -25,7 +24,15 @@ const formatSeconds = (seconds: number): string => {
   return res
 }
 
+const hex2rgba = (hex: string, alpha: number = 1) => {
+  // @ts-ignore
+  const [r, g, b] = hex.match(/\w\w/g).map(x => parseInt(x, 16))
+  return `rgba(${r},${g},${b},${alpha})`
+}
+
 const ChapterItem = ({ seconds, chapter, summary }: Chapter) => {
+  const [expand, setExpand] = useState(false)
+
   return (
     <ListItem
       disablePadding
@@ -54,7 +61,18 @@ const ChapterItem = ({ seconds, chapter, summary }: Chapter) => {
           // TODO
         }}
       >
-        <ListItemText>{chapter}</ListItemText>
+        <ListItemText>
+          {chapter}
+          <Typography
+            variant='body1'
+            style={{
+              display: 'inline',
+              color: hex2rgba(theme.palette.text.primary, 0.3),
+            }}
+          >
+            &nbsp;&nbsp;7
+          </Typography>
+        </ListItemText>
       </ListItemButton>
     </ListItem>
   )
