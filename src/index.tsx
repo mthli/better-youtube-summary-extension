@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next'
 
 import AppBar from '@mui/material/AppBar'
 import Box from '@mui/material/Box'
+import Divider from '@mui/material/Divider'
 import IconButton from '@mui/material/IconButton'
 import List from '@mui/material/List'
 import ListItem from '@mui/material/ListItem'
@@ -96,7 +97,15 @@ const App = () => {
     <ThemeProvider theme={theme}>
       <ScopedCssBaseline ref={ref} sx={{ backgroundColor: 'transparent' }}>
         <Box>
-          <AppBar position='fixed' color='transparent' elevation={0}>
+          <AppBar
+            position='fixed'
+            color='transparent'
+            elevation={0}
+            sx={{
+              borderRadius: '12px',
+              backgroundColor: theme.palette.background.default,
+            }}
+          >
             <Toolbar variant='dense'>
               <IconButton
                 aria-label={t('summarize').toString()}
@@ -120,6 +129,7 @@ const App = () => {
                 }
               </IconButton>
             </Toolbar>
+            {list.length > 0 && <Divider light />}
           </AppBar>
           <Toolbar /> {/* as placeholder because of the app bar is fixed */}
           {list.length > 0 && <List>{list}</List>}

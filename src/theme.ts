@@ -16,6 +16,7 @@ const theme = createTheme({
       primary: '#030303',
       secondary: '#606060',
     },
+    divider: 'rgba(0, 0, 0, 0.1)',
     background: {
       default: '#ffffff',
     }
