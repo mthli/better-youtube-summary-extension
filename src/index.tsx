@@ -37,12 +37,13 @@ const App = () => {
   const [toggled, setToggled] = useState(false)
   const [pageUrl, setPageUrl] = useState('')
   const [pageChapters, setPageChapters] = useState<PageChapters>()
+  const [noTranscript, setNoTranscript] = useState(false)
 
   const { t } = useTranslation()
   const { ref, height = 0 } = useResizeObserver<HTMLDivElement>()
   const { data, error, isLoading } = useSWR(
-    toggled ? [parseVid(pageUrl), matchPageChapters(pageUrl, pageChapters)?.chapters] : null,
-    ([vid, chapters]) => summarize(vid, chapters),
+    toggled ? [parseVid(pageUrl), matchPageChapters(pageUrl, pageChapters)?.chapters, noTranscript] : null,
+    ([vid, chapters, noTranscript]) => summarize(vid, chapters, noTranscript),
   )
 
   useEffect(() => {
@@ -57,6 +58,9 @@ const App = () => {
           break
         case MessageType.PAGE_CHAPTERS:
           setPageChapters(data as PageChapters)
+          break
+        case MessageType.NO_TRANSCRIPT:
+          setNoTranscript(data as boolean)
           break
         default:
           break

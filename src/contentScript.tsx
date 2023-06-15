@@ -62,18 +62,26 @@ const sendPageChapters = (pageChapters?: PageChapters) => {
   iframe.contentWindow?.postMessage(message, IFRAME_SRC)
 }
 
+const sendNoTranscript = (noTranscript?: boolean) => {
+  const iframe = document.getElementById(IFRAME_ID)
+  if (!(iframe instanceof HTMLIFrameElement)) return
+
+  const message: Message = {
+    type: MessageType.NO_TRANSCRIPT,
+    data: Boolean(noTranscript),
+  }
+
+  iframe.contentWindow?.postMessage(message, IFRAME_SRC)
+}
+
 const App = () => {
   const [pageUrl, setPageUrl] = useState(location.href)
   const [pageChapters, setPageChapters] = useState<PageChapters>()
   const [panelObserver, setPanelObserver] = useState<MutationObserver>()
   const [playerHeight, setPlayerHeight] = useState(DEFAULT_PLAYER_HEIGHT)
-  // const [noTranscript, setNoTranscript] = useState(false)
+  const [noTranscript, setNoTranscript] = useState(false)
 
   useEffect(() => {
-    // const subtitles = document.querySelector('svg.ytp-subtitles-button-icon')
-    // const opacity = subtitles?.attributes?.getNamedItem('fill-opacity')?.value ?? '1.0'
-    // setNoTranscript(parseFloat(opacity) < 1.0)
-
     const player = document.querySelector('video')
     const playerObserver = new ResizeObserver(() => {
       if (player) setPlayerHeight(player.offsetHeight)
@@ -132,6 +140,10 @@ const App = () => {
   }, [])
 
   useEffect(() => {
+    const subtitles = document.querySelector('svg.ytp-subtitles-button-icon')
+    const opacity = subtitles?.attributes?.getNamedItem('fill-opacity')?.value ?? '1.0'
+    setNoTranscript(parseFloat(opacity) < 1.0)
+
     panelObserver?.disconnect()
     if (!parseVid(pageUrl)) return
 
@@ -212,6 +224,11 @@ const App = () => {
     if (!(block instanceof HTMLDivElement)) return
     block.style.maxHeight = `${playerHeight}px`
   }, [playerHeight])
+
+  useEffect(() => {
+    log(TAG, `useEffect, noTranscript=${noTranscript}`)
+    sendNoTranscript(noTranscript)
+  }, [noTranscript])
 
   return (
     <div />

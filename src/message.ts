@@ -11,10 +11,11 @@ export interface PageChapters {
 export enum MessageType {
   PAGE_URL = 'page_url',
   PAGE_CHAPTERS = 'page_chapters',
+  NO_TRANSCRIPT = 'no_transcript',
   IFRAME_HEIGHT = 'iframe_height',
 }
 
 export interface Message {
   type: MessageType,
-  data: number | string | PageChapters,
+  data: boolean | number | string | PageChapters,
 }

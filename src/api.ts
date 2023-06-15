@@ -25,8 +25,12 @@ export const parseVid = (pageUrl: string): string => {
     return vid
 }
 
-export const summarize = async (vid: string, chapters?: Chapter[]): Promise<Response> => {
-    log(TAG, `summarize, vid=${vid}, chapters=${JSON.stringify(chapters)}`)
+export const summarize = async (
+    vid: string,
+    chapters?: Chapter[],
+    noTranscript?: boolean,
+): Promise<Response> => {
+    // log(TAG, `summarize, vid=${vid}, chapters=${JSON.stringify(chapters)}`)
 
     const res = await fetch(`${BASE_URL}/api/summarize/${vid}`, {
         method: 'POST',
@@ -34,7 +38,8 @@ export const summarize = async (vid: string, chapters?: Chapter[]): Promise<Resp
             'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-            chapters: chapters ?? [],
+            'chapters': chapters ?? [],
+            'no_transcript': Boolean(noTranscript),
         }),
     })
 
