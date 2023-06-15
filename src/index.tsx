@@ -17,11 +17,7 @@ import { GooSpinner } from 'react-spinners-kit'
 
 import log from './log'
 import { parseVid, summarize } from './api'
-import {
-  PageChapters,
-  MessageType,
-  Message,
-} from './message'
+import { Chapter, PageChapters, MessageType, Message } from './message'
 
 import theme from './theme'
 import './i18n'
@@ -29,8 +25,8 @@ import './i18n'
 const TAG = 'index'
 
 // Make sure chapters belong to its pageUrl.
-const matchPageChapters = (pageUrl: string, pageChapters?: PageChapters): PageChapters | null => {
-  return pageUrl === pageChapters?.pageUrl ? pageChapters : null
+const matchPageChapters = (pageUrl: string, pageChapters?: PageChapters): Chapter[] | undefined => {
+  return pageUrl === pageChapters?.pageUrl ? pageChapters.chapters : undefined
 }
 
 const App = () => {
@@ -42,8 +38,12 @@ const App = () => {
   const { t } = useTranslation()
   const { ref, height = 0 } = useResizeObserver<HTMLDivElement>()
   const { data, error, isLoading } = useSWR(
-    toggled ? [parseVid(pageUrl), matchPageChapters(pageUrl, pageChapters)?.chapters, noTranscript] : null,
+    toggled ? [parseVid(pageUrl), matchPageChapters(pageUrl, pageChapters), noTranscript] : null,
     ([vid, chapters, noTranscript]) => summarize(vid, chapters, noTranscript),
+    {
+      loadingTimeout: 10000, // ms.
+      errorRetryCount: 2,
+    },
   )
 
   useEffect(() => {

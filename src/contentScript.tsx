@@ -79,7 +79,6 @@ const App = () => {
   const [pageChapters, setPageChapters] = useState<PageChapters>()
   const [panelObserver, setPanelObserver] = useState<MutationObserver>()
   const [playerHeight, setPlayerHeight] = useState(DEFAULT_PLAYER_HEIGHT)
-  const [noTranscript, setNoTranscript] = useState(false)
 
   useEffect(() => {
     const player = document.querySelector('video')
@@ -142,7 +141,8 @@ const App = () => {
   useEffect(() => {
     const subtitles = document.querySelector('svg.ytp-subtitles-button-icon')
     const opacity = subtitles?.attributes?.getNamedItem('fill-opacity')?.value ?? '1.0'
-    setNoTranscript(parseFloat(opacity) < 1.0)
+    const noTranscript = parseFloat(opacity) < 1.0
+    log(TAG, `check, noTranscript=${noTranscript}`)
 
     panelObserver?.disconnect()
     if (!parseVid(pageUrl)) return
@@ -151,6 +151,7 @@ const App = () => {
       // log(TAG, 'send when pageUrl changed')
       sendPageUrl(pageUrl)
       sendPageChapters(pageChapters)
+      sendNoTranscript(noTranscript)
       return
     }
 
@@ -166,6 +167,7 @@ const App = () => {
         // log(TAG, 'send when iframe onload')
         sendPageUrl(pageUrl)
         sendPageChapters(pageChapters)
+        sendNoTranscript(noTranscript)
       }
 
       const block = document.createElement('div')
@@ -224,11 +226,6 @@ const App = () => {
     if (!(block instanceof HTMLDivElement)) return
     block.style.maxHeight = `${playerHeight}px`
   }, [playerHeight])
-
-  useEffect(() => {
-    log(TAG, `useEffect, noTranscript=${noTranscript}`)
-    sendNoTranscript(noTranscript)
-  }, [noTranscript])
 
   return (
     <div />
