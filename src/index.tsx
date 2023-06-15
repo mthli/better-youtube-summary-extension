@@ -108,15 +108,15 @@ const App = () => {
 
   return (
     <ThemeProvider theme={theme}>
-      <Box ref={ref} sx={{ backgroundColor: 'transparent' }}>
+      <Box
+        ref={ref}
+        sx={{ backgroundColor: theme.palette.background.default }}
+      >
         <AppBar
           position='fixed'
           color='transparent'
           elevation={0}
-          sx={{
-            borderRadius: '12px',
-            backgroundColor: theme.palette.background.default,
-          }}
+          sx={{ backgroundColor: theme.palette.background.default }}
         >
           <Toolbar variant='dense'>
             <IconButton

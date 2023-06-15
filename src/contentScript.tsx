@@ -174,6 +174,8 @@ const App = () => {
       const block = document.createElement('div')
       block.id = BLOCK_ID
       block.className = 'style-scope ytd-watch-flexy'
+      block.style.display = 'block'
+      block.style.overflow = 'hidden'
       block.style.height = '50px' // minimal.
       block.style.maxHeight = `${playerHeight}px`
       block.style.marginBottom = '8px'
