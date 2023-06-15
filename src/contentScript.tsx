@@ -115,16 +115,28 @@ const App = () => {
       // log(TAG, `onMessage, data=${JSON.stringify(e.data)}`)
 
       const { type, data } = e.data as Message
-      if (type !== MessageType.IFRAME_HEIGHT) return
-      const height = data as number
+      switch (type) {
+        case MessageType.IFRAME_HEIGHT: {
+          const height = data as number
 
-      const block = document.getElementById(BLOCK_ID)
-      if (!(block instanceof HTMLDivElement)) return
-      block.style.height = `${height}px`
+          const block = document.getElementById(BLOCK_ID)
+          if (!(block instanceof HTMLDivElement)) return
+          block.style.height = `${height}px`
 
-      // FIXME (Matthew Lee) why playerHeight always 560px?
-      // block.style.maxHeight = `${playerHeight}px`
-      if (player) block.style.maxHeight = `${player.offsetHeight}px`
+          // FIXME (Matthew Lee) why playerHeight always 560px?
+          // block.style.maxHeight = `${playerHeight}px`
+          if (player) block.style.maxHeight = `${player.offsetHeight}px`
+          break
+        }
+
+        case MessageType.PLAY_SECONDS: {
+          // TODO
+          break
+        }
+
+        default:
+          break
+      }
     }
 
     if (player) playerObserver.observe(player)

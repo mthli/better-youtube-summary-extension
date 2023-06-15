@@ -11,6 +11,7 @@ import Divider from '@mui/material/Divider'
 import IconButton from '@mui/material/IconButton'
 import List from '@mui/material/List'
 import ListItem from '@mui/material/ListItem'
+import ListItemButton from '@mui/material/ListItemButton'
 import ListItemText from '@mui/material/ListItemText'
 import Toolbar from '@mui/material/Toolbar'
 
@@ -58,18 +59,36 @@ const App = () => {
   const { state = SummaryState.NOTHING, chapters = [] } = (data || {}) as Summary
   const list = chapters.map(({ cid, seconds, chapter }) => {
     return (
-      <ListItem key={cid}>
-        <ListItemText>{chapter}</ListItemText>
-        <Button
-          size='small'
-          sx={{
-            minWidth: 0,
-            paddingLeft: '8px',
-            paddingRight: '8px',
+      <ListItem
+        key={cid}
+        disablePadding
+        secondaryAction={
+          <Button
+            size='small'
+            sx={{
+              minWidth: 0,
+              paddingLeft: '8px',
+              paddingRight: '8px',
+            }}
+            onClick={() => {
+              const message: Message = {
+                type: MessageType.PLAY_SECONDS,
+                data: seconds,
+              }
+              window.parent.postMessage(message, '*')
+            }}
+          >
+            {formatSeconds(seconds)}
+          </Button>
+        }
+      >
+        <ListItemButton
+          onClick={() => {
+            // TODO
           }}
         >
-          {formatSeconds(seconds)}
-        </Button>
+          <ListItemText>{chapter}</ListItemText>
+        </ListItemButton>
       </ListItem>
     )
   })

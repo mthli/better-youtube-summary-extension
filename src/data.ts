@@ -9,10 +9,11 @@ export interface PageChapters {
 }
 
 export enum MessageType {
-  PAGE_URL = 'page_url',
-  PAGE_CHAPTERS = 'page_chapters',
-  NO_TRANSCRIPT = 'no_transcript',
-  IFRAME_HEIGHT = 'iframe_height',
+  PAGE_URL = 'page_url',           // string; to iframe.
+  PAGE_CHAPTERS = 'page_chapters', // PageChapters; to iframe.
+  NO_TRANSCRIPT = 'no_transcript', // boolean; to iframe.
+  IFRAME_HEIGHT = 'iframe_height', // number; from iframe.
+  PLAY_SECONDS = 'play_seconds',   // number; from iframe.
 }
 
 export interface Message {
