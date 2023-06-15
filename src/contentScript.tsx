@@ -14,6 +14,7 @@ const TAG = 'contentScript'
 const BLOCK_ID = 'better-youtube-summary-block'
 const IFRAME_ID = 'better-youtube-summary-iframe'
 const IFRAME_SRC = chrome.runtime.getURL('index.html')
+const DEFAULT_PLAYER_HEIGHT = 560 // px
 
 // https://stackoverflow.com/a/75704708
 const parseChapters = (): Chapter[] => {
@@ -70,14 +71,20 @@ const App = () => {
   const [pageUrl, setPageUrl] = useState(location.href)
   const [pageChapters, setPageChapters] = useState<PageChapters>()
   const [panelObserver, setPanelObserver] = useState<MutationObserver>()
-  // const [noTranscript, setNoTranscript] = useState(false)
+  const [playerHeight, setPlayerHeight] = useState(DEFAULT_PLAYER_HEIGHT)
+  const [noTranscript, setNoTranscript] = useState(false)
 
   useEffect(() => {
-    // const subtitles = document.querySelector('svg.ytp-subtitles-button-icon')
-    // const opacity = subtitles?.attributes?.getNamedItem('fill-opacity')?.value ?? '1.0'
-    // setNoTranscript(parseFloat(opacity) < 1.0)
+    const subtitles = document.querySelector('svg.ytp-subtitles-button-icon')
+    const opacity = subtitles?.attributes?.getNamedItem('fill-opacity')?.value ?? '1.0'
+    setNoTranscript(parseFloat(opacity) < 1.0)
 
-    const observer = new MutationObserver(mutationList => {
+    const player = document.querySelector('video')
+    const playerObserver = new ResizeObserver(() => {
+      if (player) setPlayerHeight(player.offsetHeight)
+    })
+
+    const pageObserver = new MutationObserver(mutationList => {
       setPageUrl(location.href)
 
       for (const mutation of mutationList) {
@@ -103,7 +110,7 @@ const App = () => {
 
     // Receive messages from iframe child.
     const listener = (e: MessageEvent) => {
-      // log(TAG, `useEffect, onMessage, data=${JSON.stringify(e.data)}`)
+      // log(TAG, `onMessage, data=${JSON.stringify(e.data)}`)
 
       const { type, data } = e.data as Message
       if (type !== MessageType.IFRAME_HEIGHT) return
@@ -112,13 +119,19 @@ const App = () => {
       const block = document.getElementById(BLOCK_ID)
       if (!(block instanceof HTMLDivElement)) return
       block.style.height = `${height}px`
+
+      // FIXME (Matthew Lee) why playerHeight always 560px?
+      // block.style.maxHeight = `${playerHeight}px`
+      if (player) block.style.maxHeight = `${player.offsetHeight}px`
     }
 
-    observer.observe(document, { subtree: true, childList: true })
+    if (player) playerObserver.observe(player)
+    pageObserver.observe(document, { subtree: true, childList: true })
     window.addEventListener('message', listener)
 
     return () => {
-      observer.disconnect()
+      pageObserver.disconnect()
+      playerObserver.disconnect()
       window.removeEventListener('message', listener)
     }
   }, [])
@@ -134,7 +147,7 @@ const App = () => {
     if (!vid) return
 
     if (document.getElementById(BLOCK_ID)) {
-      // log(TAG, 'useEffect, send when pageUrl changed')
+      // log(TAG, 'send when pageUrl changed')
       sendPageUrl(pageUrl)
       sendPageChapters(pageChapters)
       return
@@ -149,15 +162,16 @@ const App = () => {
       iframe.style.width = '100%'
       iframe.style.border = 'none'
       iframe.onload = () => {
-        // log(TAG, 'useEffect, send when iframe onload')
+        // log(TAG, 'send when iframe onload')
         sendPageUrl(pageUrl)
-        setPageChapters(pageChapters)
+        sendPageChapters(pageChapters)
       }
 
       const block = document.createElement('div')
       block.id = BLOCK_ID
       block.className = 'style-scope ytd-watch-flexy'
       block.style.height = '0px'
+      block.style.maxHeight = `${playerHeight}px`
       block.style.marginBottom = '8px'
       block.appendChild(iframe)
 
@@ -167,7 +181,7 @@ const App = () => {
 
     const panels = document.querySelector('#secondary-inner')
     if (panels) {
-      log(TAG, 'useEffect, insert block with selector')
+      log(TAG, 'insert block with selector')
       insertBlock(panels)
       return
     }
@@ -179,7 +193,7 @@ const App = () => {
         for (const node of mutation.addedNodes) {
           if (node instanceof HTMLDivElement) {
             if (node.id === 'panels') {
-              log(TAG, 'useEffect, insert block with observer')
+              log(TAG, 'insert block with observer')
               insertBlock(node.parentNode)
               found = true
               break
@@ -199,9 +213,16 @@ const App = () => {
   }, [pageUrl])
 
   useEffect(() => {
-    // log(TAG, 'useEffect, send when pageChapters changed')
+    log(TAG, 'useEffect, send when pageChapters changed')
     sendPageChapters(pageChapters)
   }, [pageChapters])
+
+  useEffect(() => {
+    log(TAG, `useEffect, playerHeight=${playerHeight}`)
+    const block = document.getElementById(BLOCK_ID)
+    if (!(block instanceof HTMLDivElement)) return
+    block.style.maxHeight = `${playerHeight}px`
+  }, [playerHeight])
 
   return (
     <div />

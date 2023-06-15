@@ -38,7 +38,7 @@ const App = () => {
   useEffect(() => {
     // Receive messages from parent.
     const listener = (e: MessageEvent) => {
-      // log(TAG, `useEffect, onMessage, data=${JSON.stringify(e.data)}`)
+      // log(TAG, `onMessage, data=${JSON.stringify(e.data)}`)
 
       const { type, data } = e.data as Message
       switch (type) {
@@ -58,7 +58,7 @@ const App = () => {
   })
 
   useEffect(() => {
-    log(TAG, `useEffect, height has changed, height=${height}`)
+    log(TAG, `useEffect, height=${height}`)
 
     const message: Message = {
       type: MessageType.IFRAME_HEIGHT,
@@ -69,12 +69,12 @@ const App = () => {
   }, [height])
 
   useEffect(() => {
-    log(TAG, `useEffect, pageUrl has changed, pageUrl=${pageUrl}`)
+    log(TAG, `useEffect, pageUrl=${pageUrl}`)
     setLoading(false) // cancel all requests before.
   }, [pageUrl])
 
   useEffect(() => {
-    log(TAG, `useEffect, loading has changed, loading=${loading}`)
+    log(TAG, `useEffect, loading=${loading}`)
 
     if (!loading) {
       // TODO
