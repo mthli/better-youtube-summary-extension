@@ -162,6 +162,7 @@ const App = () => {
       iframe.id = IFRAME_ID
       iframe.src = IFRAME_SRC
       iframe.style.width = '100%'
+      iframe.style.height = '100%'
       iframe.style.border = 'none'
       iframe.onload = () => {
         // log(TAG, 'send when iframe onload')

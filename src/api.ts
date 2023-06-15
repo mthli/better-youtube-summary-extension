@@ -27,7 +27,7 @@ export const parseVid = (pageUrl: string): string => {
 }
 
 export const useSummarize = (
-  toggled: boolean,
+  toggled: number,
   pageUrl: string,
   pageChapters?: PageChapters,
   noTranscript?: boolean,
@@ -35,6 +35,8 @@ export const useSummarize = (
 ) => {
   const vid = parseVid(pageUrl)
   const chapters = pageUrl === pageChapters?.pageUrl ? pageChapters.chapters : []
+  // log(TAG, `useSummarize, vid=${vid}, toggled=${toggled}`)
+
   return useSWR(toggled ? [vid, chapters, noTranscript] : null,
     ([vid, chapters, noTranscript]) => summarize(vid, chapters, noTranscript),
     {
@@ -76,5 +78,5 @@ const summarize = async (
     throw new Error(msg)
   }
 
-  return res
+  return res.json()
 }

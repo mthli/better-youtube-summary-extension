@@ -6,6 +6,9 @@ import { useTranslation } from 'react-i18next'
 
 import AppBar from '@mui/material/AppBar'
 import IconButton from '@mui/material/IconButton'
+import List from '@mui/material/List'
+import ListItem from '@mui/material/ListItem'
+import ListItemText from '@mui/material/ListItemText'
 import Paper from '@mui/material/Paper'
 import Toolbar from '@mui/material/Toolbar'
 import Typography from '@mui/material/Typography'
@@ -31,20 +34,24 @@ import './i18n'
 const TAG = 'index'
 
 const App = () => {
-  const [toggled, setToggled] = useState(false)
+  const [toggled, setToggled] = useState(0)
   const [pageUrl, setPageUrl] = useState('')
   const [pageChapters, setPageChapters] = useState<PageChapters>()
   const [noTranscript, setNoTranscript] = useState(false)
 
   const { t } = useTranslation()
   const { ref, height = 0 } = useResizeObserver<HTMLDivElement>()
-  const { data, error, isLoading } = useSummarize(
-    toggled, pageUrl, pageChapters, noTranscript,
-    () => setToggled(false),
-  )
+  const { data, error, isLoading } = useSummarize(toggled, pageUrl, pageChapters, noTranscript)
 
-  const { state = SummaryState.NOTHING, chapters = [] } = (data || {}) as Summary
   // TODO
+  const { state = SummaryState.NOTHING, chapters = [] } = (data || {}) as Summary
+  const list = chapters.map(({ cid, chapter }) => {
+    return (
+      <ListItem key={cid}>
+        <ListItemText>{chapter}</ListItemText>
+      </ListItem>
+    )
+  })
 
   useEffect(() => {
     // Receive messages from parent.
@@ -84,7 +91,7 @@ const App = () => {
 
   useEffect(() => {
     log(TAG, `useEffect, pageUrl=${pageUrl}`)
-    setToggled(false) // cancel all requests before.
+    setToggled(0) // cancel all requests before.
   }, [pageUrl])
 
   return (
@@ -99,7 +106,7 @@ const App = () => {
                 edge='start'
                 sx={{ mr: 1 }}
                 disabled={isLoading}
-                onClick={() => setToggled(true)}
+                onClick={() => setToggled(toggled + 1)}
               >
                 {
                   !isLoading &&
@@ -127,6 +134,7 @@ const App = () => {
               </Typography>
             </Toolbar>
           </AppBar>
+          <List>{list}</List>
         </Paper>
       </ScopedCssBaseline>
     </ThemeProvider>
