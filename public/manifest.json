@@ -35,6 +35,6 @@
     }
   ],
   "host_permissions": [
-    "https://bys.mthli.com/api/*"
+    "https://bys.mthli.com/*"
   ]
 }

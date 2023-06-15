@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { createRoot } from 'react-dom/client'
 
+import useSWR from 'swr'
 import useResizeObserver from 'use-resize-observer'
 import { useTranslation } from 'react-i18next'
 
@@ -12,10 +13,10 @@ import Typography from '@mui/material/Typography'
 
 import ScopedCssBaseline from '@mui/material/ScopedCssBaseline'
 import { ThemeProvider } from '@mui/material/styles'
-
 import { GooSpinner } from 'react-spinners-kit'
 
 import log from './log'
+import { parseVid, summarize } from './api'
 import {
   PageChapters,
   MessageType,
@@ -27,13 +28,22 @@ import './i18n'
 
 const TAG = 'index'
 
-const App = () => {
-  const { t } = useTranslation()
-  const { ref, height = /* minimal */ 50 } = useResizeObserver<HTMLDivElement>()
+// Make sure chapters belong to its pageUrl.
+const matchPageChapters = (pageUrl: string, pageChapters?: PageChapters): PageChapters | null => {
+  return pageUrl === pageChapters?.pageUrl ? pageChapters : null
+}
 
-  const [loading, setLoading] = useState(false)
+const App = () => {
+  const [toggled, setToggled] = useState(false)
   const [pageUrl, setPageUrl] = useState('')
   const [pageChapters, setPageChapters] = useState<PageChapters>()
+
+  const { t } = useTranslation()
+  const { ref, height = 0 } = useResizeObserver<HTMLDivElement>()
+  const { data, error, isLoading } = useSWR(
+    toggled ? [parseVid(pageUrl), matchPageChapters(pageUrl, pageChapters)?.chapters] : null,
+    summarize,
+  )
 
   useEffect(() => {
     // Receive messages from parent.
@@ -70,19 +80,19 @@ const App = () => {
 
   useEffect(() => {
     log(TAG, `useEffect, pageUrl=${pageUrl}`)
-    setLoading(false) // cancel all requests before.
+    setToggled(false) // cancel all requests before.
   }, [pageUrl])
 
   useEffect(() => {
-    log(TAG, `useEffect, loading=${loading}`)
+    log(TAG, `useEffect, toggled=${toggled}`)
 
-    if (!loading) {
+    if (!toggled) {
       // TODO
       return
     }
 
     // TODO
-  }, [loading])
+  }, [toggled])
 
   return (
     <ThemeProvider theme={theme}>
@@ -91,22 +101,22 @@ const App = () => {
           <AppBar position='static' color='transparent' elevation={0}>
             <Toolbar variant='dense'>
               <IconButton
-                aria-label={t(loading ? 'cancel' : 'summarize').toString()}
+                aria-label={t(toggled ? 'cancel' : 'summarize').toString()}
                 color='inherit'
                 edge='start'
                 sx={{ mr: 1 }}
-                onClick={() => setLoading(!loading)}
+                onClick={() => setToggled(!toggled)}
               >
                 {
-                  !loading &&
+                  !toggled &&
                   <span className='material-symbols-outlined'>summarize</span>
                 }
                 {
-                  loading &&
+                  toggled &&
                   <GooSpinner
                     size={24}
                     color={theme.palette.iconColorActive.main}
-                    loading={loading}
+                    loading
                   />
                 }
               </IconButton>
@@ -119,7 +129,7 @@ const App = () => {
                   fontWeight: 500,
                 }}
               >
-                {t(loading ? 'summarizing' : 'summarize').toString()}
+                {t(toggled ? 'summarizing' : 'summarize').toString()}
               </Typography>
             </Toolbar>
           </AppBar>

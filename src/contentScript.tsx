@@ -2,13 +2,8 @@ import React, { useEffect, useState } from 'react'
 import { createRoot } from 'react-dom/client'
 
 import log from './log'
-import {
-  Chapter,
-  PageChapters,
-  MessageType,
-  Message,
-  pageUrlMatch,
-} from './message'
+import { parseVid } from './api'
+import { Chapter, PageChapters, MessageType, Message } from './message'
 
 const TAG = 'contentScript'
 const BLOCK_ID = 'better-youtube-summary-block'
@@ -72,12 +67,12 @@ const App = () => {
   const [pageChapters, setPageChapters] = useState<PageChapters>()
   const [panelObserver, setPanelObserver] = useState<MutationObserver>()
   const [playerHeight, setPlayerHeight] = useState(DEFAULT_PLAYER_HEIGHT)
-  const [noTranscript, setNoTranscript] = useState(false)
+  // const [noTranscript, setNoTranscript] = useState(false)
 
   useEffect(() => {
-    const subtitles = document.querySelector('svg.ytp-subtitles-button-icon')
-    const opacity = subtitles?.attributes?.getNamedItem('fill-opacity')?.value ?? '1.0'
-    setNoTranscript(parseFloat(opacity) < 1.0)
+    // const subtitles = document.querySelector('svg.ytp-subtitles-button-icon')
+    // const opacity = subtitles?.attributes?.getNamedItem('fill-opacity')?.value ?? '1.0'
+    // setNoTranscript(parseFloat(opacity) < 1.0)
 
     const player = document.querySelector('video')
     const playerObserver = new ResizeObserver(() => {
@@ -138,13 +133,7 @@ const App = () => {
 
   useEffect(() => {
     panelObserver?.disconnect()
-
-    const match = pageUrlMatch.test(pageUrl)
-    if (!match) return
-
-    const params = new URLSearchParams(location.search)
-    const vid = params.get('v') ?? ''
-    if (!vid) return
+    if (!parseVid(pageUrl)) return
 
     if (document.getElementById(BLOCK_ID)) {
       // log(TAG, 'send when pageUrl changed')
