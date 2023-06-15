@@ -5,11 +5,11 @@ import useResizeObserver from 'use-resize-observer'
 import { useTranslation } from 'react-i18next'
 
 import AppBar from '@mui/material/AppBar'
+import Box from '@mui/material/Box'
 import IconButton from '@mui/material/IconButton'
 import List from '@mui/material/List'
 import ListItem from '@mui/material/ListItem'
 import ListItemText from '@mui/material/ListItemText'
-import Paper from '@mui/material/Paper'
 import Toolbar from '@mui/material/Toolbar'
 import Typography from '@mui/material/Typography'
 
@@ -19,7 +19,6 @@ import { GooSpinner } from 'react-spinners-kit'
 
 import { useSummarize } from './api'
 import {
-  Chapter,
   PageChapters,
   MessageType,
   Message,
@@ -97,7 +96,7 @@ const App = () => {
   return (
     <ThemeProvider theme={theme}>
       <ScopedCssBaseline ref={ref} sx={{ backgroundColor: 'transparent' }}>
-        <Paper variant='outlined'>
+        <Box>
           <AppBar position='static' color='transparent' elevation={0}>
             <Toolbar variant='dense'>
               <IconButton
@@ -134,8 +133,8 @@ const App = () => {
               </Typography>
             </Toolbar>
           </AppBar>
-          <List>{list}</List>
-        </Paper>
+          {list.length > 0 && <List>{list}</List>}
+        </Box>
       </ScopedCssBaseline>
     </ThemeProvider>
   )

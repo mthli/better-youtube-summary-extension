@@ -177,6 +177,8 @@ const App = () => {
       block.style.height = '0px'
       block.style.maxHeight = `${playerHeight}px`
       block.style.marginBottom = '8px'
+      block.style.border = '1px solid var(--yt-spec-10-percent-layer)'
+      block.style.borderRadius = '12px'
       block.appendChild(iframe)
 
       const ref = parent.childNodes.length > 0 ? parent.childNodes[0] : null
