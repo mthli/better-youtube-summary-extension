@@ -60,7 +60,16 @@ const App = () => {
     return (
       <ListItem key={cid}>
         <ListItemText>{chapter}</ListItemText>
-        <Button size='small'>{formatSeconds(seconds)}</Button>
+        <Button
+          size='small'
+          sx={{
+            minWidth: 0,
+            paddingLeft: '8px',
+            paddingRight: '8px',
+          }}
+        >
+          {formatSeconds(seconds)}
+        </Button>
       </ListItem>
     )
   })
