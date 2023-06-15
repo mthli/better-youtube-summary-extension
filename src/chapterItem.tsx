@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import useResizeObserver from 'use-resize-observer'
 
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
@@ -32,48 +33,52 @@ const hexToRgba = (hex: string, alpha: number = 1) => {
 
 const ChapterItem = ({ seconds, chapter, summary }: Chapter) => {
   const [expand, setExpand] = useState(false)
+  const { ref, width = 0 } = useResizeObserver<HTMLDivElement>()
 
   return (
-    <ListItem
-      disablePadding
-      secondaryAction={
-        <Button
-          sx={{
-            minWidth: 0,
-            paddingLeft: '8px',
-            paddingRight: '8px',
-          }}
-          onClick={() => {
-            const message: Message = {
-              type: MessageType.PLAY_SECONDS,
-              data: seconds,
-            }
-            window.parent.postMessage(message, '*')
-          }}
-        >
-          {formatSeconds(seconds)}
-        </Button>
-      }
-    >
-      <ListItemButton
-        onClick={() => {
-          // TODO
-        }}
-      >
-        <ListItemText>
-          {chapter}
-          <Typography
-            variant='body1'
-            style={{
-              display: 'inline',
-              color: hexToRgba(theme.palette.text.primary, 0.3),
+    <>
+      <ListItem
+        disablePadding
+        secondaryAction={
+          <Button
+            component='div'
+            ref={ref}
+            sx={{
+              minWidth: 0,
+              paddingLeft: '8px',
+              paddingRight: '8px',
+            }}
+            onClick={() => {
+              const message: Message = {
+                type: MessageType.PLAY_SECONDS,
+                data: seconds,
+              }
+              window.parent.postMessage(message, '*')
             }}
           >
-            &nbsp;&nbsp;7
-          </Typography>
-        </ListItemText>
-      </ListItemButton>
-    </ListItem>
+            {formatSeconds(seconds)}
+          </Button>
+        }
+      >
+        <ListItemButton onClick={() => setExpand(!expand)}>
+          <ListItemText style={{ paddingRight: `${width}px` }} >
+            {chapter}
+            <Typography
+              variant='body1'
+              style={{
+                display: 'inline',
+                color: hexToRgba(theme.palette.text.primary, 0.3),
+              }}
+            >
+              &nbsp;&nbsp;7
+            </Typography>
+          </ListItemText>
+        </ListItemButton>
+      </ListItem>
+      <Collapse in={expand} timeout='auto' unmountOnExit>
+        {/* TODO */}
+      </Collapse>
+    </>
   )
 }
 
