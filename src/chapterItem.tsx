@@ -25,6 +25,11 @@ const formatSeconds = (seconds: number): string => {
   return res
 }
 
+// https://stackoverflow.com/a/8488787
+const countLines = (str?: string | null): number => {
+  return str ? str.trim().split(/\r\n|\r|\n/).length : 0
+}
+
 const hexToRgba = (hex: string, alpha: number = 1) => {
   // @ts-ignore
   const [r, g, b] = hex.match(/\w\w/g).map(x => parseInt(x, 16))
@@ -34,6 +39,7 @@ const hexToRgba = (hex: string, alpha: number = 1) => {
 const ChapterItem = ({ seconds, chapter, summary }: Chapter) => {
   const [expand, setExpand] = useState(false)
   const { ref, width = 0 } = useResizeObserver<HTMLDivElement>()
+  const count = countLines(summary)
 
   return (
     <>
@@ -60,7 +66,10 @@ const ChapterItem = ({ seconds, chapter, summary }: Chapter) => {
           </Button>
         }
       >
-        <ListItemButton onClick={() => setExpand(!expand)}>
+        <ListItemButton
+          disabled={count <= 0}
+          onClick={() => setExpand(!expand)}
+        >
           <ListItemText style={{ paddingRight: `${width}px` }} >
             {chapter}
             <Typography
@@ -70,7 +79,7 @@ const ChapterItem = ({ seconds, chapter, summary }: Chapter) => {
                 color: hexToRgba(theme.palette.text.primary, 0.3),
               }}
             >
-              &nbsp;&nbsp;7
+              &nbsp;&nbsp;{count}
             </Typography>
           </ListItemText>
         </ListItemButton>
