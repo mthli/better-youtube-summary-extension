@@ -36,6 +36,15 @@ const App = () => {
     () => setToggled(false),
   )
 
+  let toolbarTitle = t('summarize').toString()
+  if (isLoading) {
+    toolbarTitle = t('summarizing').toString()
+  } else if (error) {
+    toolbarTitle = t('oops').toString()
+  } else if (data) {
+    toolbarTitle = t('summarized').toString()
+  }
+
   useEffect(() => {
     // Receive messages from parent.
     const listener = (e: MessageEvent) => {
@@ -113,7 +122,7 @@ const App = () => {
                   fontWeight: 500,
                 }}
               >
-                {t(isLoading ? 'summarizing' : 'summarize').toString()}
+                {toolbarTitle}
               </Typography>
             </Toolbar>
           </AppBar>

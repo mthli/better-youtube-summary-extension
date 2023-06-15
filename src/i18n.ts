@@ -8,7 +8,7 @@ const resources = {
       'summarize': 'Summarize',
       'summarizing': 'Summarizing',
       'summarized': 'Summarized',
-      'cancel': 'Cancel',
+      'oops': 'Oops',
     },
   },
   zh: {
@@ -16,7 +16,7 @@ const resources = {
       'summarize': '总结',
       'summarizing': '总结中',
       'summarized': '已总结',
-      'cancel': '取消',
+      'oops': 'Oops',
     },
   },
 }
