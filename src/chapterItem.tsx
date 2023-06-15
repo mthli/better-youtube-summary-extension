@@ -70,7 +70,14 @@ const ChapterItem = ({ seconds, chapter, summary = '' }: Chapter) => {
           disabled={count <= 0}
           onClick={() => setExpand(!expand)}
         >
-          <ListItemText style={{ paddingRight: `${width}px` }} >
+          <ListItemText
+            primaryTypographyProps={{
+              sx: {
+                fontWeight: expand ? 600 : 400,
+              }
+            }}
+            style={{ paddingRight: `${width}px` }}
+          >
             {chapter}
             <Typography
               variant='body1'
@@ -84,7 +91,7 @@ const ChapterItem = ({ seconds, chapter, summary = '' }: Chapter) => {
           </ListItemText>
         </ListItemButton>
       </ListItem>
-      <Collapse in={expand} timeout='auto' unmountOnExit sx={{ pr: '16px' }}>
+      <Collapse in={expand} timeout='auto' unmountOnExit>
         <ReactMarkdown className='markdown-body'>
           {summary}
         </ReactMarkdown>

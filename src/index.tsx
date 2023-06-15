@@ -124,7 +124,7 @@ const App = () => {
           {list.length > 0 && <Divider light />}
         </AppBar>
         <Toolbar /> {/* as placeholder because of the app bar is fixed */}
-        {list.length > 0 && <List sx={{ pt: 0 }}>{list}</List>}
+        {list.length > 0 && <List>{list}</List>}
       </Box>
     </ThemeProvider>
   )

@@ -3,6 +3,21 @@ body {
   margin: 0;
 }
 
+.markdown-body {
+  color-scheme: light;
+  --color-fg-default: #030303;
+  --color-bg-default: rgba(0, 0, 0, 0.05);
+}
+
+.markdown-body {
+  padding: 8px;
+  background-color: var(--color-bg-default);
+}
+
+.markdown-body ul {
+  padding-left: 16px;
+}
+
 .markdown-body ul li {
   font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif;
   list-style-type: disc;

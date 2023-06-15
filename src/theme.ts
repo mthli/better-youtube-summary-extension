@@ -17,6 +17,10 @@ const theme = createTheme({
       secondary: '#606060',
     },
     divider: 'rgba(0, 0, 0, 0.1)',
+    action: {
+      hover: 'rgba(0, 0, 0, 0.1)',
+      hoverOpacity: 0.1,
+    },
     background: {
       default: '#ffffff',
     }
