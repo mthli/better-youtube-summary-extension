@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client'
 
 import log from './log'
 import { parseVid } from './api'
-import { Chapter, PageChapters, MessageType, Message } from './message'
+import { PageChapter, PageChapters, MessageType, Message } from './data'
 
 const TAG = 'contentScript'
 const BLOCK_ID = 'better-youtube-summary-block'
@@ -12,7 +12,7 @@ const IFRAME_SRC = chrome.runtime.getURL('index.html')
 const DEFAULT_PLAYER_HEIGHT = 560 // px
 
 // https://stackoverflow.com/a/75704708
-const parseChapters = (): Chapter[] => {
+const parseChapters = (): PageChapter[] => {
   const elements = Array.from(
     document.querySelectorAll(
       '#panels ytd-engagement-panel-section-list-renderer:nth-child(2) #content ytd-macro-markers-list-renderer #contents ytd-macro-markers-list-item-renderer #endpoint #details'
@@ -33,7 +33,7 @@ const parseChapters = (): Chapter[] => {
 
   return [
     ...new Map(filtered.map(c => [c.timestamp, c])).values(),
-  ] as Chapter[]
+  ] as PageChapter[]
 }
 
 const sendPageUrl = (pageUrl: string) => {

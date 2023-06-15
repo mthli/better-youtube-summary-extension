@@ -6,16 +6,12 @@ const resources = {
   en: {
     translation: {
       'summarize': 'Summarize',
-      'summarizing': 'Summarizing',
-      'summarized': 'Summarized',
       'oops': 'Oops',
     },
   },
   zh: {
     translation: {
       'summarize': '总结',
-      'summarizing': '总结中',
-      'summarized': '已总结',
       'oops': 'Oops',
     },
   },

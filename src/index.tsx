@@ -16,7 +16,7 @@ import { GooSpinner } from 'react-spinners-kit'
 
 import log from './log'
 import { useSummarize } from './api'
-import { PageChapters, MessageType, Message } from './message'
+import { PageChapters, MessageType, Message } from './data'
 
 import theme from './theme'
 import './i18n'
@@ -35,15 +35,6 @@ const App = () => {
     toggled, pageUrl, pageChapters, noTranscript,
     () => setToggled(false),
   )
-
-  let toolbarTitle = t('summarize').toString()
-  if (isLoading) {
-    toolbarTitle = t('summarizing').toString()
-  } else if (error) {
-    toolbarTitle = t('oops').toString()
-  } else if (data) {
-    toolbarTitle = t('summarized').toString()
-  }
 
   useEffect(() => {
     // Receive messages from parent.
@@ -122,7 +113,7 @@ const App = () => {
                   fontWeight: 500,
                 }}
               >
-                {toolbarTitle}
+                {t(error ? 'oops' : 'summarize').toString()}
               </Typography>
             </Toolbar>
           </AppBar>

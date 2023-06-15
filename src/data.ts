@@ -1,11 +1,11 @@
-export interface Chapter {
+export interface PageChapter {
   title: string,
   timestamp: string,
 }
 
 export interface PageChapters {
   pageUrl: string,
-  chapters: Chapter[],
+  chapters: PageChapter[],
 }
 
 export enum MessageType {

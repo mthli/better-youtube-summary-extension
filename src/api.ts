@@ -2,7 +2,7 @@ import UrlMatch from '@fczbkk/url-match'
 import useSWR from 'swr'
 
 import log from './log'
-import { Chapter, PageChapters } from './message'
+import { PageChapter, PageChapters } from './data'
 
 const TAG = 'api'
 const BASE_URL = 'https://bys.mthli.com'
@@ -55,7 +55,7 @@ export const useSummarize = (
 
 const summarize = async (
   vid: string,
-  chapters?: Chapter[],
+  chapters?: PageChapter[],
   noTranscript?: boolean,
 ): Promise<Response> => {
   // log(TAG, `summarize, vid=${vid}, chapters=${JSON.stringify(chapters)}`)
