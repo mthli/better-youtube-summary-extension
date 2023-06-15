@@ -1,7 +1,8 @@
 import UrlMatch from '@fczbkk/url-match'
+import useSWR from 'swr'
 
 import log from './log'
-import { Chapter } from './message'
+import { Chapter, PageChapters } from './message'
 
 const TAG = 'api'
 const BASE_URL = 'https://bys.mthli.com'
@@ -25,7 +26,34 @@ export const parseVid = (pageUrl: string): string => {
   return vid
 }
 
-export const summarize = async (
+export const useSummarize = (
+  toggled: boolean,
+  pageUrl: string,
+  pageChapters?: PageChapters,
+  noTranscript?: boolean,
+  onEnd?: (success: boolean) => void,
+) => {
+  const vid = parseVid(pageUrl)
+  const chapters = pageUrl === pageChapters?.pageUrl ? pageChapters.chapters : []
+  return useSWR(toggled ? [vid, chapters, noTranscript] : null,
+    ([vid, chapters, noTranscript]) => summarize(vid, chapters, noTranscript),
+    {
+      loadingTimeout: 10000, // ms.
+      errorRetryCount: 2,
+      onSuccess: () => onEnd?.(true),
+      onError: (err, key) => {
+        log(TAG, `onError, key=${key}, err=${err}`)
+        onEnd?.(false)
+      },
+      onDiscarded: key => {
+        log(TAG, `onDiscarded, key=${key}`)
+        onEnd?.(false)
+      },
+    },
+  )
+}
+
+const summarize = async (
   vid: string,
   chapters?: Chapter[],
   noTranscript?: boolean,

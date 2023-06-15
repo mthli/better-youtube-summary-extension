@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { createRoot } from 'react-dom/client'
 
-import useSWR from 'swr'
 import useResizeObserver from 'use-resize-observer'
 import { useTranslation } from 'react-i18next'
 
@@ -16,18 +15,13 @@ import { ThemeProvider } from '@mui/material/styles'
 import { GooSpinner } from 'react-spinners-kit'
 
 import log from './log'
-import { parseVid, summarize } from './api'
-import { Chapter, PageChapters, MessageType, Message } from './message'
+import { useSummarize } from './api'
+import { PageChapters, MessageType, Message } from './message'
 
 import theme from './theme'
 import './i18n'
 
 const TAG = 'index'
-
-// Make sure chapters belong to its pageUrl.
-const matchPageChapters = (pageUrl: string, pageChapters?: PageChapters): Chapter[] | undefined => {
-  return pageUrl === pageChapters?.pageUrl ? pageChapters.chapters : undefined
-}
 
 const App = () => {
   const [toggled, setToggled] = useState(false)
@@ -37,13 +31,9 @@ const App = () => {
 
   const { t } = useTranslation()
   const { ref, height = 0 } = useResizeObserver<HTMLDivElement>()
-  const { data, error, isLoading } = useSWR(
-    toggled ? [parseVid(pageUrl), matchPageChapters(pageUrl, pageChapters), noTranscript] : null,
-    ([vid, chapters, noTranscript]) => summarize(vid, chapters, noTranscript),
-    {
-      loadingTimeout: 10000, // ms.
-      errorRetryCount: 2,
-    },
+  const { data, error, isLoading } = useSummarize(
+    toggled, pageUrl, pageChapters, noTranscript,
+    () => setToggled(false),
   )
 
   useEffect(() => {
@@ -87,17 +77,6 @@ const App = () => {
     setToggled(false) // cancel all requests before.
   }, [pageUrl])
 
-  useEffect(() => {
-    log(TAG, `useEffect, toggled=${toggled}`)
-
-    if (!toggled) {
-      // TODO
-      return
-    }
-
-    // TODO
-  }, [toggled])
-
   return (
     <ThemeProvider theme={theme}>
       <ScopedCssBaseline ref={ref} sx={{ backgroundColor: 'transparent' }}>
@@ -105,18 +84,19 @@ const App = () => {
           <AppBar position='static' color='transparent' elevation={0}>
             <Toolbar variant='dense'>
               <IconButton
-                aria-label={t(toggled ? 'cancel' : 'summarize').toString()}
+                aria-label={t('summarize').toString()}
                 color='inherit'
                 edge='start'
                 sx={{ mr: 1 }}
-                onClick={() => setToggled(!toggled)}
+                disabled={isLoading}
+                onClick={() => setToggled(true)}
               >
                 {
-                  !toggled &&
+                  !isLoading &&
                   <span className='material-symbols-outlined'>summarize</span>
                 }
                 {
-                  toggled &&
+                  isLoading &&
                   <GooSpinner
                     size={24}
                     color={theme.palette.iconColorActive.main}
@@ -133,7 +113,7 @@ const App = () => {
                   fontWeight: 500,
                 }}
               >
-                {t(toggled ? 'summarizing' : 'summarize').toString()}
+                {t(isLoading ? 'summarizing' : 'summarize').toString()}
               </Typography>
             </Toolbar>
           </AppBar>
