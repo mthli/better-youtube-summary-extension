@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
+import ReactMarkdown from 'react-markdown'
 import useResizeObserver from 'use-resize-observer'
 
-import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Collapse from '@mui/material/Collapse'
 import ListItem from '@mui/material/ListItem'
@@ -36,7 +36,7 @@ const hexToRgba = (hex: string, alpha: number = 1) => {
   return `rgba(${r},${g},${b},${alpha})`
 }
 
-const ChapterItem = ({ seconds, chapter, summary }: Chapter) => {
+const ChapterItem = ({ seconds, chapter, summary = '' }: Chapter) => {
   const [expand, setExpand] = useState(false)
   const { ref, width = 0 } = useResizeObserver<HTMLDivElement>()
   const count = countLines(summary)
@@ -84,8 +84,10 @@ const ChapterItem = ({ seconds, chapter, summary }: Chapter) => {
           </ListItemText>
         </ListItemButton>
       </ListItem>
-      <Collapse in={expand} timeout='auto' unmountOnExit>
-        {/* TODO */}
+      <Collapse in={expand} timeout='auto' unmountOnExit sx={{ pr: '16px' }}>
+        <ReactMarkdown className='markdown-body'>
+          {summary}
+        </ReactMarkdown>
       </Collapse>
     </>
   )

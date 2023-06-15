@@ -2,3 +2,8 @@ body {
   display: block;
   margin: 0;
 }
+
+.markdown-body ul li {
+  font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif;
+  list-style-type: disc;
+}
