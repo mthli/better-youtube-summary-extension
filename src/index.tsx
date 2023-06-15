@@ -8,7 +8,6 @@ import AppBar from '@mui/material/AppBar'
 import IconButton from '@mui/material/IconButton'
 import Paper from '@mui/material/Paper'
 import Toolbar from '@mui/material/Toolbar'
-import Tooltip from '@mui/material/Tooltip'
 import Typography from '@mui/material/Typography'
 
 import ScopedCssBaseline from '@mui/material/ScopedCssBaseline'
@@ -91,28 +90,26 @@ const App = () => {
         <Paper variant='outlined'>
           <AppBar position='static' color='transparent' elevation={0}>
             <Toolbar variant='dense'>
-              <Tooltip title={t(loading ? 'cancel' : 'summarize').toString()}>
-                <IconButton
-                  aria-label={t(loading ? 'cancel' : 'summarize').toString()}
-                  color='inherit'
-                  edge='start'
-                  sx={{ mr: 1 }}
-                  onClick={() => setLoading(!loading)}
-                >
-                  {
-                    !loading &&
-                    <span className='material-symbols-outlined'>summarize</span>
-                  }
-                  {
-                    loading &&
-                    <GooSpinner
-                      size={24}
-                      color={theme.palette.iconColorActive.main}
-                      loading={loading}
-                    />
-                  }
-                </IconButton>
-              </Tooltip>
+              <IconButton
+                aria-label={t(loading ? 'cancel' : 'summarize').toString()}
+                color='inherit'
+                edge='start'
+                sx={{ mr: 1 }}
+                onClick={() => setLoading(!loading)}
+              >
+                {
+                  !loading &&
+                  <span className='material-symbols-outlined'>summarize</span>
+                }
+                {
+                  loading &&
+                  <GooSpinner
+                    size={24}
+                    color={theme.palette.iconColorActive.main}
+                    loading={loading}
+                  />
+                }
+              </IconButton>
               <Typography
                 component='div'
                 variant='h6'
