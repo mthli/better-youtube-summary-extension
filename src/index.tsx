@@ -11,7 +11,6 @@ import List from '@mui/material/List'
 import ListItem from '@mui/material/ListItem'
 import ListItemText from '@mui/material/ListItemText'
 import Toolbar from '@mui/material/Toolbar'
-import Typography from '@mui/material/Typography'
 
 import ScopedCssBaseline from '@mui/material/ScopedCssBaseline'
 import { ThemeProvider } from '@mui/material/styles'
@@ -39,7 +38,7 @@ const App = () => {
   const [noTranscript, setNoTranscript] = useState(false)
 
   const { t } = useTranslation()
-  const { ref, height = 0 } = useResizeObserver<HTMLDivElement>()
+  const { ref, height = 50 /* minimal */ } = useResizeObserver<HTMLDivElement>()
   const { data, error, isLoading } = useSummarize(toggled, pageUrl, pageChapters, noTranscript)
 
   // TODO
@@ -97,7 +96,7 @@ const App = () => {
     <ThemeProvider theme={theme}>
       <ScopedCssBaseline ref={ref} sx={{ backgroundColor: 'transparent' }}>
         <Box>
-          <AppBar position='static' color='transparent' elevation={0}>
+          <AppBar position='fixed' color='transparent' elevation={0}>
             <Toolbar variant='dense'>
               <IconButton
                 aria-label={t('summarize').toString()}
@@ -115,24 +114,14 @@ const App = () => {
                   isLoading &&
                   <GooSpinner
                     size={24}
-                    color={theme.palette.iconColorActive.main}
+                    color={theme.palette.text.primary}
                     loading
                   />
                 }
               </IconButton>
-              <Typography
-                component='div'
-                variant='h6'
-                color={theme.palette.textColorPrimary.main}
-                sx={{
-                  fontSize: '16px',
-                  fontWeight: 500,
-                }}
-              >
-                {t(error ? 'oops' : 'summarize').toString()}
-              </Typography>
             </Toolbar>
           </AppBar>
+          <Toolbar /> {/* as placeholder because of the app bar is fixed */}
           {list.length > 0 && <List>{list}</List>}
         </Box>
       </ScopedCssBaseline>
