@@ -24,7 +24,7 @@ const formatSeconds = (seconds: number): string => {
   return res
 }
 
-const hex2rgba = (hex: string, alpha: number = 1) => {
+const hexToRgba = (hex: string, alpha: number = 1) => {
   // @ts-ignore
   const [r, g, b] = hex.match(/\w\w/g).map(x => parseInt(x, 16))
   return `rgba(${r},${g},${b},${alpha})`
@@ -38,7 +38,6 @@ const ChapterItem = ({ seconds, chapter, summary }: Chapter) => {
       disablePadding
       secondaryAction={
         <Button
-          size='small'
           sx={{
             minWidth: 0,
             paddingLeft: '8px',
@@ -67,7 +66,7 @@ const ChapterItem = ({ seconds, chapter, summary }: Chapter) => {
             variant='body1'
             style={{
               display: 'inline',
-              color: hex2rgba(theme.palette.text.primary, 0.3),
+              color: hexToRgba(theme.palette.text.primary, 0.3),
             }}
           >
             &nbsp;&nbsp;7
