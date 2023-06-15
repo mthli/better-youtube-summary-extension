@@ -14,10 +14,17 @@ import ScopedCssBaseline from '@mui/material/ScopedCssBaseline'
 import { ThemeProvider } from '@mui/material/styles'
 import { GooSpinner } from 'react-spinners-kit'
 
-import log from './log'
 import { useSummarize } from './api'
-import { PageChapters, MessageType, Message } from './data'
+import {
+  Chapter,
+  PageChapters,
+  MessageType,
+  Message,
+  Summary,
+  SummaryState,
+} from './data'
 
+import log from './log'
 import theme from './theme'
 import './i18n'
 
@@ -35,6 +42,9 @@ const App = () => {
     toggled, pageUrl, pageChapters, noTranscript,
     () => setToggled(false),
   )
+
+  const { state = SummaryState.NOTHING, chapters = [] } = (data || {}) as Summary
+  // TODO
 
   useEffect(() => {
     // Receive messages from parent.
