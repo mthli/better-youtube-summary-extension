@@ -9,7 +9,6 @@ import { parseVid } from './api'
 import { PageChapter, PageChapters } from './data'
 
 const TAG = 'contentScript'
-const BLOCK_ID = 'better-youtube-summary-block'
 const DEFAULT_PLAYER_HEIGHT = 560 // px.
 
 // https://stackoverflow.com/a/75704708
@@ -90,14 +89,13 @@ const App = () => {
     log(TAG, `check, noTranscript=${noTranscript}`)
 
     panelObserver?.disconnect()
-    if (!parseVid(pageUrl)) return
-    if (document.getElementById(BLOCK_ID)) return
+    if (blockNode || !parseVid(pageUrl)) return
 
     const insertBlock = (parent: Node | null) => {
       if (!parent) return
 
       const block = document.createElement('div')
-      block.id = BLOCK_ID
+      block.id = 'better-youtube-summary-block'
       block.className = 'style-scope ytd-watch-flexy'
       block.style.display = 'block'
       block.style.overflow = 'hidden'
@@ -144,12 +142,10 @@ const App = () => {
     observer.observe(document, { subtree: true, childList: true })
   }, [pageUrl])
 
-  // TODO
   useEffect(() => {
     log(TAG, `useEffect, playerHeight=${playerHeight}`)
-    const block = document.getElementById(BLOCK_ID)
-    if (!(block instanceof HTMLDivElement)) return
-    block.style.maxHeight = `${playerHeight}px`
+    if (!blockNode) return
+    blockNode.style.maxHeight = `${playerHeight}px`
   }, [playerHeight])
 
   return (
