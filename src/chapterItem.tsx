@@ -73,6 +73,7 @@ const ChapterItem = ({ seconds, chapter, summary = '' }: Chapter) => {
           <ListItemText
             primaryTypographyProps={{
               sx: {
+                fontSize: '1.6rem',
                 fontWeight: expand ? 600 : 400,
               }
             }}
@@ -83,6 +84,7 @@ const ChapterItem = ({ seconds, chapter, summary = '' }: Chapter) => {
               variant='body1'
               style={{
                 display: 'inline',
+                fontSize: '1.6rem',
                 color: hexToRgba(theme.palette.text.primary, 0.3),
               }}
             >
