@@ -12,7 +12,7 @@ import Typography from '@mui/material/Typography'
 import ReactMarkdown from 'react-markdown'
 import rehypeRaw from 'rehype-raw'
 
-import { MessageType, Message, Chapter } from './data'
+import { Chapter } from './data'
 import './i18n'
 import theme from './theme'
 
@@ -59,11 +59,7 @@ const ChapterItem = ({ seconds, chapter, summary = '' }: Chapter) => {
               paddingRight: '8px',
             }}
             onClick={() => {
-              const message: Message = {
-                type: MessageType.PLAY_SECONDS,
-                data: seconds,
-              }
-              window.parent.postMessage(message, '*')
+              // TODO
             }}
           >
             {formatSeconds(seconds)}

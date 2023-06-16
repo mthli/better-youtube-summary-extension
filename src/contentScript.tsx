@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from 'react'
+import { createPortal } from 'react-dom'
 import { createRoot } from 'react-dom/client'
+
+import Panel from './panel'
 
 import log from './log'
 import { parseVid } from './api'
-import { PageChapter, PageChapters, MessageType, Message } from './data'
+import { PageChapter, PageChapters } from './data'
 
 const TAG = 'contentScript'
 const BLOCK_ID = 'better-youtube-summary-block'
-const IFRAME_ID = 'better-youtube-summary-iframe'
-const IFRAME_SRC = chrome.runtime.getURL('index.html')
-const DEFAULT_PLAYER_HEIGHT = 560 // px
+const DEFAULT_PLAYER_HEIGHT = 560 // px.
 
 // https://stackoverflow.com/a/75704708
 const parseChapters = (): PageChapter[] => {
@@ -36,49 +37,12 @@ const parseChapters = (): PageChapter[] => {
   ] as PageChapter[]
 }
 
-const sendPageUrl = (pageUrl: string) => {
-  const iframe = document.getElementById(IFRAME_ID)
-  if (!(iframe instanceof HTMLIFrameElement)) return
-
-  const message: Message = {
-    type: MessageType.PAGE_URL,
-    data: pageUrl,
-  }
-
-  iframe.contentWindow?.postMessage(message, IFRAME_SRC)
-}
-
-const sendPageChapters = (pageChapters?: PageChapters) => {
-  if (!pageChapters) return
-
-  const iframe = document.getElementById(IFRAME_ID)
-  if (!(iframe instanceof HTMLIFrameElement)) return
-
-  const message: Message = {
-    type: MessageType.PAGE_CHAPTERS,
-    data: pageChapters,
-  }
-
-  iframe.contentWindow?.postMessage(message, IFRAME_SRC)
-}
-
-const sendNoTranscript = (noTranscript?: boolean) => {
-  const iframe = document.getElementById(IFRAME_ID)
-  if (!(iframe instanceof HTMLIFrameElement)) return
-
-  const message: Message = {
-    type: MessageType.NO_TRANSCRIPT,
-    data: Boolean(noTranscript),
-  }
-
-  iframe.contentWindow?.postMessage(message, IFRAME_SRC)
-}
-
 const App = () => {
   const [pageUrl, setPageUrl] = useState(location.href)
   const [pageChapters, setPageChapters] = useState<PageChapters>()
   const [panelObserver, setPanelObserver] = useState<MutationObserver>()
   const [playerHeight, setPlayerHeight] = useState(DEFAULT_PLAYER_HEIGHT)
+  const [blockNode, setBlockNode] = useState<HTMLDivElement>()
 
   useEffect(() => {
     const player = document.querySelector('video')
@@ -110,43 +74,12 @@ const App = () => {
       }
     })
 
-    // Receive messages from iframe child.
-    const listener = (e: MessageEvent) => {
-      // log(TAG, `onMessage, data=${JSON.stringify(e.data)}`)
-
-      const { type, data } = e.data as Message
-      switch (type) {
-        case MessageType.IFRAME_HEIGHT: {
-          const height = data as number
-
-          const block = document.getElementById(BLOCK_ID)
-          if (!(block instanceof HTMLDivElement)) return
-          block.style.height = `${height}px`
-
-          // FIXME (Matthew Lee) why playerHeight always 560px?
-          // block.style.maxHeight = `${playerHeight}px`
-          if (player) block.style.maxHeight = `${player.offsetHeight}px`
-          break
-        }
-
-        case MessageType.PLAY_SECONDS: {
-          // TODO
-          break
-        }
-
-        default:
-          break
-      }
-    }
-
     if (player) playerObserver.observe(player)
     pageObserver.observe(document, { subtree: true, childList: true })
-    window.addEventListener('message', listener)
 
     return () => {
       pageObserver.disconnect()
       playerObserver.disconnect()
-      window.removeEventListener('message', listener)
     }
   }, [])
 
@@ -158,30 +91,10 @@ const App = () => {
 
     panelObserver?.disconnect()
     if (!parseVid(pageUrl)) return
-
-    if (document.getElementById(BLOCK_ID)) {
-      // log(TAG, 'send when pageUrl changed')
-      sendPageUrl(pageUrl)
-      sendPageChapters(pageChapters)
-      sendNoTranscript(noTranscript)
-      return
-    }
+    if (document.getElementById(BLOCK_ID)) return
 
     const insertBlock = (parent: Node | null) => {
       if (!parent) return
-
-      const iframe = document.createElement('iframe')
-      iframe.id = IFRAME_ID
-      iframe.src = IFRAME_SRC
-      iframe.style.width = '100%'
-      iframe.style.height = '100%'
-      iframe.style.border = 'none'
-      iframe.onload = () => {
-        // log(TAG, 'send when iframe onload')
-        sendPageUrl(pageUrl)
-        sendPageChapters(pageChapters)
-        sendNoTranscript(noTranscript)
-      }
 
       const block = document.createElement('div')
       block.id = BLOCK_ID
@@ -193,10 +106,10 @@ const App = () => {
       block.style.marginBottom = '8px'
       block.style.border = '1px solid var(--yt-spec-10-percent-layer)'
       block.style.borderRadius = '12px'
-      block.appendChild(iframe)
 
       const ref = parent.childNodes.length > 0 ? parent.childNodes[0] : null
       parent.insertBefore(block, ref)
+      setBlockNode(block)
     }
 
     const panels = document.querySelector('#secondary-inner')
@@ -232,11 +145,7 @@ const App = () => {
     observer.observe(document, { subtree: true, childList: true })
   }, [pageUrl])
 
-  useEffect(() => {
-    log(TAG, 'useEffect, send when pageChapters changed')
-    sendPageChapters(pageChapters)
-  }, [pageChapters])
-
+  // TODO
   useEffect(() => {
     log(TAG, `useEffect, playerHeight=${playerHeight}`)
     const block = document.getElementById(BLOCK_ID)
@@ -245,7 +154,9 @@ const App = () => {
   }, [playerHeight])
 
   return (
-    <div />
+    <div>
+      {blockNode && createPortal(<Panel />, blockNode)}
+    </div>
   )
 }
 

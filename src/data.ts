@@ -8,19 +8,6 @@ export interface PageChapters {
   chapters: PageChapter[],
 }
 
-export enum MessageType {
-  PAGE_URL = 'page_url',           // string; to iframe.
-  PAGE_CHAPTERS = 'page_chapters', // PageChapters; to iframe.
-  NO_TRANSCRIPT = 'no_transcript', // boolean; to iframe.
-  IFRAME_HEIGHT = 'iframe_height', // number; from iframe.
-  PLAY_SECONDS = 'play_seconds',   // number; from iframe.
-}
-
-export interface Message {
-  type: MessageType,
-  data: boolean | number | string | PageChapters,
-}
-
 export interface Chapter {
   cid: string,
   vid: string,
