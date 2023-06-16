@@ -8,6 +8,17 @@ export interface PageChapters {
   chapters: PageChapter[],
 }
 
+export enum MessageType {
+  REQUEST = 'request',
+  RESPONSE = 'response',
+  ERROR = 'error',
+}
+
+export interface Message {
+  type: MessageType,
+  data: RequestInfo | Response | Error,
+}
+
 export interface Chapter {
   cid: string,
   vid: string,
