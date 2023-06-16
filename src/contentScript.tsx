@@ -101,7 +101,6 @@ const App = () => {
       block.className = 'style-scope ytd-watch-flexy'
       block.style.display = 'block'
       block.style.overflow = 'hidden'
-      block.style.height = '50px' // minimal.
       block.style.maxHeight = `${playerHeight}px`
       block.style.marginBottom = '8px'
       block.style.border = '1px solid var(--yt-spec-10-percent-layer)'

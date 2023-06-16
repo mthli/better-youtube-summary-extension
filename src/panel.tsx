@@ -48,7 +48,13 @@ const Panel = () => {
           elevation={0}
           sx={{ bgcolor: 'background.default' }}
         >
-          <Toolbar variant='dense'>
+          <Toolbar
+            variant='dense'
+            style={{ /* instead of sx */
+              paddingLeft: '16px',
+              paddingRight: '16px',
+            }}
+          >
             <IconButton
               aria-label={t('summarize').toString()}
               color='inherit'
