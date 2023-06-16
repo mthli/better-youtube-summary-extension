@@ -1,13 +1,16 @@
 import React, { useState } from 'react'
-import ReactMarkdown from 'react-markdown'
 import useResizeObserver from 'use-resize-observer'
 
 import Button from '@mui/material/Button'
 import Collapse from '@mui/material/Collapse'
+import Divider from '@mui/material/Divider'
 import ListItem from '@mui/material/ListItem'
 import ListItemButton from '@mui/material/ListItemButton'
 import ListItemText from '@mui/material/ListItemText'
 import Typography from '@mui/material/Typography'
+
+import ReactMarkdown from 'react-markdown'
+import rehypeRaw from 'rehype-raw'
 
 import { MessageType, Message, Chapter } from './data'
 import './i18n'
@@ -48,6 +51,7 @@ const ChapterItem = ({ seconds, chapter, summary = '' }: Chapter) => {
         secondaryAction={
           <Button
             component='div'
+            size='small'
             ref={ref}
             sx={{
               minWidth: 0,
@@ -92,9 +96,10 @@ const ChapterItem = ({ seconds, chapter, summary = '' }: Chapter) => {
         </ListItemButton>
       </ListItem>
       <Collapse in={expand} timeout='auto' unmountOnExit>
-        <ReactMarkdown className='markdown-body'>
-          {summary}
+        <ReactMarkdown className='markdown-body' rehypePlugins={[rehypeRaw]}>
+          {/* textVide(summary) */ summary}
         </ReactMarkdown>
+        <Divider light />
       </Collapse>
     </>
   )

@@ -90,13 +90,13 @@ const App = () => {
     <ThemeProvider theme={theme}>
       <Box
         ref={ref}
-        sx={{ backgroundColor: theme.palette.background.default }}
+        sx={{ bgcolor: 'background.default' }}
       >
         <AppBar
           position='fixed'
           color='transparent'
           elevation={0}
-          sx={{ backgroundColor: theme.palette.background.default }}
+          sx={{ bgcolor: 'background.default' }}
         >
           <Toolbar variant='dense'>
             <IconButton
