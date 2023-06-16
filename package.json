@@ -27,7 +27,8 @@
     "react-i18next": "^12.3.1",
     "react-markdown": "^8.0.7",
     "react-spinners-kit": "^1.9.1",
-    "swr": "^2.1.5"
+    "swr": "^2.1.5",
+    "text-vide": "^1.7.0"
   },
   "devDependencies": {
     "@types/chrome": "0.0.158",
