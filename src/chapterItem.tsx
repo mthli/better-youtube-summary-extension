@@ -16,6 +16,7 @@ import { Chapter } from './data'
 import theme from './theme'
 
 import 'github-markdown-css'
+import './panel.css'
 import './i18n'
 
 const formatSeconds = (seconds: number): string => {
@@ -59,6 +60,7 @@ const ChapterItem = ({ seconds, chapter, summary = '' }: Chapter) => {
               minWidth: 0,
               paddingLeft: '8px',
               paddingRight: '8px',
+              bgcolor: hexToRgba(theme.palette.primary.main, 0.05),
             }}
             onClick={() => {
               // TODO
