@@ -100,7 +100,8 @@ const App = () => {
       block.id = 'better-youtube-summary-block'
       block.className = 'style-scope ytd-watch-flexy'
       block.style.display = 'block'
-      block.style.overflow = 'hidden'
+      block.style.overflowX = 'hidden'
+      block.style.overflowY = 'scroll'
       block.style.maxHeight = `${playerHeight}px`
       block.style.marginBottom = '8px'
       block.style.border = '1px solid var(--yt-spec-10-percent-layer)'
