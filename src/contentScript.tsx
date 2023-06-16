@@ -9,7 +9,6 @@ import { parseVid } from './api'
 import { PageChapter, PageChapters } from './data'
 
 const TAG = 'contentScript'
-const DEFAULT_PLAYER_HEIGHT = 560 // px.
 
 // https://stackoverflow.com/a/75704708
 const parseChapters = (): PageChapter[] => {
@@ -39,8 +38,10 @@ const parseChapters = (): PageChapter[] => {
 const App = () => {
   const [pageUrl, setPageUrl] = useState(location.href)
   const [pageChapters, setPageChapters] = useState<PageChapters>()
-  const [panelObserver, setPanelObserver] = useState<MutationObserver>()
-  const [playerHeight, setPlayerHeight] = useState(DEFAULT_PLAYER_HEIGHT)
+  const [noTranscript, setNoTranscript] = useState(false)
+
+  const [panelsObserver, setPanelsObserver] = useState<MutationObserver>()
+  const [playerHeight, setPlayerHeight] = useState(560)
   const [blockNode, setBlockNode] = useState<HTMLDivElement>()
 
   useEffect(() => {
@@ -87,8 +88,9 @@ const App = () => {
     const opacity = subtitles?.attributes?.getNamedItem('fill-opacity')?.value ?? '1.0'
     const noTranscript = parseFloat(opacity) < 1.0
     log(TAG, `check, noTranscript=${noTranscript}`)
+    setNoTranscript(noTranscript)
 
-    panelObserver?.disconnect()
+    panelsObserver?.disconnect()
     if (blockNode || !parseVid(pageUrl)) return
 
     const insertBlock = (parent: Node | null) => {
@@ -138,7 +140,7 @@ const App = () => {
       }
     })
 
-    setPanelObserver(observer)
+    setPanelsObserver(observer)
     observer.observe(document, { subtree: true, childList: true })
   }, [pageUrl])
 
@@ -150,7 +152,17 @@ const App = () => {
 
   return (
     <div>
-      {blockNode && createPortal(<Panel />, blockNode)}
+      {
+        blockNode &&
+        createPortal(
+          <Panel
+            pageUrl={pageUrl}
+            pageChapters={pageChapters}
+            noTranscript={noTranscript}
+          />,
+          blockNode,
+        )
+      }
     </div>
   )
 }

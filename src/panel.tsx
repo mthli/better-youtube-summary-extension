@@ -21,11 +21,16 @@ import './i18n'
 
 const TAG = 'panel'
 
-const Panel = () => {
+const Panel = ({
+  pageUrl,
+  pageChapters,
+  noTranscript = false,
+}: {
+  pageUrl: string,
+  pageChapters?: PageChapters,
+  noTranscript?: boolean,
+}) => {
   const [toggled, setToggled] = useState(0)
-  const [pageUrl, setPageUrl] = useState('')
-  const [pageChapters, setPageChapters] = useState<PageChapters>()
-  const [noTranscript, setNoTranscript] = useState(false)
 
   const { t } = useTranslation()
   const { data, error, isLoading } = useSummarize(toggled, pageUrl, pageChapters, noTranscript)
