@@ -13,8 +13,10 @@ import ReactMarkdown from 'react-markdown'
 import rehypeRaw from 'rehype-raw'
 
 import { Chapter } from './data'
-import './i18n'
 import theme from './theme'
+
+import 'github-markdown-css'
+import './i18n'
 
 const formatSeconds = (seconds: number): string => {
   const pad = (num: number, size: number): string => ('000' + num).slice(size * -1)
