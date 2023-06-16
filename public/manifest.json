@@ -24,16 +24,6 @@
   "background": {
     "service_worker": "js/background.js"
   },
-  "web_accessible_resources": [
-    {
-      "resources": [
-        "index.html"
-      ],
-      "matches": [
-        "https://*.youtube.com/*"
-      ]
-    }
-  ],
   "host_permissions": [
     "https://bys.mthli.com/*"
   ]

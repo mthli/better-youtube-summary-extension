@@ -160,6 +160,12 @@ const App = () => {
   )
 }
 
+const link = document.createElement('link')
+link.rel = 'stylesheet'
+link.type = 'text/css'
+link.href = 'https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,200,0,0'
+document.head.appendChild(link)
+
 const root = document.createElement('div')
 root.id = 'better-youtube-summary-root'
 document.body.appendChild(root)
