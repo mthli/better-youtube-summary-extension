@@ -1,7 +1,7 @@
 import UrlMatch from '@fczbkk/url-match'
 import useSWR from 'swr'
 
-// import log from './log'
+import log from './log'
 import {
   Message,
   MessageType,
@@ -9,7 +9,7 @@ import {
   PageChapters,
 } from './data'
 
-// const TAG = 'api'
+const TAG = 'api'
 const BASE_URL = 'https://bys.mthli.com'
 
 export const parseVid = (pageUrl: string): string => {
@@ -46,6 +46,7 @@ export const useSummarize = (
     {
       loadingTimeout: 10000, // ms.
       errorRetryCount: 2,
+      onError: (err, key) => log(TAG, `onError, key=${key}, err=${JSON.stringify(err)}`),
     },
   )
 }
@@ -54,12 +55,13 @@ const summarize = async (
   vid: string,
   chapters?: PageChapter[],
   noTranscript?: boolean,
-): Promise<Response> => {
+): Promise<any> => {
   // log(TAG, `summarize, vid=${vid}, chapters=${JSON.stringify(chapters)}`)
 
-  const request = new Request(
-    `${BASE_URL}/api/summarize/${vid}`,
-    {
+  const request: Message = {
+    type: MessageType.REQUEST,
+    requestUrl: `${BASE_URL}/api/summarize/${vid}`,
+    requestInit: {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -69,19 +71,17 @@ const summarize = async (
         'no_transcript': Boolean(noTranscript),
       }),
     },
-  )
+  }
 
-  const response = await new Promise<Response>((resolve, reject) => {
-    chrome.runtime.sendMessage<Message, Message>({
-      type: MessageType.REQUEST,
-      data: request,
-    }, res => {
-      switch (res.type) {
+  const response = await new Promise<Message>((resolve, reject) => {
+    chrome.runtime.sendMessage<Message, Message>(request, res => {
+      const { type, error } = res || {}
+      switch (type) {
         case MessageType.RESPONSE:
-          resolve(res.data as Response)
+          resolve(res)
           break
         case MessageType.ERROR:
-          reject(res.data as Error)
+          reject(error as Error)
           break
         default:
           reject(new Error(`invalid message, res=${JSON.stringify(res)}`))
@@ -90,10 +90,7 @@ const summarize = async (
     })
   })
 
-  if (!response.ok) {
-    const msg = await response.json()
-    throw new Error(msg)
-  }
-
-  return response.json()
+  const { responseOk, responseJson } = response
+  if (!responseOk) throw new Error(responseJson)
+  return responseJson
 }

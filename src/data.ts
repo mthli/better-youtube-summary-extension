@@ -16,7 +16,11 @@ export enum MessageType {
 
 export interface Message {
   type: MessageType,
-  data: RequestInfo | Response | Error,
+  requestUrl?: string,
+  requestInit?: RequestInit,
+  responseOk?: boolean,
+  responseJson?: any,
+  error?: Error,
 }
 
 export interface Chapter {
