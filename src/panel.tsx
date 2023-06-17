@@ -7,6 +7,7 @@ import Divider from '@mui/material/Divider'
 import IconButton from '@mui/material/IconButton'
 import List from '@mui/material/List'
 import Toolbar from '@mui/material/Toolbar'
+import Tooltip from '@mui/material/Tooltip'
 import { ThemeProvider } from '@mui/material/styles'
 
 import ChapterItem from './chapterItem'
@@ -71,27 +72,29 @@ const Panel = ({
               paddingRight: '16px',
             }}
           >
-            <IconButton
-              aria-label={t('summarize').toString()}
-              color='inherit'
-              edge='start'
-              sx={{ mr: 1 }}
-              disabled={isLoading}
-              onClick={() => setToggled(toggled + 1)}
-            >
-              {
-                !isLoading &&
-                <span className='material-symbols-outlined'>summarize</span>
-              }
-              {
-                isLoading &&
-                <GooSpinner
-                  size={24}
-                  color={theme.palette.text.primary}
-                  loading
-                />
-              }
-            </IconButton>
+            <Tooltip title={t('summarize').toString()}>
+              <IconButton
+                aria-label={t('summarize').toString()}
+                color='inherit'
+                edge='start'
+                sx={{ mr: 1 }}
+                disabled={isLoading}
+                onClick={() => setToggled(toggled + 1)}
+              >
+                {
+                  !isLoading &&
+                  <span className='material-symbols-outlined'>summarize</span>
+                }
+                {
+                  isLoading &&
+                  <GooSpinner
+                    size={24}
+                    color={theme.palette.text.primary}
+                    loading
+                  />
+                }
+              </IconButton>
+            </Tooltip>
           </Toolbar>
           {list.length > 0 && <Divider light />}
         </AppBar>
