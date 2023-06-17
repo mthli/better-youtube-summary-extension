@@ -64,56 +64,59 @@ const ChapterItem = ({
             color: 'text.primary',
           }}
         >
-          <ListItem
-            disablePadding
-            divider={expand}
-            secondaryAction={
-              <Button
-                component='div'
-                size='small'
-                ref={ref}
-                sx={{
-                  minWidth: 0,
-                  paddingLeft: '8px',
-                  paddingRight: '8px',
-                  bgcolor: hexToRgba(theme.palette.primary.main, 0.05),
-                }}
-                onClick={() => {
-                  // TODO
-                }}
-              >
-                {formatSeconds(seconds)}
-              </Button>
-            }
-          >
-            <ListItemButton
-              disabled={count <= 0}
-              onClick={() => setExpand(!expand)}
-            >
-              <ListItemText
-                primaryTypographyProps={{
-                  sx: {
-                    fontSize: '1.6rem',
-                    fontWeight: expand ? 600 : 400,
-                  }
-                }}
-                style={{ paddingRight: `${width}px` }}
-              >
-                {chapter}
-                <Typography
-                  variant='body1'
+          {/* <li> cannot appear as a descendant of <li> */}
+          <ul>
+            <ListItem
+              disablePadding
+              divider={expand}
+              secondaryAction={
+                <Button
+                  component='div'
+                  size='small'
+                  ref={ref}
                   sx={{
-                    display: 'inline',
-                    fontSize: '1.6rem',
-                    color: 'text.primary',
-                    opacity: 0.3,
+                    minWidth: 0,
+                    paddingLeft: '8px',
+                    paddingRight: '8px',
+                    bgcolor: hexToRgba(theme.palette.primary.main, 0.05),
+                  }}
+                  onClick={() => {
+                    // TODO
                   }}
                 >
-                  &nbsp;&nbsp;{count}
-                </Typography>
-              </ListItemText>
-            </ListItemButton>
-          </ListItem>
+                  {formatSeconds(seconds)}
+                </Button>
+              }
+            >
+              <ListItemButton
+                disabled={count <= 0}
+                onClick={() => setExpand(!expand)}
+              >
+                <ListItemText
+                  primaryTypographyProps={{
+                    sx: {
+                      fontSize: '1.6rem',
+                      fontWeight: expand ? 600 : 400,
+                    }
+                  }}
+                  style={{ paddingRight: `${width}px` }}
+                >
+                  {chapter}
+                  <Typography
+                    variant='body1'
+                    sx={{
+                      display: 'inline',
+                      fontSize: '1.6rem',
+                      color: 'text.primary',
+                      opacity: 0.3,
+                    }}
+                  >
+                    &nbsp;&nbsp;{count}
+                  </Typography>
+                </ListItemText>
+              </ListItemButton>
+            </ListItem>
+          </ul>
         </ListSubheader>
         <Collapse in={expand} timeout='auto' unmountOnExit>
           <ReactMarkdown className='markdown-body' rehypePlugins={[rehypeRaw]}>
