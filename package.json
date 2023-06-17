@@ -19,6 +19,7 @@
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@fczbkk/url-match": "^3.5.0",
+    "@microsoft/fetch-event-source": "^2.0.1",
     "@mui/material": "^5.13.5",
     "github-markdown-css": "^5.2.0",
     "i18next": "^22.5.1",

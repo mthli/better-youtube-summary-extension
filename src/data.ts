@@ -11,6 +11,7 @@ export interface PageChapters {
 export enum MessageType {
   REQUEST = 'request',
   RESPONSE = 'response',
+  SSE = 'sse',
   ERROR = 'error',
 }
 
@@ -20,6 +21,8 @@ export interface Message {
   requestInit?: RequestInit,
   responseOk?: boolean,
   responseJson?: any,
+  sseEvent?: string,
+  sseData?: any,
   error?: Error,
 }
 
@@ -31,6 +34,12 @@ export interface Chapter {
   lang: string,
   chapter: string,
   summary?: string,
+}
+
+export enum SseEvent {
+  CHAPTERS = 'chapters',
+  CHAPTER = 'chapter',
+  CLOSE = 'close',
 }
 
 export enum SummaryState {

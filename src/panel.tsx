@@ -43,6 +43,8 @@ const Panel = ({
 
   // TODO
   const { state = SummaryState.NOTHING, chapters = [] } = (data || {}) as Summary
+  const isDoing = state === SummaryState.DOING || isLoading
+
   const list = chapters.map((c, i) => (
     <ChapterItem
       {...c}
@@ -89,15 +91,15 @@ const Panel = ({
                   aria-label={t('summarize').toString()}
                   color='inherit'
                   edge='start'
-                  disabled={isLoading}
+                  disabled={isDoing}
                   onClick={() => setToggled(toggled + 1)}
                 >
                   {
-                    !isLoading &&
+                    !isDoing &&
                     <span className='material-symbols-outlined'>summarize</span>
                   }
                   {
-                    isLoading &&
+                    isDoing &&
                     <GooSpinner
                       size={24}
                       color={theme.palette.text.primary}
@@ -113,7 +115,7 @@ const Panel = ({
                     aria-label={t('unfold_less').toString()}
                     color='inherit'
                     sx={{ ml: '8px' }}
-                    disabled={isLoading}
+                    disabled={isLoading} // not isDoing here.
                     onClick={() => setExpands(expands.clear())}
                   >
                     <span className="material-symbols-outlined">unfold_less</span>
@@ -126,7 +128,6 @@ const Panel = ({
                 aria-label={t('settings').toString()}
                 color='inherit'
                 edge='end'
-                disabled={isLoading}
                 onClick={() => {
                   // TODO
                 }}

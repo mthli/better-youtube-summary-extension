@@ -10,7 +10,8 @@ import {
 } from './data'
 
 const TAG = 'api'
-const BASE_URL = 'https://bys.mthli.com'
+export const BASE_URL = 'https://bys.mthli.com'
+export const APPLICATION_JSON = 'application/json'
 
 export const parseVid = (pageUrl: string): string => {
   // log(TAG, `parseVid, pageUrl=${pageUrl}`)
@@ -46,7 +47,9 @@ export const useSummarize = (
     {
       loadingTimeout: 10000, // ms.
       errorRetryCount: 2,
-      onError: (err, key) => log(TAG, `onError, key=${key}, err=${JSON.stringify(err)}`),
+      onError(err, key) {
+        log(TAG, `onError, key=${key}, err=${JSON.stringify(err)}`)
+      },
     },
   )
 }
@@ -64,7 +67,7 @@ const summarize = async (
     requestInit: {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
+        'Content-Type': APPLICATION_JSON,
       },
       body: JSON.stringify({
         'chapters': chapters ?? [],
