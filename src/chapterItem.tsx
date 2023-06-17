@@ -48,10 +48,15 @@ const ChapterItem = ({
   chapter,
   summary = '',
   isLastItem = false,
+  expand = false,
+  onExpand,
+  onSeekTo,
 }: Chapter & {
   isLastItem?: boolean,
+  expand?: boolean,
+  onExpand?: (expand: boolean) => void,
+  onSeekTo?: (seconds: number) => void,
 }) => {
-  const [expand, setExpand] = useState(false)
   const { ref, width = 0 } = useResizeObserver<HTMLDivElement>()
   const count = countLines(summary)
 
@@ -80,9 +85,7 @@ const ChapterItem = ({
                     paddingRight: '8px',
                     bgcolor: hexToRgba(theme.palette.primary.main, 0.05),
                   }}
-                  onClick={() => {
-                    // TODO
-                  }}
+                  onClick={() => onSeekTo?.(seconds)}
                 >
                   {formatSeconds(seconds)}
                 </Button>
@@ -90,7 +93,7 @@ const ChapterItem = ({
             >
               <ListItemButton
                 disabled={count <= 0}
-                onClick={() => setExpand(!expand)}
+                onClick={() => onExpand?.(!expand)}
               >
                 <ListItemText
                   primaryTypographyProps={{

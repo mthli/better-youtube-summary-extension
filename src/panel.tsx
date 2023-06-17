@@ -15,6 +15,7 @@ import { GooSpinner } from 'react-spinners-kit'
 
 import { useSummarize } from './api'
 import { PageChapters, Summary, SummaryState } from './data'
+import { Map } from 'immutable'
 
 import log from './log'
 import theme from './theme'
@@ -34,6 +35,7 @@ const Panel = ({
   maxHeight?: number, // px.
 }) => {
   const [toggled, setToggled] = useState(0)
+  const [expands, setExpands] = useState<Map<string, boolean>>(Map())
 
   const { t } = useTranslation()
   const { data, error, isLoading } = useSummarize(toggled, pageUrl, pageChapters, noTranscript)
@@ -42,9 +44,14 @@ const Panel = ({
   const { state = SummaryState.NOTHING, chapters = [] } = (data || {}) as Summary
   const list = chapters.map((c, i) => (
     <ChapterItem
+      {...c}
       key={c.cid}
       isLastItem={i === chapters.length - 1}
-      {...c}
+      expand={expands.get(c.cid, false)}
+      onExpand={expand => setExpands(expands.set(c.cid, expand))}
+      onSeekTo={seconds => {
+        // TODO
+      }}
     />
   ))
 
@@ -102,9 +109,7 @@ const Panel = ({
                   color='inherit'
                   sx={{ ml: '8px' }}
                   disabled={isLoading}
-                  onClick={() => {
-                    // TODO
-                  }}
+                  onClick={() => setExpands(expands.clear())}
                 >
                   <span className="material-symbols-outlined">unfold_less</span>
                 </IconButton>
