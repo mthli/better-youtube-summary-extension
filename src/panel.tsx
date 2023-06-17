@@ -68,8 +68,8 @@ const Panel = ({
           <Toolbar
             variant='dense'
             style={{ /* instead of sx */
-              paddingLeft: '16px',
-              paddingRight: '16px',
+              paddingLeft: '20px',
+              paddingRight: '20px',
             }}
           >
             <Tooltip title={t('summarize').toString()}>
@@ -77,7 +77,6 @@ const Panel = ({
                 aria-label={t('summarize').toString()}
                 color='inherit'
                 edge='start'
-                sx={{ mr: 1 }}
                 disabled={isLoading}
                 onClick={() => setToggled(toggled + 1)}
               >
@@ -95,6 +94,22 @@ const Panel = ({
                 }
               </IconButton>
             </Tooltip>
+            {
+              list.length > 0 &&
+              <Tooltip title={t('unfold_less').toString()}>
+                <IconButton
+                  aria-label={t('unfold_less').toString()}
+                  color='inherit'
+                  sx={{ ml: '8px' }}
+                  disabled={isLoading}
+                  onClick={() => {
+                    // TODO
+                  }}
+                >
+                  <span className="material-symbols-outlined">unfold_less</span>
+                </IconButton>
+              </Tooltip>
+            }
           </Toolbar>
           {list.length > 0 && <Divider light />}
         </AppBar>

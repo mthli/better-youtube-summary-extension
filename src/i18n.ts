@@ -6,12 +6,14 @@ const resources = {
   en: {
     translation: {
       'summarize': 'Summarize',
+      'unfold_less': 'Unfold Less',
       'oops': 'Oops',
     },
   },
   zh: {
     translation: {
       'summarize': '总结',
+      'unfold_less': '折叠',
       'oops': 'Oops',
     },
   },
