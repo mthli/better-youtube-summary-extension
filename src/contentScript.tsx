@@ -41,7 +41,7 @@ const App = () => {
   const [noTranscript, setNoTranscript] = useState(false)
 
   const [panelsObserver, setPanelsObserver] = useState<MutationObserver>()
-  const [playerHeight, setPlayerHeight] = useState(560)
+  const [playerHeight, setPlayerHeight] = useState(560) // px.
   const [blockNode, setBlockNode] = useState<HTMLDivElement>()
 
   useEffect(() => {
@@ -102,7 +102,6 @@ const App = () => {
       block.style.display = 'block'
       block.style.overflowX = 'hidden'
       block.style.overflowY = 'scroll'
-      block.style.maxHeight = `${playerHeight}px`
       block.style.marginBottom = '8px'
       block.style.border = '1px solid var(--yt-spec-10-percent-layer)'
       block.style.borderRadius = '12px'
@@ -145,12 +144,6 @@ const App = () => {
     observer.observe(document, { subtree: true, childList: true })
   }, [pageUrl])
 
-  useEffect(() => {
-    log(TAG, `useEffect, playerHeight=${playerHeight}`)
-    if (!blockNode) return
-    blockNode.style.maxHeight = `${playerHeight}px`
-  }, [playerHeight])
-
   return (
     <div>
       {
@@ -160,6 +153,7 @@ const App = () => {
             pageUrl={pageUrl}
             pageChapters={pageChapters}
             noTranscript={noTranscript}
+            maxHeight={playerHeight}
           />,
           blockNode,
         )

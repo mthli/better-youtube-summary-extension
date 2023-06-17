@@ -25,10 +25,12 @@ const Panel = ({
   pageUrl,
   pageChapters,
   noTranscript = false,
+  maxHeight = 560, // px.
 }: {
   pageUrl: string,
   pageChapters?: PageChapters,
   noTranscript?: boolean,
+  maxHeight?: number, // px.
 }) => {
   const [toggled, setToggled] = useState(0)
 
@@ -46,7 +48,10 @@ const Panel = ({
 
   return (
     <ThemeProvider theme={theme}>
-      <Box sx={{ bgcolor: 'background.default' }}>
+      <Box sx={{
+        maxHeight: `${maxHeight}px`,
+        bgcolor: 'background.default',
+      }}>
         <AppBar
           position='sticky'
           color='transparent'
