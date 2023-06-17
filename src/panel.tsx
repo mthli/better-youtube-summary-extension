@@ -51,16 +51,16 @@ const Panel = ({
 
   return (
     <ThemeProvider theme={theme}>
-      <Box sx={{
-        maxHeight: `${maxHeight}px`,
-        bgcolor: 'background.default',
-      }}>
-        <AppBar
-          position='sticky'
-          color='transparent'
-          elevation={0}
-          sx={{ bgcolor: 'background.default' }}
-        >
+      <Box
+        sx={{
+          display: 'flex',
+          overflow: 'hidden',
+          flexDirection: 'column',
+          maxHeight: `${maxHeight}px`,
+          bgcolor: 'background.default',
+        }}
+      >
+        <AppBar position='static' color='transparent' elevation={0}>
           <Toolbar
             variant='dense'
             style={{ /* instead of sx */
@@ -92,7 +92,14 @@ const Panel = ({
           </Toolbar>
           {list.length > 0 && <Divider light />}
         </AppBar>
-        {list.length > 0 && <List>{list}</List>}
+        <Box
+          sx={{
+            display: 'block',
+            overflow: 'hidden scroll',
+          }}
+        >
+          {list.length > 0 && <List>{list}</List>}
+        </Box>
       </Box>
     </ThemeProvider>
   )
