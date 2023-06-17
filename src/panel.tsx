@@ -39,7 +39,10 @@ const Panel = ({
 
   // TODO
   const { state = SummaryState.NOTHING, chapters = [] } = (data || {}) as Summary
-  const list = chapters.map(c => <ChapterItem key={c.cid} {...c} />)
+  const list = chapters.map((c, i) => {
+    const isLastItem = i === chapters.length - 1
+    return <ChapterItem key={c.cid} {...c} isLastItem={isLastItem} />
+  })
 
   useEffect(() => {
     log(TAG, `useEffect, pageUrl=${pageUrl}`)

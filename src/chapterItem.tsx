@@ -42,7 +42,14 @@ const hexToRgba = (hex: string, alpha: number = 1) => {
   return `rgba(${r},${g},${b},${alpha})`
 }
 
-const ChapterItem = ({ seconds, chapter, summary = '' }: Chapter) => {
+const ChapterItem = ({
+  seconds,
+  chapter,
+  summary = '',
+  isLastItem = false,
+}: Chapter & {
+  isLastItem?: boolean,
+}) => {
   const [expand, setExpand] = useState(false)
   const { ref, width = 0 } = useResizeObserver<HTMLDivElement>()
   const count = countLines(summary)
@@ -101,7 +108,7 @@ const ChapterItem = ({ seconds, chapter, summary = '' }: Chapter) => {
         <ReactMarkdown className='markdown-body' rehypePlugins={[rehypeRaw]}>
           {/* textVide(summary) */ summary}
         </ReactMarkdown>
-        <Divider light />
+        {!isLastItem && <Divider light />}
       </Collapse>
     </>
   )
