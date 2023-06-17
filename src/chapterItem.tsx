@@ -6,6 +6,7 @@ import Collapse from '@mui/material/Collapse'
 import Divider from '@mui/material/Divider'
 import ListItem from '@mui/material/ListItem'
 import ListItemButton from '@mui/material/ListItemButton'
+import ListSubheader from '@mui/material/ListSubheader'
 import ListItemText from '@mui/material/ListItemText'
 import Typography from '@mui/material/Typography'
 
@@ -55,62 +56,73 @@ const ChapterItem = ({
   const count = countLines(summary)
 
   return (
-    <>
-      <ListItem
-        disablePadding
-        secondaryAction={
-          <Button
-            component='div'
-            size='small'
-            ref={ref}
-            sx={{
-              minWidth: 0,
-              paddingLeft: '8px',
-              paddingRight: '8px',
-              bgcolor: hexToRgba(theme.palette.primary.main, 0.05),
-            }}
-            onClick={() => {
-              // TODO
-            }}
-          >
-            {formatSeconds(seconds)}
-          </Button>
-        }
-      >
-        <ListItemButton
-          disabled={count <= 0}
-          onClick={() => setExpand(!expand)}
+    <li>
+      <ul>
+        <ListSubheader
+          sx={{
+            padding: 0,
+            color: 'text.primary',
+          }}
         >
-          <ListItemText
-            primaryTypographyProps={{
-              sx: {
-                fontSize: '1.6rem',
-                fontWeight: expand ? 600 : 400,
-              }
-            }}
-            style={{ paddingRight: `${width}px` }}
+          <ListItem
+            disablePadding
+            divider={expand}
+            secondaryAction={
+              <Button
+                component='div'
+                size='small'
+                ref={ref}
+                sx={{
+                  minWidth: 0,
+                  paddingLeft: '8px',
+                  paddingRight: '8px',
+                  bgcolor: hexToRgba(theme.palette.primary.main, 0.05),
+                }}
+                onClick={() => {
+                  // TODO
+                }}
+              >
+                {formatSeconds(seconds)}
+              </Button>
+            }
           >
-            {chapter}
-            <Typography
-              variant='body1'
-              style={{
-                display: 'inline',
-                fontSize: '1.6rem',
-                color: hexToRgba(theme.palette.text.primary, 0.3),
-              }}
+            <ListItemButton
+              disabled={count <= 0}
+              onClick={() => setExpand(!expand)}
             >
-              &nbsp;&nbsp;{count}
-            </Typography>
-          </ListItemText>
-        </ListItemButton>
-      </ListItem>
-      <Collapse in={expand} timeout='auto' unmountOnExit>
-        <ReactMarkdown className='markdown-body' rehypePlugins={[rehypeRaw]}>
-          {/* textVide(summary) */ summary}
-        </ReactMarkdown>
-        {!isLastItem && <Divider light />}
-      </Collapse>
-    </>
+              <ListItemText
+                primaryTypographyProps={{
+                  sx: {
+                    fontSize: '1.6rem',
+                    fontWeight: expand ? 600 : 400,
+                  }
+                }}
+                style={{ paddingRight: `${width}px` }}
+              >
+                {chapter}
+                <Typography
+                  variant='body1'
+                  sx={{
+                    display: 'inline',
+                    fontSize: '1.6rem',
+                    color: 'text.primary',
+                    opacity: 0.3,
+                  }}
+                >
+                  &nbsp;&nbsp;{count}
+                </Typography>
+              </ListItemText>
+            </ListItemButton>
+          </ListItem>
+        </ListSubheader>
+        <Collapse in={expand} timeout='auto' unmountOnExit>
+          <ReactMarkdown className='markdown-body' rehypePlugins={[rehypeRaw]}>
+            {/* textVide(summary) */ summary}
+          </ReactMarkdown>
+          {!isLastItem && <Divider light />}
+        </Collapse>
+      </ul>
+    </li>
   )
 }
 

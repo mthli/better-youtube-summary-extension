@@ -39,10 +39,13 @@ const Panel = ({
 
   // TODO
   const { state = SummaryState.NOTHING, chapters = [] } = (data || {}) as Summary
-  const list = chapters.map((c, i) => {
-    const isLastItem = i === chapters.length - 1
-    return <ChapterItem key={c.cid} {...c} isLastItem={isLastItem} />
-  })
+  const list = chapters.map((c, i) => (
+    <ChapterItem
+      key={c.cid}
+      isLastItem={i === chapters.length - 1}
+      {...c}
+    />
+  ))
 
   useEffect(() => {
     log(TAG, `useEffect, pageUrl=${pageUrl}`)
@@ -98,7 +101,12 @@ const Panel = ({
             overflow: 'hidden scroll',
           }}
         >
-          {list.length > 0 && <List>{list}</List>}
+          {
+            list.length > 0 &&
+            <List subheader={<li />}>
+              {list}
+            </List>
+          }
         </Box>
       </Box>
     </ThemeProvider>
