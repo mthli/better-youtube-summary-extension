@@ -45,7 +45,9 @@ const App = () => {
   const [blockNode, setBlockNode] = useState<HTMLDivElement>()
 
   useEffect(() => {
-    const player = document.querySelector('video')
+    // Player not inited yet in some page urls,
+    // e.g. https://www.youtube.com/@lexfridman
+    let player = document.querySelector('video')
     const playerObserver = new ResizeObserver(() => {
       if (player) setPlayerHeight(player.offsetHeight)
     })
@@ -54,8 +56,18 @@ const App = () => {
       setPageUrl(location.href)
 
       for (const mutation of mutationList) {
-        let found = false
+        if (!player) {
+          for (const node of mutation.addedNodes) {
+            if (node instanceof HTMLVideoElement) {
+              log(TAG, 'found player with observer')
+              player = node
+              playerObserver.observe(node)
+              break
+            }
+          }
+        }
 
+        let foundChapters = false
         for (const node of mutation.addedNodes) {
           if (node instanceof HTMLDivElement) {
             if (node.className.includes('ytp-chapter-hover-container')) {
@@ -64,13 +76,13 @@ const App = () => {
                 chapters: parseChapters(),
               })
 
-              found = true
+              foundChapters = true
               break
             }
           }
         }
 
-        if (found) break
+        if (foundChapters) break
       }
     })
 
