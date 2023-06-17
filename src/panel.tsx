@@ -51,7 +51,9 @@ const Panel = ({
       expand={expands.get(c.cid, false)}
       onExpand={expand => setExpands(expands.set(c.cid, expand))}
       onSeekTo={seconds => {
-        // TODO
+        log(TAG, `onSeekTo, seconds=${seconds}`)
+        const player = document.querySelector('video')
+        if (player) player.currentTime = seconds
       }}
     />
   ))
