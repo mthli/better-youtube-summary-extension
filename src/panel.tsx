@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 
 import AppBar from '@mui/material/AppBar'
 import Box from '@mui/material/Box'
+import ButtonGroup from '@mui/material/ButtonGroup'
 import Divider from '@mui/material/Divider'
 import IconButton from '@mui/material/IconButton'
 import List from '@mui/material/List'
@@ -75,46 +76,62 @@ const Panel = ({
           <Toolbar
             variant='dense'
             style={{ /* instead of sx */
+              justifyContent: 'space-between',
               paddingLeft: '20px',
               paddingRight: '20px',
             }}
           >
-            <Tooltip title={t('summarize').toString()}>
-              <IconButton
-                aria-label={t('summarize').toString()}
-                color='inherit'
-                edge='start'
-                disabled={isLoading}
-                onClick={() => setToggled(toggled + 1)}
-              >
-                {
-                  !isLoading &&
-                  <span className='material-symbols-outlined'>summarize</span>
-                }
-                {
-                  isLoading &&
-                  <GooSpinner
-                    size={24}
-                    color={theme.palette.text.primary}
-                    loading
-                  />
-                }
-              </IconButton>
-            </Tooltip>
-            {
-              list.length > 0 &&
-              <Tooltip title={t('unfold_less').toString()}>
+            <ButtonGroup disableElevation>
+              <Tooltip title={t('summarize').toString()}>
                 <IconButton
-                  aria-label={t('unfold_less').toString()}
+                  aria-label={t('summarize').toString()}
                   color='inherit'
-                  sx={{ ml: '8px' }}
+                  edge='start'
                   disabled={isLoading}
-                  onClick={() => setExpands(expands.clear())}
+                  onClick={() => setToggled(toggled + 1)}
                 >
-                  <span className="material-symbols-outlined">unfold_less</span>
+                  {
+                    !isLoading &&
+                    <span className='material-symbols-outlined'>summarize</span>
+                  }
+                  {
+                    isLoading &&
+                    <GooSpinner
+                      size={24}
+                      color={theme.palette.text.primary}
+                      loading
+                    />
+                  }
                 </IconButton>
               </Tooltip>
-            }
+              {
+                list.length > 0 &&
+                <Tooltip title={t('unfold_less').toString()}>
+                  <IconButton
+                    aria-label={t('unfold_less').toString()}
+                    color='inherit'
+                    sx={{ ml: '8px' }}
+                    disabled={isLoading}
+                    onClick={() => setExpands(expands.clear())}
+                  >
+                    <span className="material-symbols-outlined">unfold_less</span>
+                  </IconButton>
+                </Tooltip>
+              }
+            </ButtonGroup>
+            <Tooltip title={t('settings').toString()}>
+              <IconButton
+                aria-label={t('settings').toString()}
+                color='inherit'
+                edge='end'
+                disabled={isLoading}
+                onClick={() => {
+                  // TODO
+                }}
+              >
+                <span className="material-symbols-outlined">settings</span>
+              </IconButton>
+            </Tooltip>
           </Toolbar>
           {list.length > 0 && <Divider light />}
         </AppBar>

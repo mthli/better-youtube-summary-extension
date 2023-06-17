@@ -5,6 +5,7 @@ import { initReactI18next } from 'react-i18next'
 const resources = {
   en: {
     translation: {
+      'settings': 'Settings',
       'summarize': 'Summarize',
       'unfold_less': 'Unfold Less',
       'oops': 'Oops',
@@ -12,6 +13,7 @@ const resources = {
   },
   zh: {
     translation: {
+      'settings': '设置',
       'summarize': '总结',
       'unfold_less': '折叠',
       'oops': 'Oops',
