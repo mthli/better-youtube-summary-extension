@@ -1,5 +1,7 @@
 import UrlMatch from '@fczbkk/url-match'
+
 import useSWR from 'swr'
+import useSWRSubscription from 'swr/subscription'
 
 import log from './log'
 import {
@@ -48,7 +50,7 @@ export const useSummarize = (
       loadingTimeout: 10000, // ms.
       errorRetryCount: 2,
       onError(err, key) {
-        log(TAG, `onError, key=${key}, err=${JSON.stringify(err)}`)
+        log(TAG, `useSummarize onError, key=${key}, err=${JSON.stringify(err)}`)
       },
     },
   )
@@ -77,17 +79,17 @@ const summarize = async (
   }
 
   const response = await new Promise<Message>((resolve, reject) => {
-    chrome.runtime.sendMessage<Message, Message>(request, res => {
-      const { type, error } = res || {}
+    chrome.runtime.sendMessage<Message, Message>(request, message => {
+      const { type, error } = message || {}
       switch (type) {
         case MessageType.RESPONSE:
-          resolve(res)
+          resolve(message)
           break
         case MessageType.ERROR:
           reject(error as Error)
           break
         default:
-          reject(new Error(`invalid message, res=${JSON.stringify(res)}`))
+          reject(new Error(`invalid message, message=${JSON.stringify(message)}`))
           break
       }
     })
@@ -96,4 +98,54 @@ const summarize = async (
   const { responseOk, responseJson } = response
   if (!responseOk) throw new Error(responseJson)
   return responseJson
+}
+
+const useSSE = (toggled: number, pageUrl: string) => {
+  const vid = parseVid(pageUrl)
+  log(TAG, `useSSE, vid=${vid}, toggled=${toggled}`)
+
+  return useSWRSubscription(toggled ? [vid] : null, ([vid], { next }) => {
+    /* const port = */ sse(vid, next)
+    return () => {
+      log(TAG, `useSSE disposed, vid=${vid}`)
+      // DO NOTHING, port should be disconneted by server worker instead of here.
+    }
+  })
+}
+
+const sse = (
+  vid: string,
+  next: (error?: Error | null, message?: Message) => void,
+): chrome.runtime.Port => {
+  const request: Message = {
+    type: MessageType.REQUEST,
+    requestUrl: `${BASE_URL}/api/sse/${vid}`,
+  }
+
+  const port = chrome.runtime.connect({ name: vid })
+  port.onDisconnect.addListener(({ name }) => {
+    log(TAG, `sse onDisconnect, name=${name}`)
+    // DO NOTHING.
+  })
+
+  port.onMessage.addListener(message => {
+    log(TAG, `sse onMessage, message=${JSON.stringify(message)}`)
+
+    const { type, error } = message || {}
+    switch (type) {
+      case MessageType.RESPONSE:
+      case MessageType.SSE:
+        next(null, message)
+        break
+      case MessageType.ERROR:
+        next(error as Error)
+        break
+      default:
+        next(new Error(`invalid message, message=${JSON.stringify(message)}`))
+        break
+    }
+  })
+
+  port.postMessage(request)
+  return port
 }

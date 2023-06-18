@@ -34,7 +34,7 @@ const throwInvalidRequest = (send: (message?: any) => void, message: Message) =>
 }
 
 chrome.runtime.onMessage.addListener((message: Message, sender, sendResponse) => {
-  // log(TAG, `onMessage, senderId=${sender.id}, message=${JSON.stringify(message)}`)
+  // log(TAG, `runtime onMessage, senderId=${sender.id}, message=${JSON.stringify(message)}`)
 
   // Filter our extension messages.
   if (sender.id !== chrome.runtime.id) {
@@ -52,7 +52,7 @@ chrome.runtime.onMessage.addListener((message: Message, sender, sendResponse) =>
   fetch(requestUrl, requestInit)
     .then(async (response: Response) => { // response can't be stringify.
       const json = await response.json()
-      log(TAG, `then, ok=${response.ok}, json=${JSON.stringify(json)}`)
+      log(TAG, `fetch then, ok=${response.ok}, json=${JSON.stringify(json)}`)
       sendResponse({
         type: MessageType.RESPONSE,
         responseOk: response.ok,
@@ -60,7 +60,7 @@ chrome.runtime.onMessage.addListener((message: Message, sender, sendResponse) =>
       } as Message)
     })
     .catch((error: Error) => { // error can't be stringify.
-      log(TAG, `catch, error=${error}`)
+      log(TAG, `fetch catch, error=${error}`)
       sendResponse({
         type: MessageType.ERROR,
         error: {
@@ -81,7 +81,7 @@ chrome.runtime.onMessage.addListener((message: Message, sender, sendResponse) =>
 chrome.runtime.onConnect.addListener(port => {
   port.onMessage.addListener((message, port) => {
     const { name, sender: { id: senderId } = {} } = port
-    log(TAG, `onMessage, port=${port}, message=${JSON.stringify(message)}`)
+    log(TAG, `port onMessage, port=${port}, message=${JSON.stringify(message)}`)
 
     // Filter our extension messages.
     if (senderId !== chrome.runtime.id) {
@@ -112,7 +112,7 @@ chrome.runtime.onConnect.addListener(port => {
             return // continue to onmessage, onclose or onerror.
           } else if (contentType === APPLICATION_JSON) {
             const json = await response.json()
-            log(TAG, `onopen, json=${JSON.stringify(json)}`)
+            log(TAG, `sse onopen, json=${JSON.stringify(json)}`)
 
             port.postMessage({
               type: MessageType.RESPONSE,
@@ -137,7 +137,7 @@ chrome.runtime.onConnect.addListener(port => {
       },
 
       onerror(error: Error) { // error can't be stringify.
-        log(TAG, `onerror, port=${name}, error=${error}`)
+        log(TAG, `sse onerror, port=${name}, error=${error}`)
 
         // If this callback is not specified, or it returns undefined,
         // will treat every error as retriable and will try again after 1 second.
@@ -160,7 +160,7 @@ chrome.runtime.onConnect.addListener(port => {
       },
 
       onclose() {
-        log(TAG, `onclose, port=${name}`)
+        log(TAG, `sse onclose, port=${name}`)
 
         port.postMessage({
           type: MessageType.SSE,
@@ -174,7 +174,7 @@ chrome.runtime.onConnect.addListener(port => {
         try {
           const { event: sseEvent, data } = event
           const sseData = JSON.parse(data)
-          log(TAG, `onmessage, event=${JSON.stringify(event)}`)
+          log(TAG, `sse onmessage, event=${JSON.stringify(event)}`)
 
           port.postMessage({
             type: MessageType.SSE,
@@ -182,7 +182,7 @@ chrome.runtime.onConnect.addListener(port => {
             sseData: sseData,
           } as Message)
         } catch (e) {
-          log(TAG, `onmessage, event=${JSON.stringify(event)}, error=${e}`)
+          log(TAG, `see onmessage, event=${JSON.stringify(event)}, error=${e}`)
           // DO NOTHING.
         }
       },
