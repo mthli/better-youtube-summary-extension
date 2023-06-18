@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import Alert from '@mui/material/Alert'
+import Alert, { AlertColor } from '@mui/material/Alert'
 import AlertTitle from '@mui/material/AlertTitle'
 import AppBar from '@mui/material/AppBar'
 import Box from '@mui/material/Box'
@@ -82,6 +82,22 @@ const Panel = ({
   const { state, chapters = [] } = (data || {}) as Summary
   const { name: errName, message: errMsg } = (error || {}) as Error
   const isDoing = (state === SummaryState.DOING) && !error
+
+  let showAlert = false
+  let alertSeverity: AlertColor = 'info'
+  let alertTitle = ''
+  let alertMsg = ''
+  if (error) {
+    showAlert = true
+    alertSeverity = 'error'
+    alertTitle = errName
+    alertMsg = errMsg
+  } else if (state === SummaryState.NOTHING) {
+    showAlert = true
+    alertSeverity = 'warning'
+    alertTitle = t('no_transcript').toString()
+    alertMsg = t('no_transcript_desc').toString()
+  }
 
   const list = chapters.map((c, i) => (
     <ChapterItem
@@ -234,10 +250,9 @@ const Panel = ({
           {list.length > 0 && <Divider light />}
         </AppBar>
         {
-          error &&
+          showAlert &&
           <Alert
-            severity='error'
-            icon={false}
+            severity={alertSeverity}
             sx={{
               display: 'flex',
               alignItems: 'center',
@@ -245,6 +260,7 @@ const Panel = ({
               pt: 0,
               pb: 0,
             }}
+            icon={false}
             action={
               <Tooltip title={t('close').toString()}>
                 <IconButton
@@ -264,9 +280,9 @@ const Panel = ({
                 marginBottom: '4px',
               }}
             >
-              {errName}
+              {alertTitle}
             </AlertTitle>
-            {errMsg}
+            {alertMsg}
           </Alert>
         }
         <Box
