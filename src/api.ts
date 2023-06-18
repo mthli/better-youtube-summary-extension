@@ -8,7 +8,6 @@ import {
   Message,
   MessageType,
   PageChapter,
-  PageChapters,
   Summary,
   SummaryState,
 } from './data'
@@ -40,11 +39,11 @@ export const parseVid = (pageUrl: string): string => {
 export const useSummarize = (
   toggled: number,
   pageUrl: string,
-  pageChapters?: PageChapters,
+  pageChapters?: PageChapter[],
   noTranscript?: boolean,
 ) => {
   const vid = parseVid(pageUrl)
-  const chapters = pageUrl === pageChapters?.pageUrl ? pageChapters.chapters : []
+  const chapters = pageChapters ?? []
   log(TAG, `useSummarize, vid=${vid}, toggled=${toggled}`)
 
   // Allow resummarize when `toggled` changed.

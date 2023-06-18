@@ -3,11 +3,6 @@ export interface PageChapter {
   timestamp: string,
 }
 
-export interface PageChapters {
-  pageUrl: string,
-  chapters: PageChapter[],
-}
-
 export enum MessageType {
   REQUEST = 'request',
   RESPONSE = 'response',

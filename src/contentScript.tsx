@@ -5,40 +5,12 @@ import { createRoot } from 'react-dom/client'
 import Panel from './panel'
 
 import { parseVid } from './api'
-import { PageChapter, PageChapters } from './data'
 import log from './log'
 
 const TAG = 'contentScript'
 
-// https://stackoverflow.com/a/75704708
-const parseChapters = (): PageChapter[] => {
-  const elements = Array.from(
-    document.querySelectorAll(
-      '#panels ytd-engagement-panel-section-list-renderer:nth-child(2) #content ytd-macro-markers-list-renderer #contents ytd-macro-markers-list-item-renderer #endpoint #details'
-    )
-  )
-
-  const chapters = elements.map(node => ({
-    title: node.querySelector('.macro-markers')?.textContent,
-    timestamp: node.querySelector('#time')?.textContent,
-  }))
-
-  const filtered = chapters.filter(c =>
-    c.title !== undefined &&
-    c.title !== null &&
-    c.timestamp !== undefined &&
-    c.timestamp !== null
-  )
-
-  return [
-    ...new Map(filtered.map(c => [c.timestamp, c])).values(),
-  ] as PageChapter[]
-}
-
 const App = () => {
   const [pageUrl, setPageUrl] = useState(location.href)
-  const [pageChapters, setPageChapters] = useState<PageChapters>()
-
   const [panelsObserver, setPanelsObserver] = useState<MutationObserver>()
   const [playerHeight, setPlayerHeight] = useState(560) // px.
   const [blockNode, setBlockNode] = useState<HTMLDivElement>()
@@ -54,34 +26,16 @@ const App = () => {
     const pageObserver = new MutationObserver(mutationList => {
       setPageUrl(location.href)
 
+      if (!player) return
       for (const mutation of mutationList) {
-        if (!player) {
-          for (const node of mutation.addedNodes) {
-            if (node instanceof HTMLVideoElement) {
-              log(TAG, 'found player with observer')
-              player = node
-              playerObserver.observe(node)
-              break
-            }
-          }
-        }
-
-        let foundChapters = false
         for (const node of mutation.addedNodes) {
-          if (node instanceof HTMLDivElement) {
-            if (node.className.includes('ytp-chapter-hover-container')) {
-              setPageChapters({
-                pageUrl: location.href,
-                chapters: parseChapters(),
-              })
-
-              foundChapters = true
-              break
-            }
+          if (node instanceof HTMLVideoElement) {
+            log(TAG, 'found player with observer')
+            player = node
+            playerObserver.observe(node)
+            break
           }
         }
-
-        if (foundChapters) break
       }
     })
 
@@ -155,7 +109,6 @@ const App = () => {
         createPortal(
           <Panel
             pageUrl={pageUrl}
-            pageChapters={pageChapters}
             maxHeight={playerHeight}
           />,
           blockNode,

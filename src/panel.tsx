@@ -15,7 +15,7 @@ import ChapterItem from './chapterItem'
 import { GooSpinner } from 'react-spinners-kit'
 
 import { useSummarize } from './api'
-import { PageChapters, Summary, SummaryState } from './data'
+import { PageChapter, Summary, SummaryState } from './data'
 import { Map as ImmutableMap } from 'immutable'
 
 import log from './log'
@@ -30,13 +30,36 @@ const checkNoTranscript = (): boolean => {
   return parseFloat(opacity) < 1.0
 }
 
+// https://stackoverflow.com/a/75704708
+const parseChapters = (): PageChapter[] => {
+  const elements = Array.from(
+    document.querySelectorAll(
+      '#panels ytd-engagement-panel-section-list-renderer:nth-child(2) #content ytd-macro-markers-list-renderer #contents ytd-macro-markers-list-item-renderer #endpoint #details'
+    )
+  )
+
+  const chapters = elements.map(node => ({
+    title: node.querySelector('.macro-markers')?.textContent,
+    timestamp: node.querySelector('#time')?.textContent,
+  }))
+
+  const filtered = chapters.filter(c =>
+    c.title !== undefined &&
+    c.title !== null &&
+    c.timestamp !== undefined &&
+    c.timestamp !== null
+  )
+
+  return [
+    ...new Map(filtered.map(c => [c.timestamp, c])).values(),
+  ] as PageChapter[]
+}
+
 const Panel = ({
   pageUrl,
-  pageChapters,
   maxHeight = 560, // px.
 }: {
   pageUrl: string,
-  pageChapters?: PageChapters,
   maxHeight?: number, // px.
 }) => {
   const itemRefs = useRef(new Map<string, Element | null>())
@@ -46,7 +69,12 @@ const Panel = ({
   const [expands, setExpands] = useState<ImmutableMap<string, boolean>>(ImmutableMap())
 
   const { t } = useTranslation()
-  const { data, error } = useSummarize(toggled, pageUrl, pageChapters, checkNoTranscript())
+  const { data, error } = useSummarize(
+    toggled,
+    pageUrl,
+    parseChapters(),
+    checkNoTranscript(),
+  )
 
   // TODO
   const { state = SummaryState.NOTHING, chapters = [] } = (data || {}) as Summary
