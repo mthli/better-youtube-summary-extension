@@ -58,6 +58,11 @@ const parseChapters = (): PageChapter[] => {
   ] as PageChapter[]
 }
 
+// https://stackoverflow.com/a/62461987
+const openOptionsPage = () => {
+  // TODO (Matthew Lee) goto options.html
+}
+
 const Panel = ({
   pageUrl,
   maxHeight = 560, // px.
@@ -239,9 +244,7 @@ const Panel = ({
                 aria-label={t('settings').toString()}
                 color='inherit'
                 edge='end'
-                onClick={() => {
-                  // TODO (Matthew Lee) goto options.html
-                }}
+                onClick={openOptionsPage}
               >
                 <span className='material-symbols-outlined'>settings</span>
               </IconButton>
