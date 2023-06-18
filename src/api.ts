@@ -46,9 +46,10 @@ export const useSummarize = (
   const chapters = pageUrl === pageChapters?.pageUrl ? pageChapters.chapters : []
   log(TAG, `useSummarize, vid=${vid}, toggled=${toggled}`)
 
+  // Allow resummarize when `toggled` changed.
   return useSWRSubscription(
-    toggled ? [vid, chapters, noTranscript] : null,
-    ([vid, chapters, noTranscript], { next }) => {
+    toggled ? [toggled, vid, chapters, noTranscript] : null,
+    ([_toggled, vid, chapters, noTranscript], { next }) => {
       /* const port = */ summarize(vid, chapters, noTranscript, next)
       return () => {
         log(TAG, `useSummarize disposed, vid=${vid}`)
