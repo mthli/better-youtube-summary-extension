@@ -1,6 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import Alert from '@mui/material/Alert'
+import AlertTitle from '@mui/material/AlertTitle'
 import AppBar from '@mui/material/AppBar'
 import Box from '@mui/material/Box'
 import ButtonGroup from '@mui/material/ButtonGroup'
@@ -20,6 +22,7 @@ import { Map as ImmutableMap } from 'immutable'
 
 import log from './log'
 import theme from './theme'
+import './panel.css'
 import './i18n'
 
 const TAG = 'panel'
@@ -76,9 +79,9 @@ const Panel = ({
     checkNoTranscript(),
   )
 
-  // TODO
   const { state, chapters = [] } = (data || {}) as Summary
-  const isDoing = state === SummaryState.DOING
+  const { name: errName, message: errMsg } = (error || {}) as Error
+  const isDoing = (state === SummaryState.DOING) && !error
 
   const list = chapters.map((c, i) => (
     <ChapterItem
@@ -162,10 +165,8 @@ const Panel = ({
             <ButtonGroup disableElevation>
               <Tooltip title={t('summarize').toString()}>
                 {
-                  /*
-                   * Tooltip will always show if its children changed accidentally,
-                   * so use a Box as wrapper to let Tooltip can always foucs.
-                   */
+                  // Tooltip will always show if its children changed accidentally,
+                  // so use a Box as wrapper to let Tooltip can always foucs.
                 }
                 <Box>
                   <IconButton
@@ -199,7 +200,7 @@ const Panel = ({
                     sx={{ ml: '8px' }}
                     onClick={syncToVideoTime}
                   >
-                    <span className="material-symbols-outlined">schedule</span>
+                    <span className='material-symbols-outlined'>schedule</span>
                   </IconButton>
                 </Tooltip>
               }
@@ -212,7 +213,7 @@ const Panel = ({
                     sx={{ ml: '8px' }}
                     onClick={() => setExpands(expands.clear())}
                   >
-                    <span className="material-symbols-outlined">unfold_less</span>
+                    <span className='material-symbols-outlined'>unfold_less</span>
                   </IconButton>
                 </Tooltip>
               }
@@ -223,15 +224,51 @@ const Panel = ({
                 color='inherit'
                 edge='end'
                 onClick={() => {
-                  // TODO
+                  // TODO (Matthew Lee) goto options.html
                 }}
               >
-                <span className="material-symbols-outlined">settings</span>
+                <span className='material-symbols-outlined'>settings</span>
               </IconButton>
             </Tooltip>
           </Toolbar>
           {list.length > 0 && <Divider light />}
         </AppBar>
+        {
+          error &&
+          <Alert
+            severity='error'
+            icon={false}
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              borderRadius: 0,
+              pt: 0,
+              pb: 0,
+            }}
+            action={
+              <Tooltip title={t('close').toString()}>
+                <IconButton
+                  aria-label={t('close').toString()}
+                  color='inherit'
+                  sx={{ marginTop: '-4px' }} // FIXME (Matthew Lee) hack.
+                  onClick={() => setToggled(0)} // reset.
+                >
+                  <span className='material-symbols-outlined'>close</span>
+                </IconButton>
+              </Tooltip>
+            }
+          >
+            <AlertTitle
+              sx={{
+                marginTop: 0,
+                marginBottom: '4px',
+              }}
+            >
+              {errName}
+            </AlertTitle>
+            {errMsg}
+          </Alert>
+        }
         <Box
           sx={{
             display: 'block',

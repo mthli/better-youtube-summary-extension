@@ -71,7 +71,7 @@ const summarize = (
   chapters?: PageChapter[],
   noTranscript?: boolean,
   next?: (error?: Error | null, data?: Summary | MutatorCallback<Summary>) => void,
-): chrome.runtime.Port => {
+): chrome.runtime.Port | null => {
   log(TAG, `summarize, vid=${vid}`)
 
   // Let swr into loading state as soon as possible.
@@ -92,7 +92,15 @@ const summarize = (
     },
   }
 
-  const port = chrome.runtime.connect({ name: `bys-${vid}` })
+  // https://stackoverflow.com/q/53939205
+  let port: chrome.runtime.Port | null = null
+  try {
+    port = chrome.runtime.connect({ name: `bys-${vid}` })
+  } catch (e) {
+    next?.(e as Error)
+    return null
+  }
+
   port.onDisconnect.addListener(({ name }) => {
     log(TAG, `summarize onDisconnect, name=${name}`)
     // DO NOTHING.

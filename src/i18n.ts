@@ -5,6 +5,7 @@ import { initReactI18next } from 'react-i18next'
 const resources = {
   en: {
     translation: {
+      'close': 'Close',
       'settings': 'Settings',
       'summarize': 'Summarize',
       'sync_to_video_time': 'Sync to Video Time',
@@ -14,6 +15,7 @@ const resources = {
   },
   zh: {
     translation: {
+      'close': '关闭',
       'settings': '设置',
       'summarize': '总结',
       'sync_to_video_time': '与视频时间同步',
