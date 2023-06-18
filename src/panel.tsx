@@ -87,26 +87,34 @@ const Panel = ({
           >
             <ButtonGroup disableElevation>
               <Tooltip title={t('summarize').toString()}>
-                <IconButton
-                  aria-label={t('summarize').toString()}
-                  color='inherit'
-                  edge='start'
-                  disabled={isDoing}
-                  onClick={() => setToggled(toggled + 1)}
-                >
-                  {
-                    !isDoing &&
-                    <span className='material-symbols-outlined'>summarize</span>
-                  }
-                  {
-                    isDoing &&
-                    <GooSpinner
-                      size={24}
-                      color={theme.palette.text.primary}
-                      loading
-                    />
-                  }
-                </IconButton>
+                {
+                  /*
+                   * Tooltip will always show if its children changed accidentally,
+                   * so use a Box as wrapper to let Tooltip can always foucs.
+                   */
+                }
+                <Box>
+                  <IconButton
+                    aria-label={t('summarize').toString()}
+                    color='inherit'
+                    edge='start'
+                    disabled={isDoing}
+                    onClick={() => setToggled(toggled + 1)}
+                  >
+                    {
+                      !isDoing &&
+                      <span className='material-symbols-outlined'>summarize</span>
+                    }
+                    {
+                      isDoing &&
+                      <GooSpinner
+                        size={24}
+                        color={theme.palette.text.primary}
+                        loading
+                      />
+                    }
+                  </IconButton>
+                </Box>
               </Tooltip>
               {
                 list.length > 0 &&
@@ -115,7 +123,6 @@ const Panel = ({
                     aria-label={t('unfold_less').toString()}
                     color='inherit'
                     sx={{ ml: '8px' }}
-                    disabled={isDoing}
                     onClick={() => setExpands(expands.clear())}
                   >
                     <span className="material-symbols-outlined">unfold_less</span>
