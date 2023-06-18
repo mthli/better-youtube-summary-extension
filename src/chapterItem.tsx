@@ -1,4 +1,4 @@
-import React, { RefCallback } from 'react'
+import React, { Ref, forwardRef } from 'react'
 import useResizeObserver from 'use-resize-observer'
 
 import Button from '@mui/material/Button'
@@ -43,22 +43,20 @@ const hexToRgba = (hex: string, alpha: number = 1) => {
   return `rgba(${r},${g},${b},${alpha})`
 }
 
-const ChapterItem = ({
+const ChapterItem = forwardRef(function ChapterItem({
   seconds,
   chapter,
   summary = '',
-  ref,
   isLastItem = false,
   expand = false,
   onExpand,
   onSeekTo,
 }: Chapter & {
-  ref?: RefCallback<Element>,
   isLastItem?: boolean,
   expand?: boolean,
   onExpand?: (expand: boolean) => void,
   onSeekTo?: (seconds: number) => void,
-}) => {
+}, ref: Ref<HTMLLIElement>) {
   const {
     ref: buttonRef,
     width: buttonWidth = 0,
@@ -136,6 +134,6 @@ const ChapterItem = ({
       </ul>
     </li>
   )
-}
+})
 
 export default ChapterItem

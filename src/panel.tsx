@@ -63,6 +63,28 @@ const Panel = ({
     />
   ))
 
+  const syncToVideoTime = () => {
+    const player = document.querySelector('video')
+    if ((!player) || (chapters.length <= 0)) return
+
+    const currentTime = player.currentTime // in seconds.
+    for (let i = 0; i < chapters.length; i++) {
+      if (chapters[i].seconds >= currentTime) {
+        const { cid } = i > 0 ? chapters[i - 1] : chapters[0]
+        log(TAG, `syncToViewTime, cid=${cid}, currentTime=${currentTime}`)
+
+        // https://developer.mozilla.org/zh-CN/docs/Web/API/Element/scrollIntoView
+        itemRefs.current.get(cid)?.scrollIntoView({
+          behavior: 'smooth',
+          block: 'nearest',
+          inline: 'nearest',
+        })
+
+        break
+      }
+    }
+  }
+
   useEffect(() => {
     log(TAG, `useEffect, pageUrl=${pageUrl}`)
     setToggled(0) // cancel all requests before.
@@ -126,9 +148,7 @@ const Panel = ({
                     aria-label={t('sync_to_video_time').toString()}
                     color='inherit'
                     sx={{ ml: '8px' }}
-                    onClick={() => {
-                      // TODO
-                    }}
+                    onClick={syncToVideoTime}
                   >
                     <span className="material-symbols-outlined">schedule</span>
                   </IconButton>
