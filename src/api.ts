@@ -136,7 +136,7 @@ const upsert = (curr: Summary, prev?: Summary): Summary => {
   if (!prev) return curr
 
   const { chapters: prevChapters = [] } = prev
-  const { chapters: currChapters = [] } = curr
+  const { chapters: currChapters = [], state } = curr
 
   const map = new Map<string, Chapter>()
   prevChapters.forEach(c => map.set(c.cid, c))
@@ -146,7 +146,7 @@ const upsert = (curr: Summary, prev?: Summary): Summary => {
   chapters.sort((a, b) => a.seconds - b.seconds)
 
   return {
-    state: curr.state,
-    chapters: chapters,
+    state,
+    chapters,
   }
 }

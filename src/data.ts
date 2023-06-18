@@ -48,6 +48,6 @@ export enum SummaryState {
 }
 
 export interface Summary {
-  chapters: Chapter[],
   state: SummaryState,
+  chapters: Chapter[],
 }
