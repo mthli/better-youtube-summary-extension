@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import AppBar from '@mui/material/AppBar'
@@ -16,7 +16,7 @@ import { GooSpinner } from 'react-spinners-kit'
 
 import { useSummarize } from './api'
 import { PageChapters, Summary, SummaryState } from './data'
-import { Map } from 'immutable'
+import { Map as ImmutableMap } from 'immutable'
 
 import log from './log'
 import theme from './theme'
@@ -35,8 +35,10 @@ const Panel = ({
   noTranscript?: boolean,
   maxHeight?: number, // px.
 }) => {
+  const itemRefs = useRef(new Map<string, Element | null>())
+
   const [toggled, setToggled] = useState(0)
-  const [expands, setExpands] = useState<Map<string, boolean>>(Map())
+  const [expands, setExpands] = useState<ImmutableMap<string, boolean>>(ImmutableMap())
 
   const { t } = useTranslation()
   const { data, error } = useSummarize(toggled, pageUrl, pageChapters, noTranscript)
@@ -49,6 +51,7 @@ const Panel = ({
     <ChapterItem
       {...c}
       key={c.cid}
+      ref={el => itemRefs.current.set(c.cid, el)}
       isLastItem={i === chapters.length - 1}
       expand={expands.get(c.cid, false)}
       onExpand={expand => setExpands(expands.set(c.cid, expand))}

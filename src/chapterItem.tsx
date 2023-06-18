@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { RefCallback } from 'react'
 import useResizeObserver from 'use-resize-observer'
 
 import Button from '@mui/material/Button'
@@ -47,21 +47,27 @@ const ChapterItem = ({
   seconds,
   chapter,
   summary = '',
+  ref,
   isLastItem = false,
   expand = false,
   onExpand,
   onSeekTo,
 }: Chapter & {
+  ref?: RefCallback<Element>,
   isLastItem?: boolean,
   expand?: boolean,
   onExpand?: (expand: boolean) => void,
   onSeekTo?: (seconds: number) => void,
 }) => {
-  const { ref, width = 0 } = useResizeObserver<HTMLDivElement>()
+  const {
+    ref: buttonRef,
+    width: buttonWidth = 0,
+  } = useResizeObserver<HTMLDivElement>()
+
   const count = countLines(summary)
 
   return (
-    <li>
+    <li ref={ref}>
       <ul>
         <ListSubheader
           sx={{
@@ -78,7 +84,7 @@ const ChapterItem = ({
                 <Button
                   component='div'
                   size='small'
-                  ref={ref}
+                  ref={buttonRef}
                   sx={{
                     minWidth: 0,
                     paddingLeft: '8px',
@@ -102,7 +108,7 @@ const ChapterItem = ({
                       fontWeight: expand ? 600 : 400,
                     }
                   }}
-                  style={{ paddingRight: `${width}px` }}
+                  style={{ paddingRight: `${buttonWidth}px` }}
                 >
                   {chapter}
                   <Typography
