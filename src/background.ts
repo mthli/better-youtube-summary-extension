@@ -33,6 +33,7 @@ const throwInvalidRequest = (send: (message?: any) => void, message: Message) =>
   } as Message)
 }
 
+/*
 chrome.runtime.onMessage.addListener((message: Message, sender, sendResponse) => {
   // log(TAG, `runtime onMessage, senderId=${sender.id}, message=${JSON.stringify(message)}`)
 
@@ -77,6 +78,7 @@ chrome.runtime.onMessage.addListener((message: Message, sender, sendResponse) =>
   // https://stackoverflow.com/q/48107746
   return true
 })
+*/
 
 chrome.runtime.onConnect.addListener(port => {
   port.onMessage.addListener((message, port) => {

@@ -1,6 +1,4 @@
 import UrlMatch from '@fczbkk/url-match'
-
-import useSWR from 'swr'
 import useSWRSubscription from 'swr/subscription'
 
 import log from './log'
@@ -42,12 +40,19 @@ export const useSummarize = (
 ) => {
   const vid = parseVid(pageUrl)
   const chapters = pageUrl === pageChapters?.pageUrl ? pageChapters.chapters : []
-  // log(TAG, `useSummarize, vid=${vid}, toggled=${toggled}`)
+  log(TAG, `useSummarize, vid=${vid}, toggled=${toggled}`)
 
-  return useSWR(toggled ? [vid, chapters, noTranscript] : null,
-    ([vid, chapters, noTranscript]) => summarize(vid, chapters, noTranscript),
+  return useSWRSubscription(
+    toggled ? [vid, chapters, noTranscript] : null,
+    ([vid, chapters, noTranscript], { next }) => {
+      /* const port = */ summarize(vid, chapters, noTranscript, next)
+      return () => {
+        log(TAG, `useSummarize disposed, vid=${vid}`)
+        // DO NOTHING, port should be disconneted by server worker.
+      }
+    },
     {
-      loadingTimeout: 10000, // ms.
+      loadingTimeout: 5 * 60 * 1000, // 5 mins.
       errorRetryCount: 2,
       onError(err, key) {
         log(TAG, `useSummarize onError, key=${key}, err=${JSON.stringify(err)}`)
@@ -56,12 +61,12 @@ export const useSummarize = (
   )
 }
 
-const summarize = async (
+const summarize = (
   vid: string,
   chapters?: PageChapter[],
   noTranscript?: boolean,
-): Promise<any> => {
-  // log(TAG, `summarize, vid=${vid}, chapters=${JSON.stringify(chapters)}`)
+  next?: (error?: Error | null, message?: Message) => void,
+): chrome.runtime.Port => {
 
   const request: Message = {
     type: MessageType.REQUEST,
@@ -78,70 +83,30 @@ const summarize = async (
     },
   }
 
-  const response = await new Promise<Message>((resolve, reject) => {
-    chrome.runtime.sendMessage<Message, Message>(request, message => {
-      const { type, error } = message || {}
-      switch (type) {
-        case MessageType.RESPONSE:
-          resolve(message)
-          break
-        case MessageType.ERROR:
-          reject(error as Error)
-          break
-        default:
-          reject(new Error(`invalid message, message=${JSON.stringify(message)}`))
-          break
-      }
-    })
-  })
-
-  const { responseOk, responseJson } = response
-  if (!responseOk) throw new Error(responseJson)
-  return responseJson
-}
-
-const useSSE = (toggled: number, pageUrl: string) => {
-  const vid = parseVid(pageUrl)
-  log(TAG, `useSSE, vid=${vid}, toggled=${toggled}`)
-
-  return useSWRSubscription(toggled ? [vid] : null, ([vid], { next }) => {
-    /* const port = */ sse(vid, next)
-    return () => {
-      log(TAG, `useSSE disposed, vid=${vid}`)
-      // DO NOTHING, port should be disconneted by server worker instead of here.
-    }
-  })
-}
-
-const sse = (
-  vid: string,
-  next: (error?: Error | null, message?: Message) => void,
-): chrome.runtime.Port => {
-  const request: Message = {
-    type: MessageType.REQUEST,
-    requestUrl: `${BASE_URL}/api/sse/${vid}`,
-  }
-
   const port = chrome.runtime.connect({ name: vid })
   port.onDisconnect.addListener(({ name }) => {
-    log(TAG, `sse onDisconnect, name=${name}`)
+    log(TAG, `summarize onDisconnect, name=${name}`)
     // DO NOTHING.
   })
 
   port.onMessage.addListener(message => {
-    log(TAG, `sse onMessage, message=${JSON.stringify(message)}`)
+    log(TAG, `summarize onMessage, message=${JSON.stringify(message)}`)
 
-    const { type, error } = message || {}
+    const { type, responseJson, sseData, error } = message || {}
     switch (type) {
       case MessageType.RESPONSE:
+        // Don't need to check responseOk here, always ok.
+        next?.(null, responseJson)
+        break
       case MessageType.SSE:
-        next(null, message)
+        // TODO (Matthew Lee) upsert.
+        next?.(null, sseData)
         break
       case MessageType.ERROR:
-        next(error as Error)
+        next?.(error as Error)
         break
       default:
-        next(new Error(`invalid message, message=${JSON.stringify(message)}`))
+        next?.(new Error(`invalid message, message=${JSON.stringify(message)}`))
         break
     }
   })

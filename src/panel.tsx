@@ -39,11 +39,11 @@ const Panel = ({
   const [expands, setExpands] = useState<Map<string, boolean>>(Map())
 
   const { t } = useTranslation()
-  const { data, error, isLoading } = useSummarize(toggled, pageUrl, pageChapters, noTranscript)
+  const { data, error } = useSummarize(toggled, pageUrl, pageChapters, noTranscript)
 
   // TODO
   const { state = SummaryState.NOTHING, chapters = [] } = (data || {}) as Summary
-  const isDoing = state === SummaryState.DOING || isLoading
+  const isDoing = state === SummaryState.DOING
 
   const list = chapters.map((c, i) => (
     <ChapterItem
@@ -115,7 +115,7 @@ const Panel = ({
                     aria-label={t('unfold_less').toString()}
                     color='inherit'
                     sx={{ ml: '8px' }}
-                    disabled={isLoading} // not isDoing here.
+                    disabled={isDoing}
                     onClick={() => setExpands(expands.clear())}
                   >
                     <span className="material-symbols-outlined">unfold_less</span>

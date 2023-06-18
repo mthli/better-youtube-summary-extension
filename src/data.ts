@@ -37,8 +37,7 @@ export interface Chapter {
 }
 
 export enum SseEvent {
-  CHAPTERS = 'chapters',
-  CHAPTER = 'chapter',
+  SUMMARY = 'summary',
   CLOSE = 'close',
 }
 
