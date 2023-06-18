@@ -92,13 +92,24 @@ const summarize = (
   port.onMessage.addListener(message => {
     log(TAG, `summarize onMessage, message=${JSON.stringify(message)}`)
 
-    const { type, responseJson, sseData, error } = message || {}
+    const {
+      type,
+      // responseOk,
+      responseJson,
+      // sseEvent,
+      sseData,
+      error,
+    } = message || {}
+
     switch (type) {
       case MessageType.RESPONSE:
-        // Don't need to check responseOk here, always ok.
+        // Don't need to check responseOk here,
+        // always `true` from server worker.
         next?.(null, responseJson)
         break
       case MessageType.SSE:
+        // Don't need to check sseEvent here,
+        // always `SseEvent.SUMMARY` from server worker.
         // TODO (Matthew Lee) upsert.
         next?.(null, sseData)
         break

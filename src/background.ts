@@ -12,8 +12,8 @@ import log from './log'
 const TAG = 'background'
 
 // https://github.com/Azure/fetch-event-source
-class FatalError extends Error { }
-class RetriableError extends Error { }
+class FatalError extends Error { /* DO NOTHING. */ }
+class RetriableError extends Error { /* DO NOTHING. */ }
 
 const throwInvalidSender = (send: (message?: any) => void, senderId?: string) => {
   const msg = `invalid sender, senderId=${senderId}`
@@ -163,12 +163,6 @@ chrome.runtime.onConnect.addListener(port => {
 
       onclose() {
         log(TAG, `sse onclose, port=${name}`)
-
-        port.postMessage({
-          type: MessageType.SSE,
-          sseEvent: SseEvent.CLOSE,
-        } as Message)
-
         port.disconnect()
       },
 
@@ -176,15 +170,25 @@ chrome.runtime.onConnect.addListener(port => {
         try {
           const { event: sseEvent, data } = event
           const sseData = JSON.parse(data)
-          log(TAG, `sse onmessage, event=${JSON.stringify(event)}`)
+          log(TAG, `sse onmessage, port=${name}, event=${sseEvent}, data=${data}`)
 
-          port.postMessage({
-            type: MessageType.SSE,
-            sseEvent: sseEvent as SseEvent,
-            sseData: sseData,
-          } as Message)
+          switch (sseEvent) {
+            case SseEvent.SUMMARY:
+              port.postMessage({
+                type: MessageType.SSE,
+                sseEvent: SseEvent.SUMMARY,
+                sseData: sseData,
+              } as Message)
+              break
+            case SseEvent.CLOSE:
+              port.disconnect()
+              break
+            default:
+              // DO NOTHING.
+              break
+          }
         } catch (e) {
-          log(TAG, `see onmessage, event=${JSON.stringify(event)}, error=${e}`)
+          log(TAG, `see onmessage, port=${name}, error=${e}`)
           // DO NOTHING.
         }
       },
