@@ -118,6 +118,21 @@ const Panel = ({
               </Tooltip>
               {
                 list.length > 0 &&
+                <Tooltip title={t('sync_to_video_time').toString()}>
+                  <IconButton
+                    aria-label={t('sync_to_video_time').toString()}
+                    color='inherit'
+                    sx={{ ml: '8px' }}
+                    onClick={() => {
+                      // TODO
+                    }}
+                  >
+                    <span className="material-symbols-outlined">schedule</span>
+                  </IconButton>
+                </Tooltip>
+              }
+              {
+                list.length > 0 &&
                 <Tooltip title={t('unfold_less').toString()}>
                   <IconButton
                     aria-label={t('unfold_less').toString()}
