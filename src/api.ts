@@ -10,6 +10,7 @@ import {
   PageChapter,
   PageChapters,
   Summary,
+  SummaryState,
 } from './data'
 import log from './log'
 
@@ -73,6 +74,9 @@ const summarize = (
   next?: (error?: Error | null, data?: Summary | MutatorCallback<Summary>) => void,
 ): chrome.runtime.Port => {
   log(TAG, `summarize, vid=${vid}`)
+
+  // Let swr into loading state as soon as possible.
+  next?.(null, { state: SummaryState.DOING })
 
   const request: Message = {
     type: MessageType.REQUEST,

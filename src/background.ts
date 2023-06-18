@@ -143,6 +143,7 @@ chrome.runtime.onConnect.addListener(port => {
     // Filter our extension messages.
     if (senderId !== chrome.runtime.id) {
       throwInvalidSender(port.postMessage, senderId)
+      port.disconnect()
       return true
     }
 
@@ -150,6 +151,7 @@ chrome.runtime.onConnect.addListener(port => {
     const { type, requestUrl, requestInit = {} } = message
     if (type !== MessageType.REQUEST || !requestUrl) {
       throwInvalidRequest(port.postMessage, message)
+      port.disconnect()
       return true
     }
 
