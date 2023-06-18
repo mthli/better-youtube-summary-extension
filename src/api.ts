@@ -67,6 +67,7 @@ const summarize = (
   noTranscript?: boolean,
   next?: (error?: Error | null, message?: Message) => void,
 ): chrome.runtime.Port => {
+  log(TAG, `summarize, vid=${vid}`)
 
   const request: Message = {
     type: MessageType.REQUEST,

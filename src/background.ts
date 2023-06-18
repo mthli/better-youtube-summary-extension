@@ -11,6 +11,61 @@ import log from './log'
 
 const TAG = 'background'
 
+// Server worker `document` is undefined,
+// but `fetchEventSource` need it,
+// so we mock it.
+//
+// @ts-ignore
+global.document = {
+  hidden: false,
+
+  // @ts-ignore
+  addEventListener: (type, listener, options) => {
+    try {
+      global.addEventListener(type, listener, options)
+    } catch (e) {
+      log(TAG, `addEventListener catch, type=${type}, e=${e}`)
+      // DO NOTHING.
+    }
+  },
+
+  // @ts-ignore
+  removeEventListener: (type, listener, options) => {
+    try {
+      global.removeEventListener(type, listener, options)
+    } catch (e) {
+      log(TAG, `removeEventListener catch, type=${type}, e=${e}`)
+      // DO NOTHING.
+    }
+  },
+}
+
+// Server worker `document` is undefined,
+// but `fetchEventSource` need it,
+// so we mock it.
+//
+// @ts-ignore
+global.window = {
+  // @ts-ignore
+  setTimeout: (callback, ms, ...args) => {
+    try {
+      global.setTimeout(callback, ms, args)
+    } catch (e) {
+      log(TAG, `setTimeout catch, e=${e}`)
+      // DO NOTHING.
+    }
+  },
+
+  clearTimeout: timeoutId => {
+    try {
+      global.clearTimeout(timeoutId)
+    } catch (e) {
+      log(TAG, `clearTimeout catch, e=${e}`)
+      // DO NOTHING.
+    }
+  },
+}
+
 // https://github.com/Azure/fetch-event-source
 class FatalError extends Error { /* DO NOTHING. */ }
 class RetriableError extends Error { /* DO NOTHING. */ }
@@ -83,7 +138,7 @@ chrome.runtime.onMessage.addListener((message: Message, sender, sendResponse) =>
 chrome.runtime.onConnect.addListener(port => {
   port.onMessage.addListener((message, port) => {
     const { name, sender: { id: senderId } = {} } = port
-    log(TAG, `port onMessage, port=${port}, message=${JSON.stringify(message)}`)
+    log(TAG, `port onMessage, port=${name}`)
 
     // Filter our extension messages.
     if (senderId !== chrome.runtime.id) {
@@ -104,7 +159,10 @@ chrome.runtime.onConnect.addListener(port => {
     // https://github.com/Azure/fetch-event-source
     const init: FetchEventSourceInit = {
       ...requestInit,
+
+      openWhenHidden: true,
       signal: ctrl.signal,
+      fetch: fetch,
 
       async onopen(response: Response) {
         const { ok, headers, status } = response
