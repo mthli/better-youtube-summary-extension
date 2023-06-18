@@ -4,9 +4,9 @@ import { createRoot } from 'react-dom/client'
 
 import Panel from './panel'
 
-import log from './log'
 import { parseVid } from './api'
 import { PageChapter, PageChapters } from './data'
+import log from './log'
 
 const TAG = 'contentScript'
 

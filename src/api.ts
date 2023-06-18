@@ -1,13 +1,17 @@
 import UrlMatch from '@fczbkk/url-match'
-import useSWRSubscription from 'swr/subscription'
 
-import log from './log'
+import useSWRSubscription from 'swr/subscription'
+import { MutatorCallback } from 'swr'
+
 import {
+  Chapter,
   Message,
   MessageType,
   PageChapter,
   PageChapters,
+  Summary,
 } from './data'
+import log from './log'
 
 const TAG = 'api'
 export const BASE_URL = 'https://bys.mthli.com'
@@ -65,7 +69,7 @@ const summarize = (
   vid: string,
   chapters?: PageChapter[],
   noTranscript?: boolean,
-  next?: (error?: Error | null, message?: Message) => void,
+  next?: (error?: Error | null, data?: Summary | MutatorCallback<Summary>) => void,
 ): chrome.runtime.Port => {
   log(TAG, `summarize, vid=${vid}`)
 
@@ -84,7 +88,7 @@ const summarize = (
     },
   }
 
-  const port = chrome.runtime.connect({ name: vid })
+  const port = chrome.runtime.connect({ name: `bys-${vid}` })
   port.onDisconnect.addListener(({ name }) => {
     log(TAG, `summarize onDisconnect, name=${name}`)
     // DO NOTHING.
@@ -111,18 +115,37 @@ const summarize = (
       case MessageType.SSE:
         // Don't need to check sseEvent here,
         // always `SseEvent.SUMMARY` from server worker.
-        // TODO (Matthew Lee) upsert.
-        next?.(null, sseData)
+        next?.(null, prev => upsert(sseData, prev))
         break
       case MessageType.ERROR:
         next?.(error as Error)
         break
       default:
-        next?.(new Error(`invalid message, message=${JSON.stringify(message)}`))
+        const msg = `invalid message, message=${JSON.stringify(message)}`
+        next?.(new Error(msg))
         break
     }
   })
 
   port.postMessage(request)
   return port
+}
+
+const upsert = (curr: Summary, prev?: Summary): Summary => {
+  if (!prev) return curr
+
+  const { chapters: prevChapters = [] } = prev
+  const { chapters: currChapters = [] } = curr
+
+  const map = new Map<string, Chapter>()
+  prevChapters.forEach(c => map.set(c.cid, c))
+  currChapters.forEach(c => map.set(c.cid, c))
+
+  const chapters = Array.from(map.values())
+  chapters.sort((a, b) => a.seconds - b.seconds)
+
+  return {
+    state: curr.state,
+    chapters: chapters,
+  }
 }
