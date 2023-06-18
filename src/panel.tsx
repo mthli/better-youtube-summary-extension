@@ -24,15 +24,19 @@ import './i18n'
 
 const TAG = 'panel'
 
+const checkNoTranscript = (): boolean => {
+  const subtitles = document.querySelector('svg.ytp-subtitles-button-icon')
+  const opacity = subtitles?.attributes?.getNamedItem('fill-opacity')?.value ?? '1.0'
+  return parseFloat(opacity) < 1.0
+}
+
 const Panel = ({
   pageUrl,
   pageChapters,
-  noTranscript = false,
   maxHeight = 560, // px.
 }: {
   pageUrl: string,
   pageChapters?: PageChapters,
-  noTranscript?: boolean,
   maxHeight?: number, // px.
 }) => {
   const itemRefs = useRef(new Map<string, Element | null>())
@@ -42,7 +46,7 @@ const Panel = ({
   const [expands, setExpands] = useState<ImmutableMap<string, boolean>>(ImmutableMap())
 
   const { t } = useTranslation()
-  const { data, error } = useSummarize(toggled, pageUrl, pageChapters, noTranscript)
+  const { data, error } = useSummarize(toggled, pageUrl, pageChapters, checkNoTranscript())
 
   // TODO
   const { state = SummaryState.NOTHING, chapters = [] } = (data || {}) as Summary

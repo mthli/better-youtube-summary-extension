@@ -38,7 +38,6 @@ const parseChapters = (): PageChapter[] => {
 const App = () => {
   const [pageUrl, setPageUrl] = useState(location.href)
   const [pageChapters, setPageChapters] = useState<PageChapters>()
-  const [noTranscript, setNoTranscript] = useState(false)
 
   const [panelsObserver, setPanelsObserver] = useState<MutationObserver>()
   const [playerHeight, setPlayerHeight] = useState(560) // px.
@@ -96,12 +95,6 @@ const App = () => {
   }, [])
 
   useEffect(() => {
-    const subtitles = document.querySelector('svg.ytp-subtitles-button-icon')
-    const opacity = subtitles?.attributes?.getNamedItem('fill-opacity')?.value ?? '1.0'
-    const noTranscript = parseFloat(opacity) < 1.0
-    log(TAG, `check, noTranscript=${noTranscript}`)
-    setNoTranscript(noTranscript)
-
     panelsObserver?.disconnect()
     if (blockNode || !parseVid(pageUrl)) return
 
@@ -163,7 +156,6 @@ const App = () => {
           <Panel
             pageUrl={pageUrl}
             pageChapters={pageChapters}
-            noTranscript={noTranscript}
             maxHeight={playerHeight}
           />,
           blockNode,
