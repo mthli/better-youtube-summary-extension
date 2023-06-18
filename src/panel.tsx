@@ -77,7 +77,7 @@ const Panel = ({
   )
 
   // TODO
-  const { state = SummaryState.NOTHING, chapters = [] } = (data || {}) as Summary
+  const { state, chapters = [] } = (data || {}) as Summary
   const isDoing = state === SummaryState.DOING
 
   const list = chapters.map((c, i) => (
