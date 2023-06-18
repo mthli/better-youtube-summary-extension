@@ -38,6 +38,7 @@ const Panel = ({
   const itemRefs = useRef(new Map<string, Element | null>())
 
   const [toggled, setToggled] = useState(0)
+  const [selected, setSelected] = useState<string>('') // cid.
   const [expands, setExpands] = useState<ImmutableMap<string, boolean>>(ImmutableMap())
 
   const { t } = useTranslation()
@@ -53,7 +54,8 @@ const Panel = ({
       key={c.cid}
       ref={el => itemRefs.current.set(c.cid, el)}
       isLastItem={i === chapters.length - 1}
-      expand={expands.get(c.cid, false)}
+      selected={c.cid === selected}
+      expanded={expands.get(c.cid, false)}
       onExpand={expand => setExpands(expands.set(c.cid, expand))}
       onSeekTo={seconds => {
         log(TAG, `onSeekTo, seconds=${seconds}`)
@@ -63,32 +65,47 @@ const Panel = ({
     />
   ))
 
+  // https://developer.mozilla.org/zh-CN/docs/Web/API/Element/scrollIntoView
+  const scrollIntoView = (cid: string) => {
+    log(TAG, `scrollIntoView, cid=${cid}`)
+
+    itemRefs.current.get(cid)?.scrollIntoView({
+      behavior: 'smooth',
+      block: 'nearest',
+      inline: 'nearest',
+    })
+
+    setSelected(cid)
+  }
+
   const syncToVideoTime = () => {
     const player = document.querySelector('video')
     if ((!player) || (chapters.length <= 0)) return
 
     const currentTime = player.currentTime // in seconds.
+    log(TAG, `syncToViewTime, currentTime=${currentTime}`)
+
     for (let i = 0; i < chapters.length; i++) {
       if (chapters[i].seconds >= currentTime) {
         const { cid } = i > 0 ? chapters[i - 1] : chapters[0]
-        log(TAG, `syncToViewTime, cid=${cid}, currentTime=${currentTime}`)
-
-        // https://developer.mozilla.org/zh-CN/docs/Web/API/Element/scrollIntoView
-        itemRefs.current.get(cid)?.scrollIntoView({
-          behavior: 'smooth',
-          block: 'nearest',
-          inline: 'nearest',
-        })
-
-        break
+        scrollIntoView(cid)
+        return
       }
     }
+
+    // If not seleted in for loop, then must be the last item.
+    scrollIntoView(chapters[chapters.length - 1].cid)
   }
 
   useEffect(() => {
     log(TAG, `useEffect, pageUrl=${pageUrl}`)
     setToggled(0) // cancel all requests before.
   }, [pageUrl])
+
+  useEffect(() => {
+    log(TAG, `useEffect, selected=${selected}`)
+    if (selected) setTimeout(() => setSelected(''), 2000) // ms.
+  }, [selected])
 
   return (
     <ThemeProvider theme={theme}>

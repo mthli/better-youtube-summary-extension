@@ -48,12 +48,14 @@ const ChapterItem = forwardRef(function ChapterItem({
   chapter,
   summary = '',
   isLastItem = false,
-  expand = false,
+  selected = false,
+  expanded = false,
   onExpand,
   onSeekTo,
 }: Chapter & {
   isLastItem?: boolean,
-  expand?: boolean,
+  selected?: boolean,
+  expanded?: boolean,
   onExpand?: (expand: boolean) => void,
   onSeekTo?: (seconds: number) => void,
 }, ref: Ref<HTMLLIElement>) {
@@ -77,7 +79,7 @@ const ChapterItem = forwardRef(function ChapterItem({
           <ul>
             <ListItem
               disablePadding
-              divider={expand}
+              divider={expanded}
               secondaryAction={
                 <Button
                   component='div'
@@ -97,13 +99,14 @@ const ChapterItem = forwardRef(function ChapterItem({
             >
               <ListItemButton
                 disabled={count <= 0}
-                onClick={() => onExpand?.(!expand)}
+                selected={selected}
+                onClick={() => onExpand?.(!expanded)}
               >
                 <ListItemText
                   primaryTypographyProps={{
                     sx: {
                       fontSize: '1.6rem',
-                      fontWeight: expand ? 600 : 400,
+                      fontWeight: expanded ? 600 : 400,
                     }
                   }}
                   style={{ paddingRight: `${buttonWidth}px` }}
@@ -125,7 +128,7 @@ const ChapterItem = forwardRef(function ChapterItem({
             </ListItem>
           </ul>
         </ListSubheader>
-        <Collapse in={expand} timeout='auto' unmountOnExit>
+        <Collapse in={expanded} timeout='auto' unmountOnExit>
           <ReactMarkdown className='markdown-body' rehypePlugins={[rehypeRaw]}>
             {/* textVide(summary) */ summary}
           </ReactMarkdown>
