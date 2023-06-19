@@ -93,6 +93,7 @@ const Panel = ({ pageUrl }: { pageUrl: string }) => {
   const itemRefs = useRef(new Map<string, Element | null>())
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)')
   const currentTheme = checkIsDarkMode(prefersDarkMode) ? darkTheme : lightTheme
+  const iconColor = currentTheme.palette.text.primary
 
   const [toggled, setToggled] = useState(0)
   const [selected, setSelected] = useState<string>('') // cid.
@@ -240,7 +241,7 @@ const Panel = ({ pageUrl }: { pageUrl: string }) => {
                 >
                   <IconButton
                     aria-label={t('summarize').toString()}
-                    color='inherit'
+                    style={{ color: iconColor }} // not `sx` here.
                     disabled={doing}
                     onClick={() => setToggled(toggled + 1)}
                   >
@@ -264,8 +265,7 @@ const Panel = ({ pageUrl }: { pageUrl: string }) => {
                 <Tooltip title={t('sync_to_video_time').toString()}>
                   <IconButton
                     aria-label={t('sync_to_video_time').toString()}
-                    color='inherit'
-                    sx={{ ml: '8px' }}
+                    style={{ color: iconColor, marginLeft: '8px' }} // not `sx` here.
                     onClick={syncToVideoTime}
                   >
                     <span className='material-symbols-outlined'>schedule</span>
@@ -277,8 +277,7 @@ const Panel = ({ pageUrl }: { pageUrl: string }) => {
                 <Tooltip title={t('unfold_less').toString()}>
                   <IconButton
                     aria-label={t('unfold_less').toString()}
-                    color='inherit'
-                    sx={{ ml: '8px' }}
+                    style={{ color: iconColor, marginLeft: '8px' }} // not `sx` here.
                     onClick={() => setExpands(expands.clear())}
                   >
                     <span className='material-symbols-outlined'>unfold_less</span>
@@ -297,7 +296,7 @@ const Panel = ({ pageUrl }: { pageUrl: string }) => {
                   }}>
                     <IconButton
                       aria-label={t('translate').toString()}
-                      color='inherit'
+                      style={{ color: iconColor }} // not `sx` here.
                       disabled={translating || !done}
                       onClick={() => {
                         // TODO
@@ -323,7 +322,7 @@ const Panel = ({ pageUrl }: { pageUrl: string }) => {
               <Tooltip title={t('settings').toString()}>
                 <IconButton
                   aria-label={t('settings').toString()}
-                  color='inherit'
+                  style={{ color: iconColor }} // not `sx` here.
                   onClick={openOptionsPage}
                 >
                   <span className='material-symbols-outlined'>settings</span>
@@ -349,8 +348,7 @@ const Panel = ({ pageUrl }: { pageUrl: string }) => {
               <Tooltip title={t('close').toString()}>
                 <IconButton
                   aria-label={t('close').toString()}
-                  color='inherit'
-                  sx={{ marginTop: '-4px' }} // FIXME (Matthew Lee) hack.
+                  style={{ color: iconColor, marginTop: '-4px' }} // not `sx` here.
                   onClick={() => setToggled(0)} // reset.
                 >
                   <span className='material-symbols-outlined'>close</span>
