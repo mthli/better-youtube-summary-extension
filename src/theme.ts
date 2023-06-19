@@ -1,7 +1,7 @@
 import { createTheme } from '@mui/material/styles'
 
 // YouTube Light.
-const theme = createTheme({
+export const lightTheme = createTheme({
   palette: {
     mode: 'light',
     primary: {
@@ -47,13 +47,11 @@ export const darkTheme = createTheme({
     },
     divider: 'rgba(255, 255, 255, 0.2)', // --yt-spec-outline
     action: {
-      hover: 'rgba(255, 255, 255, 0.2)', // --yt-spec-outline
-      hoverOpacity: 0.2,
+      hover: 'rgba(255, 255, 255, 0.1)', // --yt-spec-outline, but change 0.2 to 0.1
+      hoverOpacity: 0.1,
     },
     background: {
       default: '#0f0f0f', // --yt-spec-base-background
     },
   }
 })
-
-export default theme

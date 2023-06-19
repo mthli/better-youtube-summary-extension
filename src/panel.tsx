@@ -11,13 +11,14 @@ import IconButton from '@mui/material/IconButton'
 import List from '@mui/material/List'
 import Toolbar from '@mui/material/Toolbar'
 import Tooltip from '@mui/material/Tooltip'
+
 import useMediaQuery from '@mui/material/useMediaQuery'
 import { ThemeProvider } from '@mui/material/styles'
+import { darkTheme, lightTheme } from './theme'
 
 import ChapterItem from './chapterItem'
 import { GooSpinner, ImpulseSpinner } from 'react-spinners-kit'
 
-import { useSummarize } from './api'
 import {
   Message,
   MessageType,
@@ -25,14 +26,26 @@ import {
   Summary,
   SummaryState,
 } from './data'
+import { useSummarize } from './api'
 import { Map as ImmutableMap } from 'immutable'
 
 import log from './log'
-import theme from './theme'
 import './panel.css'
 import './i18n'
 
 const TAG = 'panel'
+
+const checkIsDarkMode = (prefersDarkMode: boolean): boolean => {
+  // Follow the System Preferences.
+  if (prefersDarkMode) return true
+
+  const flexy = document.querySelector('ytd-watch-flexy')
+  if (!flexy) return prefersDarkMode
+
+  // Check if YouTube Settings.
+  const check = flexy.attributes.getNamedItem('is-dark-theme')
+  return Boolean(check) || prefersDarkMode
+}
 
 const checkNoTranscript = (): boolean => {
   const subtitles = document.querySelector('svg.ytp-subtitles-button-icon')
@@ -79,6 +92,7 @@ const openOptionsPage = () => {
 const Panel = ({ pageUrl }: { pageUrl: string }) => {
   const itemRefs = useRef(new Map<string, Element | null>())
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)')
+  const currentTheme = checkIsDarkMode(prefersDarkMode) ? darkTheme : lightTheme
 
   const [toggled, setToggled] = useState(0)
   const [selected, setSelected] = useState<string>('') // cid.
@@ -121,6 +135,7 @@ const Panel = ({ pageUrl }: { pageUrl: string }) => {
       {...c}
       key={c.cid}
       ref={el => itemRefs.current.set(c.cid, el)}
+      theme={currentTheme}
       isLastItem={i === chapters.length - 1}
       selected={c.cid === selected}
       expanded={expands.get(c.cid, false)}
@@ -191,7 +206,7 @@ const Panel = ({ pageUrl }: { pageUrl: string }) => {
   }, [selected])
 
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={currentTheme}>
       <Box
         sx={{
           display: 'flex',
@@ -237,7 +252,7 @@ const Panel = ({ pageUrl }: { pageUrl: string }) => {
                       doing &&
                       <GooSpinner
                         size={24}
-                        color={theme.palette.text.primary}
+                        color={currentTheme.palette.text.primary}
                         loading
                       />
                     }
@@ -296,8 +311,8 @@ const Panel = ({ pageUrl }: { pageUrl: string }) => {
                         translating &&
                         <ImpulseSpinner
                           size={24}
-                          frontColor={theme.palette.text.primary}
-                          backColor={theme.palette.text.secondary}
+                          frontColor={currentTheme.palette.text.primary}
+                          backColor={currentTheme.palette.text.secondary}
                           loading
                         />
                       }

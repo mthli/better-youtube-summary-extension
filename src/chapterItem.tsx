@@ -9,13 +9,12 @@ import ListItemButton from '@mui/material/ListItemButton'
 import ListSubheader from '@mui/material/ListSubheader'
 import ListItemText from '@mui/material/ListItemText'
 import Typography from '@mui/material/Typography'
+import { Theme } from '@mui/material/styles'
 
 import ReactMarkdown from 'react-markdown'
 import rehypeRaw from 'rehype-raw'
 
 import { Chapter } from './data'
-import theme from './theme'
-
 import 'github-markdown-css'
 import './panel.css'
 import './i18n'
@@ -47,12 +46,14 @@ const ChapterItem = forwardRef(function ChapterItem({
   seconds,
   chapter,
   summary = '',
+  theme,
   isLastItem = false,
   selected = false,
   expanded = false,
   onExpand,
   onSeekTo,
 }: Chapter & {
+  theme: Theme,
   isLastItem?: boolean,
   selected?: boolean,
   expanded?: boolean,

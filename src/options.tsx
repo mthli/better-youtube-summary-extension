@@ -13,11 +13,12 @@ import Select from '@mui/material/Select'
 import Typography from '@mui/material/Typography'
 
 import CssBaseline from '@mui/material/CssBaseline'
+import useMediaQuery from '@mui/material/useMediaQuery'
 import { ThemeProvider } from '@mui/material/styles'
-import { Settings, TargetLang } from './data'
+import { darkTheme, lightTheme } from './theme'
 
+import { Settings, TargetLang } from './data'
 import log from './log'
-import theme from './theme'
 import './i18n'
 
 const TAG = 'options'
@@ -26,6 +27,9 @@ const manifest = chrome.runtime.getManifest()
 const version = `v${manifest.version}`
 
 const App = () => {
+  const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)')
+  const currentTheme = prefersDarkMode ? darkTheme : lightTheme
+
   const targetLangkeys = Object.keys(TargetLang)
   const [targetLangKey, setTargetLangKey] = useState(targetLangkeys[0])
 
@@ -45,7 +49,7 @@ const App = () => {
   }, [])
 
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={currentTheme}>
       <Container
         maxWidth='sm'
         sx={{
