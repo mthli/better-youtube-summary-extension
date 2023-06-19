@@ -1,4 +1,4 @@
-import React, { } from 'react'
+import React, { useEffect, useState } from 'react'
 import { createRoot } from 'react-dom/client'
 import { useTranslation } from 'react-i18next'
 
@@ -14,13 +14,25 @@ import Typography from '@mui/material/Typography'
 
 import CssBaseline from '@mui/material/CssBaseline'
 import { ThemeProvider } from '@mui/material/styles'
+import { TargetLang } from './data'
 
+import log from './log'
 import theme from './theme'
 import './i18n'
 
+const TAG = 'options'
+
 const App = () => {
+  // TODO (Matthew Lee) read from storage.
+  const [targetLangKey, setTargetLangKey] = useState(Object.keys(TargetLang)[0])
+
   const { t } = useTranslation()
   const title = t('title').toString()
+
+  useEffect(() => {
+    log(TAG, `useEffect, targetLangKey=${targetLangKey}`)
+    // TODO (Matthew Lee) save to storage.
+  }, [targetLangKey])
 
   return (
     <ThemeProvider theme={theme}>
@@ -64,7 +76,7 @@ const App = () => {
               pt: '8px',
               pb: '8px',
               pl: '16px',
-              pr: '16px',
+              pr: '9px', // trick.
             }}
           >
             <ListItemText>
@@ -73,16 +85,21 @@ const App = () => {
             <Select
               size='small'
               sx={{
-                minWidth: '120px',
+                minWidth: '180px',
                 height: '32px',
               }}
+              value={targetLangKey}
+              onChange={({ target: { value: key } }) => {
+                log(TAG, `Select, onChange, key=${key}`)
+                setTargetLangKey(key)
+              }}
             >
-              <MenuItem value={0}>
-                <em>None</em>
-              </MenuItem>
-              <MenuItem value={10}>Ten</MenuItem>
-              <MenuItem value={20}>Twenty</MenuItem>
-              <MenuItem value={30}>Thirty</MenuItem>
+              {
+                Object.keys(TargetLang).map(key => (
+                  // @ts-ignore
+                  <MenuItem value={key}>{TargetLang[key]}</MenuItem>
+                ))
+              }
             </Select>
           </ListItem>
           <ListItem disablePadding divider>

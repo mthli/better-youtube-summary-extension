@@ -1,3 +1,18 @@
+// https://www.deepl.com/docs-api/translate-text
+// https://en.wikipedia.org/wiki/Languages_used_on_the_Internet#Internet_users_by_language
+export enum TargetLang {
+  'EN-US' = 'English', // default.
+  'ZH' = '中文',
+  'ES' = 'Español',
+  'ID' = 'Bahasa Indonesia',
+  'PT-BR' = 'Português',
+  'FR' = 'Français',
+  'JA' = '日本語',
+  'RU' = 'Русский язык',
+  'DE' = 'Deutsch',
+  'KO' = '한국어',
+}
+
 export interface PageChapter {
   title: string,
   timestamp: string,

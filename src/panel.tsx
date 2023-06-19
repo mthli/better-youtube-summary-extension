@@ -71,7 +71,7 @@ const openOptionsPage = () => {
     requestUrl: chrome.runtime.getURL('options.html'),
   } as Message, message => {
     const json = JSON.stringify(message)
-    log(TAG, `openOptionsPage responseCallback, message=${json}`)
+    log(TAG, `openOptionsPage, responseCallback, message=${json}`)
   })
 }
 

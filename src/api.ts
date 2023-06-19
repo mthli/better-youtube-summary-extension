@@ -52,7 +52,7 @@ export const useSummarize = (
     ([_toggled, vid, chapters, noTranscript], { next }) => {
       /* const port = */ summarize(vid, chapters, noTranscript, next)
       return () => {
-        log(TAG, `useSummarize disposed, vid=${vid}`)
+        log(TAG, `useSummarize, disposed, vid=${vid}`)
         // DO NOTHING, port should be disconneted by server worker.
       }
     },
@@ -60,7 +60,7 @@ export const useSummarize = (
       loadingTimeout: 5 * 60 * 1000, // 5 mins.
       errorRetryCount: 2,
       onError(err, key) {
-        log(TAG, `useSummarize onError, key=${key}, err=${JSON.stringify(err)}`)
+        log(TAG, `useSummarize, onError, key=${key}, err=${JSON.stringify(err)}`)
       },
     },
   )
@@ -102,12 +102,12 @@ const summarize = (
   }
 
   port.onDisconnect.addListener(({ name }) => {
-    log(TAG, `summarize onDisconnect, name=${name}`)
+    log(TAG, `summarize, onDisconnect, name=${name}`)
     // DO NOTHING.
   })
 
   port.onMessage.addListener(message => {
-    log(TAG, `summarize onMessage, message=${JSON.stringify(message)}`)
+    log(TAG, `summarize, onMessage, message=${JSON.stringify(message)}`)
 
     const {
       type,
