@@ -22,6 +22,9 @@ import './i18n'
 
 const TAG = 'options'
 
+const manifest = chrome.runtime.getManifest()
+const version = `v${manifest.version}`
+
 const App = () => {
   // TODO (Matthew Lee) read from storage.
   const [targetLangKey, setTargetLangKey] = useState(Object.keys(TargetLang)[0])
@@ -96,8 +99,10 @@ const App = () => {
             >
               {
                 Object.keys(TargetLang).map(key => (
-                  // @ts-ignore
-                  <MenuItem value={key}>{TargetLang[key]}</MenuItem>
+                  <MenuItem key={key} value={key}>
+                    {/* @ts-ignore */}
+                    {TargetLang[key]}
+                  </MenuItem>
                 ))
               }
             </Select>
@@ -149,7 +154,7 @@ const App = () => {
           <ListItem disablePadding>
             <ListItemButton
               component='a'
-              href={`mailto:matthewlee0725@gmail.com?subject=${title}`}
+              href={`mailto:matthewlee0725@gmail.com?subject=${`${title} ${version}`}`}
               target='_blank'
             >
               <Box
