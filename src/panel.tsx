@@ -321,13 +321,16 @@ const Panel = ({ pageUrl }: { pageUrl: string }) => {
                       }}
                     >
                       {
-                        // SVG copied from YouTube Settings.
+                        // SVG copied from YouTube Settings, not perfect but ok.
                         !translating && (
                           <svg
                             viewBox='0 0 24 24'
-                            width='24'
-                            height='24'
+                            width='22px'
+                            height='22px'
                             style={{
+                              display: 'flex',
+                              alignItems: 'center',
+                              padding: '1px',
                               fill: iconColor,
                             }}
                           >
