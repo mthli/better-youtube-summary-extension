@@ -11,6 +11,7 @@ import IconButton from '@mui/material/IconButton'
 import List from '@mui/material/List'
 import Toolbar from '@mui/material/Toolbar'
 import Tooltip from '@mui/material/Tooltip'
+import useMediaQuery from '@mui/material/useMediaQuery'
 import { ThemeProvider } from '@mui/material/styles'
 
 import ChapterItem from './chapterItem'
@@ -77,6 +78,7 @@ const openOptionsPage = () => {
 
 const Panel = ({ pageUrl }: { pageUrl: string }) => {
   const itemRefs = useRef(new Map<string, Element | null>())
+  const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)')
 
   const [toggled, setToggled] = useState(0)
   const [selected, setSelected] = useState<string>('') // cid.
