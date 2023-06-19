@@ -57,9 +57,20 @@ const App = () => {
               href='https://twitter.com/mth_li'
               target='_blank'
             >
-              <ListItemText>
-                {t('twitter').toString()}
-              </ListItemText>
+              <Box
+                sx={{
+                  display: 'flex',
+                  overflow: 'hidden',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  width: '100%',
+                }}
+              >
+                <ListItemText>
+                  {t('twitter').toString()}
+                </ListItemText>
+                <span className="material-symbols-outlined">open_in_new</span>
+              </Box>
             </ListItemButton>
           </ListItem>
           <ListItem disablePadding divider>
@@ -68,9 +79,20 @@ const App = () => {
               href='https://t.me/betteryoutubesummary'
               target='_blank'
             >
-              <ListItemText>
-                {t('telegram').toString()}
-              </ListItemText>
+              <Box
+                sx={{
+                  display: 'flex',
+                  overflow: 'hidden',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  width: '100%',
+                }}
+              >
+                <ListItemText>
+                  {t('telegram').toString()}
+                </ListItemText>
+                <span className="material-symbols-outlined">open_in_new</span>
+              </Box>
             </ListItemButton>
           </ListItem>
           <ListItem disablePadding>
@@ -79,9 +101,20 @@ const App = () => {
               href={`mailto:matthewlee0725@gmail.com?subject=${title}`}
               target='_blank'
             >
-              <ListItemText>
-                {t('gmail').toString()}
-              </ListItemText>
+              <Box
+                sx={{
+                  display: 'flex',
+                  overflow: 'hidden',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  width: '100%',
+                }}
+              >
+                <ListItemText>
+                  {t('gmail').toString()}
+                </ListItemText>
+                <span className="material-symbols-outlined">open_in_new</span>
+              </Box>
             </ListItemButton>
           </ListItem>
         </List>

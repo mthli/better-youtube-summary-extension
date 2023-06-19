@@ -132,7 +132,7 @@ const ChapterItem = forwardRef(function ChapterItem({
           <ReactMarkdown className='markdown-body' rehypePlugins={[rehypeRaw]}>
             {/* textVide(summary) */ summary}
           </ReactMarkdown>
-          {!isLastItem && <Divider light />}
+          {!isLastItem && <Divider />}
         </Collapse>
       </ul>
     </li>

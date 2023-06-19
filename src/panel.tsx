@@ -262,7 +262,7 @@ const Panel = ({
               </IconButton>
             </Tooltip>
           </Toolbar>
-          {list.length > 0 && <Divider light />}
+          {list.length > 0 && <Divider />}
         </AppBar>
         {
           showAlert &&
