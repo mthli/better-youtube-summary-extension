@@ -202,4 +202,4 @@ root.render(
     <CssBaseline />
     <App />
   </React.StrictMode>
-);
+)
