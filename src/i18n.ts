@@ -8,6 +8,7 @@ const resources = {
       'title': 'Better YouTube Summary',
       'slogan': 'Literally Better YouTube Summary 🎯',
 
+      'translation': 'Set Translation Language',
       'gmail': 'Feedback by Email',
       'telegram': 'Join Telegram Group',
       'twitter': 'Follow on Twitter',
@@ -27,6 +28,7 @@ const resources = {
       'title': 'Better YouTube Summary',
       'slogan': '字面意义上更好的 YouTube 摘要插件 🎯',
 
+      'translation': '设置翻译语言',
       'gmail': '通过邮件反馈',
       'telegram': '加入电报群组',
       'twitter': '在推特上关注',
