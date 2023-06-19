@@ -82,7 +82,6 @@ const Panel = ({
   pageUrl: string,
   maxHeight?: number, // px.
 }) => {
-  const minHeight = 48 // px.
   const itemRefs = useRef(new Map<string, Element | null>())
 
   const [toggled, setToggled] = useState(0)
@@ -185,8 +184,8 @@ const Panel = ({
           display: 'flex',
           overflow: 'hidden',
           flexDirection: 'column',
-          minHeight: `${minHeight}px`,
-          maxHeight: `${maxHeight > minHeight ? maxHeight : minHeight}px`,
+          minHeight: '48px',
+          maxHeight: `${maxHeight > 560 ? maxHeight : 560}px`,
           bgcolor: 'background.default',
         }}
       >
