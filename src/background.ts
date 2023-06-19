@@ -88,9 +88,8 @@ const throwInvalidRequest = (send: (message?: any) => void, message: Message) =>
   } as Message)
 }
 
-/*
 chrome.runtime.onMessage.addListener((message: Message, sender, sendResponse) => {
-  // log(TAG, `runtime onMessage, senderId=${sender.id}, message=${JSON.stringify(message)}`)
+  log(TAG, `runtime onMessage, senderId=${sender.id}`)
 
   // Filter our extension messages.
   if (sender.id !== chrome.runtime.id) {
@@ -98,10 +97,22 @@ chrome.runtime.onMessage.addListener((message: Message, sender, sendResponse) =>
     return true
   }
 
-  // Must be MessageType.REQUEST
   const { type, requestUrl, requestInit } = message
+  log(TAG, `runtime onMessage, requestUrl=${requestUrl}`)
+
+  // Must be MessageType.REQUEST
   if (type !== MessageType.REQUEST || !requestUrl) {
     throwInvalidRequest(sendResponse, message)
+    return true
+  }
+
+  // https://stackoverflow.com/a/62461987
+  if (requestUrl.startsWith('chrome-extension://')) {
+    chrome.tabs.create({ url: requestUrl })
+    sendResponse({
+      type: MessageType.RESPONSE,
+      responseOk: true,
+    } as Message)
     return true
   }
 
@@ -133,7 +144,6 @@ chrome.runtime.onMessage.addListener((message: Message, sender, sendResponse) =>
   // https://stackoverflow.com/q/48107746
   return true
 })
-*/
 
 chrome.runtime.onConnect.addListener(port => {
   port.onMessage.addListener((message, port) => {

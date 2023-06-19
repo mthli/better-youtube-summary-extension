@@ -17,7 +17,13 @@ import ChapterItem from './chapterItem'
 import { GooSpinner } from 'react-spinners-kit'
 
 import { useSummarize } from './api'
-import { PageChapter, Summary, SummaryState } from './data'
+import {
+  Message,
+  MessageType,
+  PageChapter,
+  Summary,
+  SummaryState,
+} from './data'
 import { Map as ImmutableMap } from 'immutable'
 
 import log from './log'
@@ -60,7 +66,13 @@ const parseChapters = (): PageChapter[] => {
 
 // https://stackoverflow.com/a/62461987
 const openOptionsPage = () => {
-  // TODO (Matthew Lee) goto options.html
+  chrome.runtime.sendMessage({
+    type: MessageType.REQUEST,
+    requestUrl: chrome.runtime.getURL('options.html'),
+  } as Message, message => {
+    const json = JSON.stringify(message)
+    log(TAG, `openOptionsPage responseCallback, message=${json}`)
+  })
 }
 
 const Panel = ({
