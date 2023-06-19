@@ -13,6 +13,10 @@ export enum TargetLang {
   'KO' = '한국어',
 }
 
+export enum Settings {
+  TRANSLATION_TARGET_LANG = 'translation_target_lang',
+}
+
 export interface PageChapter {
   title: string,
   timestamp: string,

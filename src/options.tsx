@@ -14,7 +14,7 @@ import Typography from '@mui/material/Typography'
 
 import CssBaseline from '@mui/material/CssBaseline'
 import { ThemeProvider } from '@mui/material/styles'
-import { TargetLang } from './data'
+import { Settings, TargetLang } from './data'
 
 import log from './log'
 import theme from './theme'
@@ -26,16 +26,23 @@ const manifest = chrome.runtime.getManifest()
 const version = `v${manifest.version}`
 
 const App = () => {
-  // TODO (Matthew Lee) read from storage.
-  const [targetLangKey, setTargetLangKey] = useState(Object.keys(TargetLang)[0])
+  const targetLangkeys = Object.keys(TargetLang)
+  const [targetLangKey, setTargetLangKey] = useState(targetLangkeys[0])
 
   const { t } = useTranslation()
   const title = t('title').toString()
 
   useEffect(() => {
-    log(TAG, `useEffect, targetLangKey=${targetLangKey}`)
-    // TODO (Matthew Lee) save to storage.
-  }, [targetLangKey])
+    chrome.storage.sync.get(Settings.TRANSLATION_TARGET_LANG, res => {
+      const { [Settings.TRANSLATION_TARGET_LANG]: key } = res
+      log(TAG, `init, TRANSLATION_TARGET_LANG=${key}`)
+      if (targetLangkeys.includes(key)) {
+        setTargetLangKey(key)
+      } else {
+        setTargetLangKey(targetLangkeys[0])
+      }
+    })
+  }, [])
 
   return (
     <ThemeProvider theme={theme}>
@@ -105,6 +112,8 @@ const App = () => {
               value={targetLangKey}
               onChange={({ target: { value: key } }) => {
                 log(TAG, `Select, onChange, key=${key}`)
+                // Don't useEffect for `targetLangKey` here.
+                chrome.storage.sync.set({ [Settings.TRANSLATION_TARGET_LANG]: key })
                 setTargetLangKey(key)
               }}
             >
