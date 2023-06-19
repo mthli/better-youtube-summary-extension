@@ -3,6 +3,8 @@
   padding-bottom: 12px;
   padding-left: 8px;
   padding-right: 16px;
+  color: var(--yt-spec-text-primary);
+  background-color: var(--yt-spec-base-background);
 }
 
 .markdown-light ul {
@@ -19,6 +21,8 @@
   padding-bottom: 12px;
   padding-left: 8px;
   padding-right: 16px;
+  color: var(--yt-spec-text-primary);
+  background-color: var(--yt-spec-base-background);
 }
 
 .markdown-dark ul {
