@@ -1,15 +1,31 @@
-.markdown-body {
+.markdown-light {
   padding-top: 12px;
   padding-bottom: 12px;
   padding-left: 8px;
   padding-right: 16px;
 }
 
-.markdown-body ul {
+.markdown-light ul {
   padding-left: 16px;
 }
 
-.markdown-body ul li {
+.markdown-light ul li {
+  font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif;
+  list-style-type: disc;
+}
+
+.markdown-dark {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  padding-left: 8px;
+  padding-right: 16px;
+}
+
+.markdown-dark ul {
+  padding-left: 16px;
+}
+
+.markdown-dark ul li {
   font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif;
   list-style-type: disc;
 }

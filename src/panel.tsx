@@ -14,7 +14,7 @@ import Tooltip from '@mui/material/Tooltip'
 
 import useMediaQuery from '@mui/material/useMediaQuery'
 import { ThemeProvider } from '@mui/material/styles'
-import { darkTheme, lightTheme } from './theme'
+import { lightTheme, darkTheme } from './theme'
 
 import ChapterItem from './chapterItem'
 import { GooSpinner, ImpulseSpinner } from 'react-spinners-kit'

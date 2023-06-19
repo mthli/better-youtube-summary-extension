@@ -15,7 +15,7 @@ import Typography from '@mui/material/Typography'
 import CssBaseline from '@mui/material/CssBaseline'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import { ThemeProvider } from '@mui/material/styles'
-import { darkTheme, lightTheme } from './theme'
+import { lightTheme, darkTheme } from './theme'
 
 import { Settings, TargetLang } from './data'
 import log from './log'

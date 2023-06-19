@@ -1,0 +1,1039 @@
+/*light*/
+
+.markdown-light {
+  -ms-text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
+  margin: 0;
+  color: #1F2328;
+  background-color: #ffffff;
+  font-family: -apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji";
+  font-size: 16px;
+  line-height: 1.5;
+  word-wrap: break-word;
+}
+
+.markdown-light .octicon {
+  display: inline-block;
+  fill: currentColor;
+  vertical-align: text-bottom;
+}
+
+.markdown-light h1:hover .anchor .octicon-link:before,
+.markdown-light h2:hover .anchor .octicon-link:before,
+.markdown-light h3:hover .anchor .octicon-link:before,
+.markdown-light h4:hover .anchor .octicon-link:before,
+.markdown-light h5:hover .anchor .octicon-link:before,
+.markdown-light h6:hover .anchor .octicon-link:before {
+  width: 16px;
+  height: 16px;
+  content: ' ';
+  display: inline-block;
+  background-color: currentColor;
+  -webkit-mask-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' version='1.1' aria-hidden='true'><path fill-rule='evenodd' d='M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z'></path></svg>");
+  mask-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' version='1.1' aria-hidden='true'><path fill-rule='evenodd' d='M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z'></path></svg>");
+}
+
+.markdown-light details,
+.markdown-light figcaption,
+.markdown-light figure {
+  display: block;
+}
+
+.markdown-light summary {
+  display: list-item;
+}
+
+.markdown-light [hidden] {
+  display: none !important;
+}
+
+.markdown-light a {
+  background-color: transparent;
+  color: #0969da;
+  text-decoration: none;
+}
+
+.markdown-light abbr[title] {
+  border-bottom: none;
+  text-decoration: underline dotted;
+}
+
+.markdown-light b,
+.markdown-light strong {
+  font-weight: 600;
+}
+
+.markdown-light dfn {
+  font-style: italic;
+}
+
+.markdown-light h1 {
+  margin: .67em 0;
+  font-weight: 600;
+  padding-bottom: .3em;
+  font-size: 2em;
+  border-bottom: 1px solid hsla(210,18%,87%,1);
+}
+
+.markdown-light mark {
+  background-color: #fff8c5;
+  color: #1F2328;
+}
+
+.markdown-light small {
+  font-size: 90%;
+}
+
+.markdown-light sub,
+.markdown-light sup {
+  font-size: 75%;
+  line-height: 0;
+  position: relative;
+  vertical-align: baseline;
+}
+
+.markdown-light sub {
+  bottom: -0.25em;
+}
+
+.markdown-light sup {
+  top: -0.5em;
+}
+
+.markdown-light img {
+  border-style: none;
+  max-width: 100%;
+  box-sizing: content-box;
+  background-color: #ffffff;
+}
+
+.markdown-light code,
+.markdown-light kbd,
+.markdown-light pre,
+.markdown-light samp {
+  font-family: monospace;
+  font-size: 1em;
+}
+
+.markdown-light figure {
+  margin: 1em 40px;
+}
+
+.markdown-light hr {
+  box-sizing: content-box;
+  overflow: hidden;
+  background: transparent;
+  border-bottom: 1px solid hsla(210,18%,87%,1);
+  height: .25em;
+  padding: 0;
+  margin: 24px 0;
+  background-color: #d0d7de;
+  border: 0;
+}
+
+.markdown-light input {
+  font: inherit;
+  margin: 0;
+  overflow: visible;
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+}
+
+.markdown-light [type=button],
+.markdown-light [type=reset],
+.markdown-light [type=submit] {
+  -webkit-appearance: button;
+}
+
+.markdown-light [type=checkbox],
+.markdown-light [type=radio] {
+  box-sizing: border-box;
+  padding: 0;
+}
+
+.markdown-light [type=number]::-webkit-inner-spin-button,
+.markdown-light [type=number]::-webkit-outer-spin-button {
+  height: auto;
+}
+
+.markdown-light [type=search]::-webkit-search-cancel-button,
+.markdown-light [type=search]::-webkit-search-decoration {
+  -webkit-appearance: none;
+}
+
+.markdown-light ::-webkit-input-placeholder {
+  color: inherit;
+  opacity: .54;
+}
+
+.markdown-light ::-webkit-file-upload-button {
+  -webkit-appearance: button;
+  font: inherit;
+}
+
+.markdown-light a:hover {
+  text-decoration: underline;
+}
+
+.markdown-light ::placeholder {
+  color: #6e7781;
+  opacity: 1;
+}
+
+.markdown-light hr::before {
+  display: table;
+  content: "";
+}
+
+.markdown-light hr::after {
+  display: table;
+  clear: both;
+  content: "";
+}
+
+.markdown-light table {
+  border-spacing: 0;
+  border-collapse: collapse;
+  display: block;
+  width: max-content;
+  max-width: 100%;
+  overflow: auto;
+}
+
+.markdown-light td,
+.markdown-light th {
+  padding: 0;
+}
+
+.markdown-light details summary {
+  cursor: pointer;
+}
+
+.markdown-light details:not([open])>*:not(summary) {
+  display: none !important;
+}
+
+.markdown-light a:focus,
+.markdown-light [role=button]:focus,
+.markdown-light input[type=radio]:focus,
+.markdown-light input[type=checkbox]:focus {
+  outline: 2px solid #0969da;
+  outline-offset: -2px;
+  box-shadow: none;
+}
+
+.markdown-light a:focus:not(:focus-visible),
+.markdown-light [role=button]:focus:not(:focus-visible),
+.markdown-light input[type=radio]:focus:not(:focus-visible),
+.markdown-light input[type=checkbox]:focus:not(:focus-visible) {
+  outline: solid 1px transparent;
+}
+
+.markdown-light a:focus-visible,
+.markdown-light [role=button]:focus-visible,
+.markdown-light input[type=radio]:focus-visible,
+.markdown-light input[type=checkbox]:focus-visible {
+  outline: 2px solid #0969da;
+  outline-offset: -2px;
+  box-shadow: none;
+}
+
+.markdown-light a:not([class]):focus,
+.markdown-light a:not([class]):focus-visible,
+.markdown-light input[type=radio]:focus,
+.markdown-light input[type=radio]:focus-visible,
+.markdown-light input[type=checkbox]:focus,
+.markdown-light input[type=checkbox]:focus-visible {
+  outline-offset: 0;
+}
+
+.markdown-light kbd {
+  display: inline-block;
+  padding: 3px 5px;
+  font: 11px ui-monospace,SFMono-Regular,SF Mono,Menlo,Consolas,Liberation Mono,monospace;
+  line-height: 10px;
+  color: #1F2328;
+  vertical-align: middle;
+  background-color: #f6f8fa;
+  border: solid 1px rgba(175,184,193,0.2);
+  border-bottom-color: rgba(175,184,193,0.2);
+  border-radius: 6px;
+  box-shadow: inset 0 -1px 0 rgba(175,184,193,0.2);
+}
+
+.markdown-light h1,
+.markdown-light h2,
+.markdown-light h3,
+.markdown-light h4,
+.markdown-light h5,
+.markdown-light h6 {
+  margin-top: 24px;
+  margin-bottom: 16px;
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+.markdown-light h2 {
+  font-weight: 600;
+  padding-bottom: .3em;
+  font-size: 1.5em;
+  border-bottom: 1px solid hsla(210,18%,87%,1);
+}
+
+.markdown-light h3 {
+  font-weight: 600;
+  font-size: 1.25em;
+}
+
+.markdown-light h4 {
+  font-weight: 600;
+  font-size: 1em;
+}
+
+.markdown-light h5 {
+  font-weight: 600;
+  font-size: .875em;
+}
+
+.markdown-light h6 {
+  font-weight: 600;
+  font-size: .85em;
+  color: #656d76;
+}
+
+.markdown-light p {
+  margin-top: 0;
+  margin-bottom: 10px;
+}
+
+.markdown-light blockquote {
+  margin: 0;
+  padding: 0 1em;
+  color: #656d76;
+  border-left: .25em solid #d0d7de;
+}
+
+.markdown-light ul,
+.markdown-light ol {
+  margin-top: 0;
+  margin-bottom: 0;
+  padding-left: 2em;
+}
+
+.markdown-light ol ol,
+.markdown-light ul ol {
+  list-style-type: lower-roman;
+}
+
+.markdown-light ul ul ol,
+.markdown-light ul ol ol,
+.markdown-light ol ul ol,
+.markdown-light ol ol ol {
+  list-style-type: lower-alpha;
+}
+
+.markdown-light dd {
+  margin-left: 0;
+}
+
+.markdown-light tt,
+.markdown-light code,
+.markdown-light samp {
+  font-family: ui-monospace,SFMono-Regular,SF Mono,Menlo,Consolas,Liberation Mono,monospace;
+  font-size: 12px;
+}
+
+.markdown-light pre {
+  margin-top: 0;
+  margin-bottom: 0;
+  font-family: ui-monospace,SFMono-Regular,SF Mono,Menlo,Consolas,Liberation Mono,monospace;
+  font-size: 12px;
+  word-wrap: normal;
+}
+
+.markdown-light .octicon {
+  display: inline-block;
+  overflow: visible !important;
+  vertical-align: text-bottom;
+  fill: currentColor;
+}
+
+.markdown-light input::-webkit-outer-spin-button,
+.markdown-light input::-webkit-inner-spin-button {
+  margin: 0;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.markdown-light::before {
+  display: table;
+  content: "";
+}
+
+.markdown-light::after {
+  display: table;
+  clear: both;
+  content: "";
+}
+
+.markdown-light>*:first-child {
+  margin-top: 0 !important;
+}
+
+.markdown-light>*:last-child {
+  margin-bottom: 0 !important;
+}
+
+.markdown-light a:not([href]) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.markdown-light .absent {
+  color: #d1242f;
+}
+
+.markdown-light .anchor {
+  float: left;
+  padding-right: 4px;
+  margin-left: -20px;
+  line-height: 1;
+}
+
+.markdown-light .anchor:focus {
+  outline: none;
+}
+
+.markdown-light p,
+.markdown-light blockquote,
+.markdown-light ul,
+.markdown-light ol,
+.markdown-light dl,
+.markdown-light table,
+.markdown-light pre,
+.markdown-light details {
+  margin-top: 0;
+  margin-bottom: 16px;
+}
+
+.markdown-light blockquote>:first-child {
+  margin-top: 0;
+}
+
+.markdown-light blockquote>:last-child {
+  margin-bottom: 0;
+}
+
+.markdown-light h1 .octicon-link,
+.markdown-light h2 .octicon-link,
+.markdown-light h3 .octicon-link,
+.markdown-light h4 .octicon-link,
+.markdown-light h5 .octicon-link,
+.markdown-light h6 .octicon-link {
+  color: #1F2328;
+  vertical-align: middle;
+  visibility: hidden;
+}
+
+.markdown-light h1:hover .anchor,
+.markdown-light h2:hover .anchor,
+.markdown-light h3:hover .anchor,
+.markdown-light h4:hover .anchor,
+.markdown-light h5:hover .anchor,
+.markdown-light h6:hover .anchor {
+  text-decoration: none;
+}
+
+.markdown-light h1:hover .anchor .octicon-link,
+.markdown-light h2:hover .anchor .octicon-link,
+.markdown-light h3:hover .anchor .octicon-link,
+.markdown-light h4:hover .anchor .octicon-link,
+.markdown-light h5:hover .anchor .octicon-link,
+.markdown-light h6:hover .anchor .octicon-link {
+  visibility: visible;
+}
+
+.markdown-light h1 tt,
+.markdown-light h1 code,
+.markdown-light h2 tt,
+.markdown-light h2 code,
+.markdown-light h3 tt,
+.markdown-light h3 code,
+.markdown-light h4 tt,
+.markdown-light h4 code,
+.markdown-light h5 tt,
+.markdown-light h5 code,
+.markdown-light h6 tt,
+.markdown-light h6 code {
+  padding: 0 .2em;
+  font-size: inherit;
+}
+
+.markdown-light summary h1,
+.markdown-light summary h2,
+.markdown-light summary h3,
+.markdown-light summary h4,
+.markdown-light summary h5,
+.markdown-light summary h6 {
+  display: inline-block;
+}
+
+.markdown-light summary h1 .anchor,
+.markdown-light summary h2 .anchor,
+.markdown-light summary h3 .anchor,
+.markdown-light summary h4 .anchor,
+.markdown-light summary h5 .anchor,
+.markdown-light summary h6 .anchor {
+  margin-left: -40px;
+}
+
+.markdown-light summary h1,
+.markdown-light summary h2 {
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
+.markdown-light ul.no-list,
+.markdown-light ol.no-list {
+  padding: 0;
+  list-style-type: none;
+}
+
+.markdown-light ol[type="a s"] {
+  list-style-type: lower-alpha;
+}
+
+.markdown-light ol[type="A s"] {
+  list-style-type: upper-alpha;
+}
+
+.markdown-light ol[type="i s"] {
+  list-style-type: lower-roman;
+}
+
+.markdown-light ol[type="I s"] {
+  list-style-type: upper-roman;
+}
+
+.markdown-light ol[type="1"] {
+  list-style-type: decimal;
+}
+
+.markdown-light div>ol:not([type]) {
+  list-style-type: decimal;
+}
+
+.markdown-light ul ul,
+.markdown-light ul ol,
+.markdown-light ol ol,
+.markdown-light ol ul {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.markdown-light li>p {
+  margin-top: 16px;
+}
+
+.markdown-light li+li {
+  margin-top: .25em;
+}
+
+.markdown-light dl {
+  padding: 0;
+}
+
+.markdown-light dl dt {
+  padding: 0;
+  margin-top: 16px;
+  font-size: 1em;
+  font-style: italic;
+  font-weight: 600;
+}
+
+.markdown-light dl dd {
+  padding: 0 16px;
+  margin-bottom: 16px;
+}
+
+.markdown-light table th {
+  font-weight: 600;
+}
+
+.markdown-light table th,
+.markdown-light table td {
+  padding: 6px 13px;
+  border: 1px solid #d0d7de;
+}
+
+.markdown-light table td>:last-child {
+  margin-bottom: 0;
+}
+
+.markdown-light table tr {
+  background-color: #ffffff;
+  border-top: 1px solid hsla(210,18%,87%,1);
+}
+
+.markdown-light table tr:nth-child(2n) {
+  background-color: #f6f8fa;
+}
+
+.markdown-light table img {
+  background-color: transparent;
+}
+
+.markdown-light img[align=right] {
+  padding-left: 20px;
+}
+
+.markdown-light img[align=left] {
+  padding-right: 20px;
+}
+
+.markdown-light .emoji {
+  max-width: none;
+  vertical-align: text-top;
+  background-color: transparent;
+}
+
+.markdown-light span.frame {
+  display: block;
+  overflow: hidden;
+}
+
+.markdown-light span.frame>span {
+  display: block;
+  float: left;
+  width: auto;
+  padding: 7px;
+  margin: 13px 0 0;
+  overflow: hidden;
+  border: 1px solid #d0d7de;
+}
+
+.markdown-light span.frame span img {
+  display: block;
+  float: left;
+}
+
+.markdown-light span.frame span span {
+  display: block;
+  padding: 5px 0 0;
+  clear: both;
+  color: #1F2328;
+}
+
+.markdown-light span.align-center {
+  display: block;
+  overflow: hidden;
+  clear: both;
+}
+
+.markdown-light span.align-center>span {
+  display: block;
+  margin: 13px auto 0;
+  overflow: hidden;
+  text-align: center;
+}
+
+.markdown-light span.align-center span img {
+  margin: 0 auto;
+  text-align: center;
+}
+
+.markdown-light span.align-right {
+  display: block;
+  overflow: hidden;
+  clear: both;
+}
+
+.markdown-light span.align-right>span {
+  display: block;
+  margin: 13px 0 0;
+  overflow: hidden;
+  text-align: right;
+}
+
+.markdown-light span.align-right span img {
+  margin: 0;
+  text-align: right;
+}
+
+.markdown-light span.float-left {
+  display: block;
+  float: left;
+  margin-right: 13px;
+  overflow: hidden;
+}
+
+.markdown-light span.float-left span {
+  margin: 13px 0 0;
+}
+
+.markdown-light span.float-right {
+  display: block;
+  float: right;
+  margin-left: 13px;
+  overflow: hidden;
+}
+
+.markdown-light span.float-right>span {
+  display: block;
+  margin: 13px auto 0;
+  overflow: hidden;
+  text-align: right;
+}
+
+.markdown-light code,
+.markdown-light tt {
+  padding: .2em .4em;
+  margin: 0;
+  font-size: 85%;
+  white-space: break-spaces;
+  background-color: rgba(175,184,193,0.2);
+  border-radius: 6px;
+}
+
+.markdown-light code br,
+.markdown-light tt br {
+  display: none;
+}
+
+.markdown-light del code {
+  text-decoration: inherit;
+}
+
+.markdown-light samp {
+  font-size: 85%;
+}
+
+.markdown-light pre code {
+  font-size: 100%;
+}
+
+.markdown-light pre>code {
+  padding: 0;
+  margin: 0;
+  word-break: normal;
+  white-space: pre;
+  background: transparent;
+  border: 0;
+}
+
+.markdown-light .highlight {
+  margin-bottom: 16px;
+}
+
+.markdown-light .highlight pre {
+  margin-bottom: 0;
+  word-break: normal;
+}
+
+.markdown-light .highlight pre,
+.markdown-light pre {
+  padding: 16px;
+  overflow: auto;
+  font-size: 85%;
+  line-height: 1.45;
+  color: #1F2328;
+  background-color: #f6f8fa;
+  border-radius: 6px;
+}
+
+.markdown-light pre code,
+.markdown-light pre tt {
+  display: inline;
+  max-width: auto;
+  padding: 0;
+  margin: 0;
+  overflow: visible;
+  line-height: inherit;
+  word-wrap: normal;
+  background-color: transparent;
+  border: 0;
+}
+
+.markdown-light .csv-data td,
+.markdown-light .csv-data th {
+  padding: 5px;
+  overflow: hidden;
+  font-size: 12px;
+  line-height: 1;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.markdown-light .csv-data .blob-num {
+  padding: 10px 8px 9px;
+  text-align: right;
+  background: #ffffff;
+  border: 0;
+}
+
+.markdown-light .csv-data tr {
+  border-top: 0;
+}
+
+.markdown-light .csv-data th {
+  font-weight: 600;
+  background: #f6f8fa;
+  border-top: 0;
+}
+
+.markdown-light [data-footnote-ref]::before {
+  content: "[";
+}
+
+.markdown-light [data-footnote-ref]::after {
+  content: "]";
+}
+
+.markdown-light .footnotes {
+  font-size: 12px;
+  color: #656d76;
+  border-top: 1px solid #d0d7de;
+}
+
+.markdown-light .footnotes ol {
+  padding-left: 16px;
+}
+
+.markdown-light .footnotes ol ul {
+  display: inline-block;
+  padding-left: 16px;
+  margin-top: 16px;
+}
+
+.markdown-light .footnotes li {
+  position: relative;
+}
+
+.markdown-light .footnotes li:target::before {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  bottom: -8px;
+  left: -24px;
+  pointer-events: none;
+  content: "";
+  border: 2px solid #0969da;
+  border-radius: 6px;
+}
+
+.markdown-light .footnotes li:target {
+  color: #1F2328;
+}
+
+.markdown-light .footnotes .data-footnote-backref g-emoji {
+  font-family: monospace;
+}
+
+.markdown-light [popover] {
+  background: canvas;
+  border: solid;
+  color: canvastext;
+  height: fit-content;
+  inset: 0;
+  margin: auto;
+  overflow: auto;
+  padding: .25em;
+  position: fixed;
+  width: fit-content;
+  z-index: 2147483647;
+}
+
+.markdown-light [popover][anchor] {
+  inset: auto;
+}
+
+.markdown-light .pl-c {
+  color: #6e7781;
+}
+
+.markdown-light .pl-c1,
+.markdown-light .pl-s .pl-v {
+  color: #0550ae;
+}
+
+.markdown-light .pl-e,
+.markdown-light .pl-en {
+  color: #8250df;
+}
+
+.markdown-light .pl-smi,
+.markdown-light .pl-s .pl-s1 {
+  color: #24292f;
+}
+
+.markdown-light .pl-ent {
+  color: #116329;
+}
+
+.markdown-light .pl-k {
+  color: #cf222e;
+}
+
+.markdown-light .pl-s,
+.markdown-light .pl-pds,
+.markdown-light .pl-s .pl-pse .pl-s1,
+.markdown-light .pl-sr,
+.markdown-light .pl-sr .pl-cce,
+.markdown-light .pl-sr .pl-sre,
+.markdown-light .pl-sr .pl-sra {
+  color: #0a3069;
+}
+
+.markdown-light .pl-v,
+.markdown-light .pl-smw {
+  color: #953800;
+}
+
+.markdown-light .pl-bu {
+  color: #82071e;
+}
+
+.markdown-light .pl-ii {
+  color: #f6f8fa;
+  background-color: #82071e;
+}
+
+.markdown-light .pl-c2 {
+  color: #f6f8fa;
+  background-color: #cf222e;
+}
+
+.markdown-light .pl-sr .pl-cce {
+  font-weight: bold;
+  color: #116329;
+}
+
+.markdown-light .pl-ml {
+  color: #3b2300;
+}
+
+.markdown-light .pl-mh,
+.markdown-light .pl-mh .pl-en,
+.markdown-light .pl-ms {
+  font-weight: bold;
+  color: #0550ae;
+}
+
+.markdown-light .pl-mi {
+  font-style: italic;
+  color: #24292f;
+}
+
+.markdown-light .pl-mb {
+  font-weight: bold;
+  color: #24292f;
+}
+
+.markdown-light .pl-md {
+  color: #82071e;
+  background-color: #ffebe9;
+}
+
+.markdown-light .pl-mi1 {
+  color: #116329;
+  background-color: #dafbe1;
+}
+
+.markdown-light .pl-mc {
+  color: #953800;
+  background-color: #ffd8b5;
+}
+
+.markdown-light .pl-mi2 {
+  color: #eaeef2;
+  background-color: #0550ae;
+}
+
+.markdown-light .pl-mdr {
+  font-weight: bold;
+  color: #8250df;
+}
+
+.markdown-light .pl-ba {
+  color: #57606a;
+}
+
+.markdown-light .pl-sg {
+  color: #8c959f;
+}
+
+.markdown-light .pl-corl {
+  text-decoration: underline;
+  color: #0a3069;
+}
+
+.markdown-light g-emoji {
+  display: inline-block;
+  min-width: 1ch;
+  font-family: "Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
+  font-size: 1em;
+  font-style: normal !important;
+  font-weight: 400;
+  line-height: 1;
+  vertical-align: -0.075em;
+}
+
+.markdown-light g-emoji img {
+  width: 1em;
+  height: 1em;
+}
+
+.markdown-light .task-list-item {
+  list-style-type: none;
+}
+
+.markdown-light .task-list-item label {
+  font-weight: 400;
+}
+
+.markdown-light .task-list-item.enabled label {
+  cursor: pointer;
+}
+
+.markdown-light .task-list-item+.task-list-item {
+  margin-top: 4px;
+}
+
+.markdown-light .task-list-item .handle {
+  display: none;
+}
+
+.markdown-light .task-list-item-checkbox {
+  margin: 0 .2em .25em -1.4em;
+  vertical-align: middle;
+}
+
+.markdown-light .contains-task-list:dir(rtl) .task-list-item-checkbox {
+  margin: 0 -1.6em .25em .2em;
+}
+
+.markdown-light .contains-task-list {
+  position: relative;
+}
+
+.markdown-light .contains-task-list:hover .task-list-item-convert-container,
+.markdown-light .contains-task-list:focus-within .task-list-item-convert-container {
+  display: block;
+  width: auto;
+  height: 24px;
+  overflow: visible;
+  clip: auto;
+}
+
+.markdown-light .QueryBuilder .qb-entity {
+  color: #8250df;
+}
+
+.markdown-light .QueryBuilder .qb-constant {
+  color: #0550ae;
+}
+
+.markdown-light ::-webkit-calendar-picker-indicator {
+  filter: invert(50%);
+}

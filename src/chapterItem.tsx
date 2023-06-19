@@ -15,7 +15,8 @@ import ReactMarkdown from 'react-markdown'
 import rehypeRaw from 'rehype-raw'
 
 import { Chapter } from './data'
-import 'github-markdown-css'
+import './markdown-light.css'
+import './markdown-dark.css'
 import './panel.css'
 import './i18n'
 
@@ -130,7 +131,10 @@ const ChapterItem = forwardRef(function ChapterItem({
           </ul>
         </ListSubheader>
         <Collapse in={expanded} timeout='auto' unmountOnExit>
-          <ReactMarkdown className='markdown-body' rehypePlugins={[rehypeRaw]}>
+          <ReactMarkdown
+            className={`markdown-${theme.palette.mode}`}
+            rehypePlugins={[rehypeRaw]}
+          >
             {/* textVide(summary) */ summary}
           </ReactMarkdown>
           {!isLastItem && <Divider />}
