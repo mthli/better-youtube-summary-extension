@@ -11,6 +11,7 @@ import log from './log'
 
 const TAG = 'background'
 
+/*
 // One of: 'install', 'update', 'chrome_update', or 'shared_module_update'.
 chrome.runtime.onInstalled.addListener(({ reason }) => {
   // If is first installed or updated to a new version, jump to options page.
@@ -20,6 +21,7 @@ chrome.runtime.onInstalled.addListener(({ reason }) => {
     })
   }
 })
+*/
 
 // Server worker `document` is undefined,
 // but `fetchEventSource` need it,
