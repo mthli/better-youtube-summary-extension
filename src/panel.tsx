@@ -14,7 +14,7 @@ import Tooltip from '@mui/material/Tooltip'
 import { ThemeProvider } from '@mui/material/styles'
 
 import ChapterItem from './chapterItem'
-import { GooSpinner } from 'react-spinners-kit'
+import { GooSpinner, ImpulseSpinner } from 'react-spinners-kit'
 
 import { useSummarize } from './api'
 import {
@@ -87,6 +87,7 @@ const Panel = ({
   const [toggled, setToggled] = useState(0)
   const [selected, setSelected] = useState<string>('') // cid.
   const [expands, setExpands] = useState<ImmutableMap<string, boolean>>(ImmutableMap())
+  const [translating, setTranslating] = useState(false)
 
   const { t } = useTranslation()
   const { data, error } = useSummarize(
@@ -98,7 +99,8 @@ const Panel = ({
 
   const { state, chapters = [] } = (data || {}) as Summary
   const { name: errName, message: errMsg } = (error || {}) as Error
-  const isDoing = (state === SummaryState.DOING) && !error
+  const doing = (state === SummaryState.DOING) && !error
+  const done = (state === SummaryState.DONE) && !error
 
   let showAlert = false
   let alertSeverity: AlertColor = 'info'
@@ -191,8 +193,8 @@ const Panel = ({
             variant='dense'
             style={{ /* instead of sx */
               justifyContent: 'space-between',
-              paddingLeft: '20px',
-              paddingRight: '20px',
+              paddingLeft: '8px',
+              paddingRight: '8px',
             }}
           >
             <ButtonGroup disableElevation>
@@ -201,20 +203,24 @@ const Panel = ({
                   // Tooltip will always show if its children changed accidentally,
                   // so use a Box as wrapper to let Tooltip can always foucs.
                 }
-                <Box>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                  }}
+                >
                   <IconButton
                     aria-label={t('summarize').toString()}
                     color='inherit'
-                    edge='start'
-                    disabled={isDoing}
+                    disabled={doing}
                     onClick={() => setToggled(toggled + 1)}
                   >
                     {
-                      !isDoing &&
+                      !doing &&
                       <span className='material-symbols-outlined'>summarize</span>
                     }
                     {
-                      isDoing &&
+                      doing &&
                       <GooSpinner
                         size={24}
                         color={theme.palette.text.primary}
@@ -251,16 +257,50 @@ const Panel = ({
                 </Tooltip>
               }
             </ButtonGroup>
-            <Tooltip title={t('settings').toString()}>
-              <IconButton
-                aria-label={t('settings').toString()}
-                color='inherit'
-                edge='end'
-                onClick={openOptionsPage}
-              >
-                <span className='material-symbols-outlined'>settings</span>
-              </IconButton>
-            </Tooltip>
+            <ButtonGroup>
+              {
+                list.length > 0 &&
+                <Tooltip title={t('translate').toString()}>
+                  <Box sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    mr: '8px',
+                  }}>
+                    <IconButton
+                      aria-label={t('translate').toString()}
+                      color='inherit'
+                      disabled={translating || !done}
+                      onClick={() => {
+                        // TODO
+                      }}
+                    >
+                      {
+                        !translating &&
+                        <span className='material-symbols-outlined'>language</span>
+                      }
+                      {
+                        translating &&
+                        <ImpulseSpinner
+                          size={24}
+                          frontColor={theme.palette.text.primary}
+                          backColor={theme.palette.text.secondary}
+                          loading
+                        />
+                      }
+                    </IconButton>
+                  </Box>
+                </Tooltip>
+              }
+              <Tooltip title={t('settings').toString()}>
+                <IconButton
+                  aria-label={t('settings').toString()}
+                  color='inherit'
+                  onClick={openOptionsPage}
+                >
+                  <span className='material-symbols-outlined'>settings</span>
+                </IconButton>
+              </Tooltip>
+            </ButtonGroup>
           </Toolbar>
           {list.length > 0 && <Divider />}
         </AppBar>
