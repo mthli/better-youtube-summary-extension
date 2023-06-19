@@ -1,77 +1,99 @@
-import React, { useEffect, useState } from "react";
-import { createRoot } from "react-dom/client";
+import React, { useEffect, useState } from 'react'
+import { createRoot } from 'react-dom/client'
+import { Trans, useTranslation } from 'react-i18next'
 
-const Options = () => {
-  const [color, setColor] = useState<string>("");
-  const [status, setStatus] = useState<string>("");
-  const [like, setLike] = useState<boolean>(false);
+import Box from '@mui/material/Box'
+import Container from '@mui/material/Container'
+import Divider from '@mui/material/Divider'
+import List from '@mui/material/List'
+import ListItem from '@mui/material/ListItem'
+import ListItemButton from '@mui/material/ListItemButton'
+import ListItemText from '@mui/material/ListItemText'
+import Typography from '@mui/material/Typography'
 
-  useEffect(() => {
-    // Restores select box and checkbox state using the preferences
-    // stored in chrome.storage.
-    chrome.storage.sync.get(
-      {
-        favoriteColor: "red",
-        likesColor: true,
-      },
-      (items) => {
-        setColor(items.favoriteColor);
-        setLike(items.likesColor);
-      }
-    );
-  }, []);
+import CssBaseline from '@mui/material/CssBaseline'
+import { ThemeProvider } from '@mui/material/styles'
 
-  const saveOptions = () => {
-    // Saves options to chrome.storage.sync.
-    chrome.storage.sync.set(
-      {
-        favoriteColor: color,
-        likesColor: like,
-      },
-      () => {
-        // Update status to let user know options were saved.
-        setStatus("Options saved.");
-        const id = setTimeout(() => {
-          setStatus("");
-        }, 1000);
-        return () => clearTimeout(id);
-      }
-    );
-  };
+import theme from './theme'
+import './i18n'
+
+const App = () => {
+  const { t } = useTranslation()
+  const title = t('title').toString()
 
   return (
-    <>
-      <div>
-        Favorite color: <select
-          value={color}
-          onChange={(event) => setColor(event.target.value)}
+    <ThemeProvider theme={theme}>
+      <Container
+        maxWidth='sm'
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+        }}
+      >
+        <Typography
+          variant='h5'
+          component='div'
+          gutterBottom
+          sx={{ pt: 2 }}
         >
-          <option value="red">red</option>
-          <option value="green">green</option>
-          <option value="blue">blue</option>
-          <option value="yellow">yellow</option>
-        </select>
-      </div>
-      <div>
-        <label>
-          <input
-            type="checkbox"
-            checked={like}
-            onChange={(event) => setLike(event.target.checked)}
-          />
-          I like colors.
-        </label>
-      </div>
-      <div>{status}</div>
-      <button onClick={saveOptions}>Save</button>
-    </>
-  );
-};
+          {title}
+        </Typography>
+        <Typography
+          variant='body1'
+          component='div'
+          gutterBottom
+        >
+          {t('slogan').toString()}
+        </Typography>
+        <List
+          sx={{
+            marginLeft: '-16px',
+            marginRight: '-16px',
+          }}
+        >
+          <ListItem disablePadding divider>
+            <ListItemButton
+              component='a'
+              href='https://twitter.com/mth_li'
+              target='_blank'
+            >
+              <ListItemText>
+                {t('twitter').toString()}
+              </ListItemText>
+            </ListItemButton>
+          </ListItem>
+          <ListItem disablePadding divider>
+            <ListItemButton
+              component='a'
+              href='https://t.me/betteryoutubesummary'
+              target='_blank'
+            >
+              <ListItemText>
+                {t('telegram').toString()}
+              </ListItemText>
+            </ListItemButton>
+          </ListItem>
+          <ListItem disablePadding>
+            <ListItemButton
+              component='a'
+              href={`mailto:matthewlee0725@gmail.com?subject=${title}`}
+              target='_blank'
+            >
+              <ListItemText>
+                {t('gmail').toString()}
+              </ListItemText>
+            </ListItemButton>
+          </ListItem>
+        </List>
+      </Container>
+    </ThemeProvider>
+  )
+}
 
-const root = createRoot(document.getElementById("root")!);
-
+const root = createRoot(document.getElementById('root')!)
 root.render(
   <React.StrictMode>
-    <Options />
+    <CssBaseline />
+    <App />
   </React.StrictMode>
 );
