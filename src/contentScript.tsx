@@ -12,40 +12,12 @@ const TAG = 'contentScript'
 const App = () => {
   const [pageUrl, setPageUrl] = useState(location.href)
   const [panelsObserver, setPanelsObserver] = useState<MutationObserver>()
-  const [playerHeight, setPlayerHeight] = useState(560) // px.
   const [blockNode, setBlockNode] = useState<HTMLDivElement>()
 
   useEffect(() => {
-    // Player not inited yet in some page urls,
-    // e.g. https://www.youtube.com/@lexfridman
-    let player = document.querySelector('video')
-    const playerObserver = new ResizeObserver(() => {
-      if (player) setPlayerHeight(player.offsetHeight)
-    })
-
-    const pageObserver = new MutationObserver(mutationList => {
-      setPageUrl(location.href)
-
-      if (!player) return
-      for (const mutation of mutationList) {
-        for (const node of mutation.addedNodes) {
-          if (node instanceof HTMLVideoElement) {
-            log(TAG, 'found player with observer')
-            player = node
-            playerObserver.observe(node)
-            break
-          }
-        }
-      }
-    })
-
-    if (player) playerObserver.observe(player)
-    pageObserver.observe(document, { subtree: true, childList: true })
-
-    return () => {
-      pageObserver.disconnect()
-      playerObserver.disconnect()
-    }
+    const observer = new MutationObserver(() => setPageUrl(location.href))
+    observer.observe(document, { subtree: true, childList: true })
+    return () => observer.disconnect()
   }, [])
 
   useEffect(() => {
@@ -108,10 +80,7 @@ const App = () => {
       {
         blockNode &&
         createPortal(
-          <Panel
-            pageUrl={pageUrl}
-            maxHeight={playerHeight}
-          />,
+          <Panel pageUrl={pageUrl} />,
           blockNode,
         )
       }

@@ -75,18 +75,14 @@ const openOptionsPage = () => {
   })
 }
 
-const Panel = ({
-  pageUrl,
-  maxHeight = 560, // px.
-}: {
-  pageUrl: string,
-  maxHeight?: number, // px.
-}) => {
+const Panel = ({ pageUrl }: { pageUrl: string }) => {
   const itemRefs = useRef(new Map<string, Element | null>())
 
   const [toggled, setToggled] = useState(0)
   const [selected, setSelected] = useState<string>('') // cid.
   const [expands, setExpands] = useState<ImmutableMap<string, boolean>>(ImmutableMap())
+
+  const [playerHeight, setPlayerHeight] = useState(560) // px.
   const [translating, setTranslating] = useState(false)
 
   const { t } = useTranslation()
@@ -168,6 +164,21 @@ const Panel = ({
   }
 
   useEffect(() => {
+    const player = document.querySelector('video')
+    log(TAG, `useEffect, init, player=${player}`)
+
+    const playerObserver = new ResizeObserver(() => {
+      if (!player) return
+      const height = player.offsetHeight
+      log(TAG, `ResizeObserverCallback, height=${height}`)
+      setPlayerHeight(height)
+    })
+
+    if (player) playerObserver.observe(player)
+    return () => playerObserver.disconnect()
+  }, [])
+
+  useEffect(() => {
     log(TAG, `useEffect, pageUrl=${pageUrl}`)
     setToggled(0) // cancel all requests before.
   }, [pageUrl])
@@ -185,7 +196,7 @@ const Panel = ({
           overflow: 'hidden',
           flexDirection: 'column',
           minHeight: '48px',
-          maxHeight: `${maxHeight > 560 ? maxHeight : 560}px`,
+          maxHeight: `${playerHeight > 240 ? playerHeight : 240}px`,
           bgcolor: 'background.default',
         }}
       >
