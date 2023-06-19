@@ -7,6 +7,12 @@ import Panel from './panel'
 import { parseVid } from './api'
 import log from './log'
 
+// Insert as soon as possible.
+const link = document.createElement('link')
+link.rel = 'stylesheet'
+link.href = 'https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,200,0,0'
+document.head.appendChild(link)
+
 const TAG = 'contentScript'
 
 const App = () => {
@@ -87,12 +93,6 @@ const App = () => {
     </div>
   )
 }
-
-const link = document.createElement('link')
-link.rel = 'stylesheet'
-link.type = 'text/css'
-link.href = 'https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,200,0,0'
-document.head.appendChild(link)
 
 const root = document.createElement('div')
 root.id = 'better-youtube-summary-root'
