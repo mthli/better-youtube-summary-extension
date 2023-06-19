@@ -181,6 +181,12 @@ const Panel = ({ pageUrl }: { pageUrl: string }) => {
     scrollIntoView(chapters[chapters.length - 1].cid)
   }
 
+  const onClose = () => {
+    setSelected('') // clear.
+    setExpands(expands.clear())
+    setToggled(0) // reset.
+  }
+
   useEffect(() => {
     const player = document.querySelector('video')
     log(TAG, `useEffect, init, player=${player}`)
@@ -284,6 +290,18 @@ const Panel = ({ pageUrl }: { pageUrl: string }) => {
                   </IconButton>
                 </Tooltip>
               }
+              {
+                list.length > 0 &&
+                <Tooltip title={t('close').toString()}>
+                  <IconButton
+                    aria-label={t('close').toString()}
+                    style={{ color: iconColor, marginLeft: '8px' }} // not `sx` here.
+                    onClick={onClose}
+                  >
+                    <span className='material-symbols-outlined'>close</span>
+                  </IconButton>
+                </Tooltip>
+              }
             </ButtonGroup>
             <ButtonGroup>
               {
@@ -299,7 +317,7 @@ const Panel = ({ pageUrl }: { pageUrl: string }) => {
                       style={{ color: iconColor }} // not `sx` here.
                       disabled={translating || !done}
                       onClick={() => {
-                        // TODO
+                        // TODO (Matthew Lee) translate.
                       }}
                     >
                       {
@@ -349,7 +367,7 @@ const Panel = ({ pageUrl }: { pageUrl: string }) => {
                 <IconButton
                   aria-label={t('close').toString()}
                   style={{ color: iconColor, marginTop: '-4px' }} // not `sx` here.
-                  onClick={() => setToggled(0)} // reset.
+                  onClick={onClose}
                 >
                   <span className='material-symbols-outlined'>close</span>
                 </IconButton>
