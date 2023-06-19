@@ -237,6 +237,7 @@ chrome.runtime.onConnect.addListener(port => {
         } as Message)
 
         port.disconnect()
+        ctrl.abort()
 
         // If the error is fatal,
         // rethrow the error inside the callback to stop the entire operation.
@@ -246,6 +247,7 @@ chrome.runtime.onConnect.addListener(port => {
       onclose() {
         log(TAG, `sse, onclose, port=${name}`)
         port.disconnect()
+        ctrl.abort()
       },
 
       onmessage(event: EventSourceMessage) {
@@ -264,6 +266,7 @@ chrome.runtime.onConnect.addListener(port => {
               break
             case SseEvent.CLOSE:
               port.disconnect()
+              ctrl.abort()
               break
             default:
               // DO NOTHING.
