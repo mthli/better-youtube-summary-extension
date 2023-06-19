@@ -50,9 +50,21 @@ const App = () => {
           variant='h5'
           component='div'
           gutterBottom
-          sx={{ pt: 2 }}
+          sx={{
+            display: 'flex',
+            flexDirection: 'row',
+            pt: 2,
+          }}
         >
           {title}
+          <Typography
+            variant='caption'
+            component='div'
+            gutterBottom
+            sx={{ pl: '6px' }}
+          >
+            {version}
+          </Typography>
         </Typography>
         <Typography
           variant='body1'
@@ -72,7 +84,6 @@ const App = () => {
             disablePadding
             sx={{
               display: 'flex',
-              overflow: 'hidden',
               alignItems: 'center',
               justifyContent: 'space-between',
               width: '100%',
@@ -116,7 +127,6 @@ const App = () => {
               <Box
                 sx={{
                   display: 'flex',
-                  overflow: 'hidden',
                   alignItems: 'center',
                   justifyContent: 'space-between',
                   width: '100%',
@@ -138,7 +148,6 @@ const App = () => {
               <Box
                 sx={{
                   display: 'flex',
-                  overflow: 'hidden',
                   alignItems: 'center',
                   justifyContent: 'space-between',
                   width: '100%',
@@ -160,7 +169,6 @@ const App = () => {
               <Box
                 sx={{
                   display: 'flex',
-                  overflow: 'hidden',
                   alignItems: 'center',
                   justifyContent: 'space-between',
                   width: '100%',
