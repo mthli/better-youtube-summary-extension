@@ -29,7 +29,7 @@ import {
   Summary,
   SummaryState,
 } from './data'
-import { useSummarize } from './api'
+import { useSummarize, feedback } from './api'
 import { Map as ImmutableMap } from 'immutable'
 
 import log from './log'
@@ -232,9 +232,10 @@ const Panel = ({ pageUrl }: { pageUrl: string }) => {
           pr: '18px',
           fontSize: '1.6rem',
         }}
+        disabled={!done}
         onClick={() => {
           setAnchorEl(null)
-          // TODO
+          feedback(pageUrl, true)
         }}
       >
         <ListItemIcon>
@@ -248,9 +249,10 @@ const Panel = ({ pageUrl }: { pageUrl: string }) => {
           pr: '18px',
           fontSize: '1.6rem',
         }}
+        disabled={!done}
         onClick={() => {
           setAnchorEl(null)
-          // TODO
+          feedback(pageUrl, false)
         }}
       >
         <ListItemIcon>

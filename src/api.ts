@@ -33,7 +33,32 @@ export const parseVid = (pageUrl: string): string => {
   const vid = params.get('v') ?? ''
   if (!vid) return ''
 
-  return vid
+  return vid.trim()
+}
+
+export const feedback = (pageUrl: string, good: boolean) => {
+  const vid = parseVid(pageUrl)
+  if (!vid) return
+
+  const request: Message = {
+    type: MessageType.REQUEST,
+    requestUrl: `${BASE_URL}/api/feedback/${vid}`,
+    requestInit: {
+      method: 'POST',
+      headers: {
+        'Content-Type': APPLICATION_JSON,
+      },
+      body: JSON.stringify({
+        good: Boolean(good),
+        bad: !Boolean(good),
+      }),
+    },
+  }
+
+  chrome.runtime.sendMessage(request, message => {
+    const json = JSON.stringify(message)
+    log(TAG, `feedback, responseCallback, message=${json}`)
+  })
 }
 
 export const useSummarize = (
