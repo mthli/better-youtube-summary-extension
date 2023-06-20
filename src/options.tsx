@@ -33,16 +33,26 @@ const App = () => {
 
   const targetLangkeys = Object.keys(TargetLang)
   const [targetLangKey, setTargetLangKey] = useState(targetLangkeys[0])
+  const [openAiApiKey, setOpenAiApiKey] = useState('')
 
   const { t } = useTranslation()
   const title = t('title').toString()
 
   useEffect(() => {
-    chrome.storage.sync.get(Settings.TRANSLATION_TARGET_LANG, res => {
-      const { [Settings.TRANSLATION_TARGET_LANG]: key } = res
-      log(TAG, `init, TRANSLATION_TARGET_LANG=${key}`)
-      if (targetLangkeys.includes(key)) {
-        setTargetLangKey(key)
+    chrome.storage.sync.get([
+      Settings.OPENAI_API_KEY,
+      Settings.TRANSLATION_TARGET_LANG,
+    ], res => {
+      const {
+        [Settings.OPENAI_API_KEY]: key,
+        [Settings.TRANSLATION_TARGET_LANG]: lang,
+      } = res
+
+      log(TAG, `useEffect, init, OPENAI_API_KEY=${key}, TRANSLATION_TARGET_LANG=${lang}`)
+      setOpenAiApiKey(key)
+
+      if (targetLangkeys.includes(lang)) {
+        setTargetLangKey(lang)
       } else {
         setTargetLangKey(targetLangkeys[0])
       }
@@ -116,7 +126,6 @@ const App = () => {
               }}
               value={targetLangKey}
               onChange={({ target: { value: key } }) => {
-                log(TAG, `Select, onChange, key=${key}`)
                 // Don't useEffect for `targetLangKey` here.
                 chrome.storage.sync.set({ [Settings.TRANSLATION_TARGET_LANG]: key })
                 setTargetLangKey(key)
@@ -164,8 +173,11 @@ const App = () => {
                   paddingBottom: '4px',
                 }
               }}
-              onChange={({ target: { value } = {} }) => {
-                // TODO
+              value={openAiApiKey}
+              onChange={({ target: { value = '' } = {} }) => {
+                // Don't useEffect for `openAiApiKey` here.
+                chrome.storage.sync.set({ [Settings.OPENAI_API_KEY]: value.trim() })
+                setOpenAiApiKey(value)
               }}
             />
           </ListItem>

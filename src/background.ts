@@ -100,10 +100,16 @@ const throwInvalidRequest = (send: (message?: any) => void, message: Message) =>
   } as Message)
 }
 
-const getUid = async (): Promise<string | null> => {
+const getOpenAiApiKey = async (): Promise<string> => {
+  const res = await chrome.storage.sync.get(Settings.OPENAI_API_KEY)
+  const { [Settings.OPENAI_API_KEY]: key }: { [Settings.OPENAI_API_KEY]?: string } = res
+  return key ? key.trim() : ''
+}
+
+const getUid = async (): Promise<string> => {
   const res = await chrome.storage.sync.get(Settings.UID)
   const { [Settings.UID]: uid }: { [Settings.UID]?: string } = res
-  return uid && uid.length > 0 ? uid : null
+  return uid ? uid.trim() : ''
 }
 
 const getOrGenerateUid = async (): Promise<string> => {
@@ -118,12 +124,14 @@ const getOrGenerateUid = async (): Promise<string> => {
 
   const json = await res.json()
   const { uid }: { uid?: string } = json
-  if (!uid || uid.length <= 0) {
+
+  const finalUid = uid ? uid.trim() : ''
+  if (!finalUid || finalUid.length <= 0) {
     throw new Error('generate uid from server failed')
   }
 
-  await chrome.storage.sync.set({ [Settings.UID]: uid })
-  return uid
+  await chrome.storage.sync.set({ [Settings.UID]: finalUid })
+  return finalUid
 }
 
 chrome.runtime.onMessage.addListener((message: Message, sender, sendResponse) => {
@@ -154,10 +162,17 @@ chrome.runtime.onMessage.addListener((message: Message, sender, sendResponse) =>
     return true
   }
 
-  getOrGenerateUid()
-    .then(uid => {
+  Promise.all([getOrGenerateUid(), getOpenAiApiKey()])
+    .then(([uid, key]) => {
       const { headers = {} } = requestInit || {}
-      return { ...requestInit, headers: { ...headers, uid } }
+      return {
+        ...requestInit,
+        headers: {
+          ...headers,
+          'uid': uid,
+          'openai-api-key': key, // don't use underscore here because of nginx.
+        }
+      }
     })
     .then(init => fetch(requestUrl, init))
     .then(async (response: Response) => { // response can't be stringify.
@@ -307,10 +322,18 @@ chrome.runtime.onConnect.addListener(port => {
       },
     }
 
-    getOrGenerateUid()
-      .then(uid => {
+    Promise.all([getOrGenerateUid(), getOpenAiApiKey()])
+      .then(([uid, key]) => {
         const { headers = {} } = requestInit || {}
-        return { ...requestInit, headers: { ...headers, uid }, ...sseInit }
+        return {
+          ...requestInit,
+          headers: {
+            ...headers,
+            'uid': uid,
+            'openai-api-key': key, // don't use underscore here because of nginx.
+          },
+          ...sseInit,
+        }
       })
       .then(init => fetchEventSource(requestUrl, init))
       .catch(error => {
