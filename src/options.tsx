@@ -10,6 +10,7 @@ import ListItemButton from '@mui/material/ListItemButton'
 import ListItemText from '@mui/material/ListItemText'
 import MenuItem from '@mui/material/MenuItem'
 import Select from '@mui/material/Select'
+import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
 
 import CssBaseline from '@mui/material/CssBaseline'
@@ -110,7 +111,7 @@ const App = () => {
             <Select
               size='small'
               sx={{
-                minWidth: '180px',
+                width: '180px',
                 height: '32px',
               }}
               value={targetLangKey}
@@ -130,6 +131,43 @@ const App = () => {
                 ))
               }
             </Select>
+          </ListItem>
+          <ListItem
+            divider
+            disablePadding
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              width: '100%',
+              pt: '8px',
+              pb: '8px',
+              pl: '16px',
+              pr: '9px', // trick.
+            }}
+          >
+            <ListItemText>
+              {t('openai').toString()}
+            </ListItemText>
+            <TextField
+              hiddenLabel
+              size='small'
+              sx={{
+                width: '180px',
+                height: '32px',
+              }}
+              inputProps={{
+                type: 'password',
+                placeholder: t('optional').toString(),
+                style: {
+                  paddingTop: '4px',
+                  paddingBottom: '4px',
+                }
+              }}
+              onChange={({ target: { value } = {} }) => {
+                // TODO
+              }}
+            />
           </ListItem>
           <ListItem disablePadding divider>
             <ListItemButton

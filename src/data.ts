@@ -15,6 +15,7 @@ export enum TargetLang {
 
 export enum Settings {
   UID = 'uid',
+  OPENAI_API_KEY = 'openai_api_key',
   TRANSLATION_TARGET_LANG = 'translation_target_lang',
 }
 
