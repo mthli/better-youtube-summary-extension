@@ -93,7 +93,8 @@ const Panel = ({ pageUrl }: { pageUrl: string }) => {
   const itemRefs = useRef(new Map<string, Element | null>())
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)')
   const currentTheme = checkIsDarkMode(prefersDarkMode) ? darkTheme : lightTheme
-  const iconColor = currentTheme.palette.text.primary
+  const iconColorActive = currentTheme.palette.action.active
+  const iconColorDisabled = currentTheme.palette.action.disabled
 
   const [toggled, setToggled] = useState(0)
   const [selected, setSelected] = useState<string>('') // cid.
@@ -114,6 +115,9 @@ const Panel = ({ pageUrl }: { pageUrl: string }) => {
   const { name: errName, message: errMsg } = (error || {}) as Error
   const doing = (state === SummaryState.DOING) && !error
   const done = (state === SummaryState.DONE) && !error
+
+  const transDisabled = translating || !done
+  const transIconColor = transDisabled ? iconColorDisabled : iconColorActive
 
   let showAlert = false
   let alertSeverity: AlertColor = 'info'
@@ -234,7 +238,13 @@ const Panel = ({ pageUrl }: { pageUrl: string }) => {
             }}
           >
             <ButtonGroup disableElevation>
-              <Tooltip title={t('summarize').toString()}>
+              <Tooltip
+                title={t('summarize').toString()}
+                disableFocusListener={doing}
+                disableHoverListener={doing}
+                disableInteractive={doing}
+                disableTouchListener={doing}
+              >
                 {
                   // Tooltip will always show if its children changed accidentally,
                   // so use a Box as wrapper to let Tooltip can always foucs.
@@ -247,8 +257,8 @@ const Panel = ({ pageUrl }: { pageUrl: string }) => {
                 >
                   <IconButton
                     aria-label={t('summarize').toString()}
-                    style={{ color: iconColor }} // not `sx` here.
                     disabled={doing}
+                    style={{ color: doing ? iconColorDisabled : iconColorActive }} // not `sx` here.
                     onClick={() => setToggled(toggled + 1)}
                   >
                     {
@@ -271,7 +281,7 @@ const Panel = ({ pageUrl }: { pageUrl: string }) => {
                 <Tooltip title={t('sync_to_video_time').toString()}>
                   <IconButton
                     aria-label={t('sync_to_video_time').toString()}
-                    style={{ color: iconColor, marginLeft: '8px' }} // not `sx` here.
+                    style={{ color: iconColorActive, marginLeft: '8px' }} // not `sx` here.
                     onClick={syncToVideoTime}
                   >
                     <span className='material-symbols-outlined'>schedule</span>
@@ -283,7 +293,7 @@ const Panel = ({ pageUrl }: { pageUrl: string }) => {
                 <Tooltip title={t('unfold_less').toString()}>
                   <IconButton
                     aria-label={t('unfold_less').toString()}
-                    style={{ color: iconColor, marginLeft: '8px' }} // not `sx` here.
+                    style={{ color: iconColorActive, marginLeft: '8px' }} // not `sx` here.
                     onClick={() => setExpands(expands.clear())}
                   >
                     <span className='material-symbols-outlined'>unfold_less</span>
@@ -295,7 +305,7 @@ const Panel = ({ pageUrl }: { pageUrl: string }) => {
                 <Tooltip title={t('close').toString()}>
                   <IconButton
                     aria-label={t('close').toString()}
-                    style={{ color: iconColor, marginLeft: '8px' }} // not `sx` here.
+                    style={{ color: iconColorActive, marginLeft: '8px' }} // not `sx` here.
                     onClick={onClose}
                   >
                     <span className='material-symbols-outlined'>close</span>
@@ -306,7 +316,13 @@ const Panel = ({ pageUrl }: { pageUrl: string }) => {
             <ButtonGroup>
               {
                 list.length > 0 &&
-                <Tooltip title={t('translate').toString()}>
+                <Tooltip
+                  title={t('translate').toString()}
+                  disableFocusListener={transDisabled}
+                  disableHoverListener={transDisabled}
+                  disableInteractive={transDisabled}
+                  disableTouchListener={transDisabled}
+                >
                   <Box sx={{
                     display: 'flex',
                     alignItems: 'center',
@@ -314,8 +330,8 @@ const Panel = ({ pageUrl }: { pageUrl: string }) => {
                   }}>
                     <IconButton
                       aria-label={t('translate').toString()}
-                      style={{ color: iconColor }} // not `sx` here.
-                      disabled={translating || !done}
+                      disabled={transDisabled}
+                      style={{ color: transIconColor }} // not `sx` here.
                       onClick={() => {
                         // TODO (Matthew Lee) translate.
                       }}
@@ -331,7 +347,7 @@ const Panel = ({ pageUrl }: { pageUrl: string }) => {
                             display: 'flex',
                             alignItems: 'center',
                             padding: '1px',
-                            fill: iconColor,
+                            fill: transIconColor,
                           }}
                         >
                           <path d="M13.33 6c-1 2.42-2.22 4.65-3.57 6.52l2.98 2.94-.7.71-2.88-2.84c-.53.67-1.06 1.28-1.61 1.83l-3.19 3.19-.71-.71 3.19-3.19c.55-.55 1.08-1.16 1.6-1.83l-.16-.15c-1.11-1.09-1.97-2.44-2.49-3.9l.94-.34c.47 1.32 1.25 2.54 2.25 3.53l.05.05c1.2-1.68 2.29-3.66 3.2-5.81H2V5h6V3h1v2h7v1h-2.67zM22 21h-1l-1.49-4h-5.02L13 21h-1l4-11h2l4 11zm-2.86-5-1.86-5h-.56l-1.86 5h4.28z" />
@@ -353,7 +369,7 @@ const Panel = ({ pageUrl }: { pageUrl: string }) => {
               <Tooltip title={t('settings').toString()}>
                 <IconButton
                   aria-label={t('settings').toString()}
-                  style={{ color: iconColor }} // not `sx` here.
+                  style={{ color: iconColorActive }} // not `sx` here.
                   onClick={openOptionsPage}
                 >
                   <span className='material-symbols-outlined'>settings</span>
@@ -379,7 +395,7 @@ const Panel = ({ pageUrl }: { pageUrl: string }) => {
               <Tooltip title={t('close').toString()}>
                 <IconButton
                   aria-label={t('close').toString()}
-                  style={{ color: iconColor, marginTop: '-4px' }} // not `sx` here.
+                  style={{ color: iconColorActive, marginTop: '-4px' }} // not `sx` here.
                   onClick={onClose}
                 >
                   <span className='material-symbols-outlined'>close</span>
