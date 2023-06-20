@@ -14,6 +14,7 @@ export enum TargetLang {
 }
 
 export enum Settings {
+  UID = 'uid',
   TRANSLATION_TARGET_LANG = 'translation_target_lang',
 }
 

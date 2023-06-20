@@ -5,8 +5,8 @@ import {
   fetchEventSource,
 } from '@microsoft/fetch-event-source'
 
-import { APPLICATION_JSON } from './api'
-import { Message, MessageType, SseEvent } from './data'
+import { APPLICATION_JSON, BASE_URL } from './api'
+import { Message, MessageType, Settings, SseEvent } from './data'
 import log from './log'
 
 const TAG = 'background'
@@ -100,6 +100,32 @@ const throwInvalidRequest = (send: (message?: any) => void, message: Message) =>
   } as Message)
 }
 
+const getUid = async (): Promise<string | null> => {
+  const res = await chrome.storage.sync.get(Settings.UID)
+  const { [Settings.UID]: uid }: { [Settings.UID]?: string } = res
+  return uid && uid.length > 0 ? uid : null
+}
+
+const getOrGenerateUid = async (): Promise<string> => {
+  const savedUid = await getUid()
+  if (savedUid) return savedUid
+
+  const res = await fetch(`${BASE_URL}/api/user`, { method: 'POST' })
+  if (!res.ok) {
+    const text = await res.text()
+    throw new Error(text)
+  }
+
+  const json = await res.json()
+  const { uid }: { uid?: string } = json
+  if (!uid || uid.length <= 0) {
+    throw new Error('generate uid from server failed')
+  }
+
+  await chrome.storage.sync.set({ [Settings.UID]: uid })
+  return uid
+}
+
 chrome.runtime.onMessage.addListener((message: Message, sender, sendResponse) => {
   log(TAG, `runtime, onMessage, senderId=${sender.id}`)
 
@@ -109,7 +135,7 @@ chrome.runtime.onMessage.addListener((message: Message, sender, sendResponse) =>
     return true
   }
 
-  const { type, requestUrl, requestInit } = message
+  const { type, requestUrl, requestInit = {} } = message
   log(TAG, `runtime, onMessage, requestUrl=${requestUrl}`)
 
   // Must be MessageType.REQUEST
@@ -128,7 +154,12 @@ chrome.runtime.onMessage.addListener((message: Message, sender, sendResponse) =>
     return true
   }
 
-  fetch(requestUrl, requestInit)
+  getOrGenerateUid()
+    .then(uid => {
+      const { headers = {} } = requestInit || {}
+      return { ...requestInit, headers: { ...headers, uid } }
+    })
+    .then(init => fetch(requestUrl, init))
     .then(async (response: Response) => { // response can't be stringify.
       const json = await response.json()
       log(TAG, `fetch, then, ok=${response.ok}, json=${JSON.stringify(json)}`)
@@ -148,9 +179,6 @@ chrome.runtime.onMessage.addListener((message: Message, sender, sendResponse) =>
           stack: error.stack,
         },
       } as Message)
-    })
-    .finally(() => {
-      // DO NOTHING.
     })
 
   // https://stackoverflow.com/q/48107746
@@ -181,9 +209,7 @@ chrome.runtime.onConnect.addListener(port => {
     const ctrl = new AbortController()
 
     // https://github.com/Azure/fetch-event-source
-    const init: FetchEventSourceInit = {
-      ...requestInit,
-
+    const sseInit: FetchEventSourceInit = {
       openWhenHidden: true,
       signal: ctrl.signal,
       fetch: fetch,
@@ -281,7 +307,17 @@ chrome.runtime.onConnect.addListener(port => {
       },
     }
 
-    fetchEventSource(requestUrl, init)
+    getOrGenerateUid()
+      .then(uid => {
+        const { headers = {} } = requestInit || {}
+        return { ...requestInit, headers: { ...headers, uid }, ...sseInit }
+      })
+      .then(init => fetchEventSource(requestUrl, init))
+      .catch(error => {
+        log(TAG, `sse, catch but ignore, error=${error}`)
+        // DO NOTHING.
+      })
+
     return true
   })
 })
