@@ -133,8 +133,7 @@ const summarize = (
         next?.(error as Error)
         break
       default:
-        const msg = `invalid message, message=${JSON.stringify(message)}`
-        next?.(new Error(msg))
+        next?.(new Error(JSON.stringify(message)))
         break
     }
   })

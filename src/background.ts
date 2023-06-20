@@ -208,14 +208,16 @@ chrome.runtime.onConnect.addListener(port => {
             ctrl.abort() // finished.
             return
           } else {
-            const msg = `onopen, invalid response, contentType=${contentType}`
+            const msg = `sse, onopen, invalid response, contentType=${contentType}`
             throw new FatalError(msg)
           }
         } else if (status >= 400 && status < 500 && status !== 429) {
-          const msg = `onopen, invalid response, status=${status}`
+          const text = await response.text()
+          const msg = `sse, onopen, invalid response, text=${text}`
           throw new FatalError(msg)
         } else {
-          const msg = `onopen, invalid response, status=${status}`
+          const text = await response.text()
+          const msg = `sse, onopen, invalid response, text=${text}`
           throw new RetriableError(msg)
         }
       },
