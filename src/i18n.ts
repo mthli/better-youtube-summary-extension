@@ -17,8 +17,11 @@ const resources = {
       'no_transcript_desc': 'This video cannot be summarized at this time, as no subtitles were found 👀',
 
       'close': 'Close',
+      'more': 'More',
       'settings': 'Settings',
       'summarize': 'Summarize',
+      'good': 'Good',
+      'bad': 'Bad',
       'sync_to_video_time': 'Sync to Video Time',
       'translate': 'Translate',
       'unfold_less': 'Unfold Less',
@@ -38,8 +41,11 @@ const resources = {
       'no_transcript_desc': '这个视频目前没有摘要，因为没有找到字幕 👀',
 
       'close': '关闭',
+      'more': '更多',
       'settings': '设置',
       'summarize': '摘要',
+      'good': '不错',
+      'bad': '糟糕',
       'sync_to_video_time': '与视频时间同步',
       'translate': '翻译',
       'unfold_less': '折叠',

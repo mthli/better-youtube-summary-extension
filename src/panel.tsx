@@ -9,6 +9,9 @@ import ButtonGroup from '@mui/material/ButtonGroup'
 import Divider from '@mui/material/Divider'
 import IconButton from '@mui/material/IconButton'
 import List from '@mui/material/List'
+import ListItemIcon from '@mui/material/ListItemIcon'
+import Menu from '@mui/material/Menu'
+import MenuItem from '@mui/material/MenuItem'
 import Toolbar from '@mui/material/Toolbar'
 import Tooltip from '@mui/material/Tooltip'
 
@@ -99,6 +102,7 @@ const Panel = ({ pageUrl }: { pageUrl: string }) => {
   const [toggled, setToggled] = useState(0)
   const [selected, setSelected] = useState<string>('') // cid.
   const [expands, setExpands] = useState<ImmutableMap<string, boolean>>(ImmutableMap())
+  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null)
 
   const [playerHeight, setPlayerHeight] = useState(560) // px.
   const [translating, setTranslating] = useState(false)
@@ -215,6 +219,63 @@ const Panel = ({ pageUrl }: { pageUrl: string }) => {
     log(TAG, `useEffect, selected=${selected}`)
     if (selected) setTimeout(() => setSelected(''), 2000) // ms.
   }, [selected])
+
+  const menu = (
+    <Menu
+      anchorEl={anchorEl}
+      open={Boolean(anchorEl)}
+      onClose={() => setAnchorEl(null)}
+    >
+      <MenuItem
+        key={'good'}
+        sx={{
+          pr: '18px',
+          fontSize: '1.6rem',
+        }}
+        onClick={() => {
+          setAnchorEl(null)
+          // TODO
+        }}
+      >
+        <ListItemIcon>
+          <span className='material-symbols-outlined'>thumb_up</span>
+        </ListItemIcon>
+        {t('good').toString()}
+      </MenuItem>
+      <MenuItem
+        key={'bad'}
+        sx={{
+          pr: '18px',
+          fontSize: '1.6rem',
+        }}
+        onClick={() => {
+          setAnchorEl(null)
+          // TODO
+        }}
+      >
+        <ListItemIcon>
+          <span className='material-symbols-outlined'>thumb_down</span>
+        </ListItemIcon>
+        {t('bad').toString()}
+      </MenuItem>
+      <MenuItem
+        key={'settings'}
+        sx={{
+          pr: '18px',
+          fontSize: '1.6rem',
+        }}
+        onClick={() => {
+          setAnchorEl(null)
+          openOptionsPage()
+        }}
+      >
+        <ListItemIcon>
+          <span className='material-symbols-outlined'>settings</span>
+        </ListItemIcon>
+        {t('settings').toString()}
+      </MenuItem>
+    </Menu>
+  )
 
   return (
     <ThemeProvider theme={currentTheme}>
@@ -354,11 +415,11 @@ const Panel = ({ pageUrl }: { pageUrl: string }) => {
                   </Box>
                 </Tooltip>
               }
-              <Tooltip title={t('settings').toString()}>
+              <Tooltip title={t('more').toString()}>
                 <IconButton
-                  aria-label={t('settings').toString()}
+                  aria-label={t('more').toString()}
                   style={{ color: iconColorActive }} // not `sx` here.
-                  onClick={openOptionsPage}
+                  onClick={e => setAnchorEl(e.currentTarget)}
                 >
                   {/* SVG copied from YouTube, not perfect but ok */}
                   <svg
@@ -372,10 +433,11 @@ const Panel = ({ pageUrl }: { pageUrl: string }) => {
                       fill: iconColorActive,
                     }}
                   >
-                    <path d='M7.5 12c0 .83-.67 1.5-1.5 1.5s-1.5-.67-1.5-1.5.67-1.5 1.5-1.5 1.5.67 1.5 1.5zm4.5-1.5c-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5 1.5-.67 1.5-1.5-.67-1.5-1.5-1.5zm6 0c-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5 1.5-.67 1.5-1.5-.67-1.5-1.5-1.5z' />
+                    <path d='M12 16.5c.83 0 1.5.67 1.5 1.5s-.67 1.5-1.5 1.5-1.5-.67-1.5-1.5.67-1.5 1.5-1.5zM10.5 12c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5-.67-1.5-1.5-1.5-1.5.67-1.5 1.5zm0-6c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5-.67-1.5-1.5-1.5-1.5.67-1.5 1.5z' />
                   </svg>
                 </IconButton>
               </Tooltip>
+              {menu}
             </ButtonGroup>
           </Toolbar>
           {list.length > 0 && <Divider />}
