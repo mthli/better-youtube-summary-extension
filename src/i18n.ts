@@ -9,7 +9,7 @@ const resources = {
       'slogan': 'Literally Better YouTube Summary 🎯',
 
       'translation': 'Set Translation Language',
-      'openai': 'Use Your OpenAI API Key',
+      'openai': 'I want to use my OpenAI API Key',
       'twitter': 'Follow on Twitter',
       'telegram': 'Join Telegram Group',
       'gmail': 'Feedback by Email',
@@ -35,7 +35,7 @@ const resources = {
       'slogan': '字面意义上更好的 YouTube 摘要插件 🎯',
 
       'translation': '设置翻译语言',
-      'openai': '使用你自己的 OpenAI API Key',
+      'openai': '我想用自己的 OpenAI API Key',
       'twitter': '在推特上关注',
       'telegram': '加入电报群组',
       'gmail': '通过邮件反馈',
