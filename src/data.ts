@@ -42,11 +42,17 @@ export interface Message {
   error?: Error,
 }
 
+export enum ChapterStyle {
+  MARKDOWN = 'markdown',
+  TEXT = 'text',
+}
+
 export interface Chapter {
   cid: string,
   vid: string,
-  seconds: number,
   slicer: string,
+  style: ChapterStyle,
+  start: number,
   lang: string,
   chapter: string,
   summary?: string,

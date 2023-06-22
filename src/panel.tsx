@@ -149,10 +149,10 @@ const Panel = ({ pageUrl }: { pageUrl: string }) => {
       selected={c.cid === selected}
       expanded={expands.get(c.cid, false)}
       onExpand={expand => setExpands(expands.set(c.cid, expand))}
-      onSeekTo={seconds => {
-        log(TAG, `onSeekTo, seconds=${seconds}`)
+      onSeekTo={start => {
+        log(TAG, `onSeekTo, start=${start}`)
         const player = document.querySelector('video')
-        if (player) player.currentTime = seconds
+        if (player) player.currentTime = start
       }}
     />
   ))
@@ -178,7 +178,7 @@ const Panel = ({ pageUrl }: { pageUrl: string }) => {
     log(TAG, `syncToViewTime, currentTime=${currentTime}`)
 
     for (let i = 0; i < chapters.length; i++) {
-      if (chapters[i].seconds >= currentTime) {
+      if (chapters[i].start >= currentTime) {
         const { cid } = i > 0 ? chapters[i - 1] : chapters[0]
         scrollIntoView(cid)
         return

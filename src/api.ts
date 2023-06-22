@@ -178,7 +178,7 @@ const upsert = (curr: Summary, prev?: Summary): Summary => {
   currChapters.forEach(c => map.set(c.cid, c))
 
   const chapters = Array.from(map.values())
-  chapters.sort((a, b) => a.seconds - b.seconds)
+  chapters.sort((a, b) => a.start - b.start)
 
   return {
     state,

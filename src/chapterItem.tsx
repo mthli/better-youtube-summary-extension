@@ -44,7 +44,7 @@ const hexToRgba = (hex: string, alpha: number = 1) => {
 }
 
 const ChapterItem = forwardRef(function ChapterItem({
-  seconds,
+  start,
   chapter,
   summary = '',
   theme,
@@ -59,7 +59,7 @@ const ChapterItem = forwardRef(function ChapterItem({
   selected?: boolean,
   expanded?: boolean,
   onExpand?: (expand: boolean) => void,
-  onSeekTo?: (seconds: number) => void,
+  onSeekTo?: (start: number) => void,
 }, ref: Ref<HTMLLIElement>) {
   const {
     ref: buttonRef,
@@ -93,9 +93,9 @@ const ChapterItem = forwardRef(function ChapterItem({
                     paddingRight: '8px',
                     bgcolor: hexToRgba(theme.palette.primary.main, 0.05),
                   }}
-                  onClick={() => onSeekTo?.(seconds)}
+                  onClick={() => onSeekTo?.(start)}
                 >
-                  {formatSeconds(seconds)}
+                  {formatSeconds(start)}
                 </Button>
               }
             >
