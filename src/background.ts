@@ -10,6 +10,7 @@ import { Message, MessageType, Settings, SseEvent } from './data'
 import log from './log'
 
 const TAG = 'background'
+const manifest = chrome.runtime.getManifest()
 
 /*
 // One of: 'install', 'update', 'chrome_update', or 'shared_module_update'.
@@ -171,6 +172,7 @@ chrome.runtime.onMessage.addListener((message: Message, sender, sendResponse) =>
           ...headers,
           'uid': uid,
           'openai-api-key': key, // don't use underscore here because of nginx.
+          'crx-version': manifest.version,
         }
       }
     })
@@ -321,6 +323,7 @@ chrome.runtime.onConnect.addListener(port => {
             ...headers,
             'uid': uid,
             'openai-api-key': key, // don't use underscore here because of nginx.
+            'crx-version': manifest.version,
           },
           ...sseInit,
         }
