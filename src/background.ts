@@ -208,7 +208,6 @@ chrome.runtime.onConnect.addListener(port => {
     // Filter our extension messages.
     if (senderId !== chrome.runtime.id) {
       throwInvalidSender(port.postMessage, senderId)
-      port.disconnect()
       return true
     }
 
@@ -216,7 +215,6 @@ chrome.runtime.onConnect.addListener(port => {
     const { type, requestUrl, requestInit = {} } = message
     if (type !== MessageType.REQUEST || !requestUrl) {
       throwInvalidRequest(port.postMessage, message)
-      port.disconnect()
       return true
     }
 
@@ -245,7 +243,6 @@ chrome.runtime.onConnect.addListener(port => {
               responseJson: json,
             } as Message)
 
-            port.disconnect()
             ctrl.abort() // finished.
             return
           } else {
@@ -279,9 +276,6 @@ chrome.runtime.onConnect.addListener(port => {
           },
         } as Message)
 
-        port.disconnect()
-        ctrl.abort()
-
         // If the error is fatal,
         // rethrow the error inside the callback to stop the entire operation.
         throw error
@@ -289,8 +283,7 @@ chrome.runtime.onConnect.addListener(port => {
 
       onclose() {
         log(TAG, `sse, onclose, port=${name}`)
-        port.disconnect()
-        ctrl.abort()
+        // DO NOTHING.
       },
 
       onmessage(event: EventSourceMessage) {
@@ -308,9 +301,6 @@ chrome.runtime.onConnect.addListener(port => {
               } as Message)
               break
             case SseEvent.CLOSE:
-              port.disconnect()
-              ctrl.abort()
-              break
             default:
               // DO NOTHING.
               break

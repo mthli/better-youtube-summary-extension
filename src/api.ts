@@ -75,10 +75,10 @@ export const useSummarize = (
   return useSWRSubscription(
     toggled ? [toggled, vid, chapters, noTranscript] : null,
     ([_toggled, vid, chapters, noTranscript], { next }) => {
-      /* const port = */ summarize(vid, chapters, noTranscript, next)
+      const port = summarize(vid, chapters, noTranscript, next)
       return () => {
         log(TAG, `useSummarize, disposed, vid=${vid}`)
-        // DO NOTHING, port should be disconneted by server worker.
+        port?.disconnect()
       }
     },
     {
@@ -125,11 +125,6 @@ const summarize = (
     next?.(e as Error)
     return null
   }
-
-  port.onDisconnect.addListener(({ name }) => {
-    log(TAG, `summarize, onDisconnect, name=${name}`)
-    // DO NOTHING.
-  })
 
   port.onMessage.addListener(message => {
     log(TAG, `summarize, onMessage, message=${JSON.stringify(message)}`)
