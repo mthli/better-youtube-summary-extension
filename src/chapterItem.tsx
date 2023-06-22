@@ -1,6 +1,8 @@
 import React, { Ref, forwardRef } from 'react'
+import ReactMarkdown from 'react-markdown'
 import useResizeObserver from 'use-resize-observer'
 
+import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Collapse from '@mui/material/Collapse'
 import Divider from '@mui/material/Divider'
@@ -11,10 +13,7 @@ import ListItemText from '@mui/material/ListItemText'
 import Typography from '@mui/material/Typography'
 import { Theme } from '@mui/material/styles'
 
-import ReactMarkdown from 'react-markdown'
-import rehypeRaw from 'rehype-raw'
-
-import { Chapter } from './data'
+import { Chapter, ChapterStyle } from './data'
 import './markdown-light.css'
 import './markdown-dark.css'
 import './panel.css'
@@ -44,6 +43,7 @@ const hexToRgba = (hex: string, alpha: number = 1) => {
 }
 
 const ChapterItem = forwardRef(function ChapterItem({
+  style = ChapterStyle.MARKDOWN,
   start,
   chapter,
   summary = '',
@@ -67,6 +67,7 @@ const ChapterItem = forwardRef(function ChapterItem({
   } = useResizeObserver<HTMLDivElement>()
 
   const count = countLines(summary)
+  const padding = style === ChapterStyle.TEXT ? '8px' : 0
 
   return (
     <li ref={ref}>
@@ -114,29 +115,36 @@ const ChapterItem = forwardRef(function ChapterItem({
                   style={{ paddingRight: `${buttonWidth}px` }}
                 >
                   {chapter}
-                  <Typography
-                    variant='body1'
-                    sx={{
-                      display: 'inline',
-                      fontSize: '1.6rem',
-                      color: 'text.primary',
-                      opacity: 0.3,
-                    }}
-                  >
-                    &nbsp;&nbsp;{count}
-                  </Typography>
+                  {
+                    count > 1 &&
+                    <Typography
+                      variant='body1'
+                      sx={{
+                        display: 'inline',
+                        fontSize: '1.6rem',
+                        color: 'text.primary',
+                        opacity: 0.3,
+                      }}
+                    >
+                      &nbsp;&nbsp;{count}
+                    </Typography>
+                  }
                 </ListItemText>
               </ListItemButton>
             </ListItem>
           </ul>
         </ListSubheader>
         <Collapse in={expanded} timeout='auto' unmountOnExit>
-          <ReactMarkdown
-            className={`markdown-${theme.palette.mode}`}
-            rehypePlugins={[rehypeRaw]}
+          <Box
+            sx={{
+              pl: padding,
+              pr: padding,
+            }}
           >
-            {/* textVide(summary) */ summary}
-          </ReactMarkdown>
+            <ReactMarkdown className={`markdown-${theme.palette.mode}`}>
+              {summary}
+            </ReactMarkdown>
+          </Box>
           {!isLastItem && <Divider />}
         </Collapse>
       </ul>
