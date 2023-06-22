@@ -43,8 +43,8 @@ export interface Message {
 }
 
 export enum ChapterStyle {
-  MARKDOWN = 'markdown',
-  TEXT = 'text',
+  COLLAPSE = 'collapse', // default.
+  FLATTEN = 'flatten',
 }
 
 export interface Chapter {
