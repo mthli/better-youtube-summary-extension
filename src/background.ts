@@ -296,10 +296,11 @@ chrome.runtime.onConnect.addListener(port => {
 
           switch (sseEvent) {
             case SseEvent.SUMMARY:
+            case SseEvent.TRANSLATION:
               port.postMessage({
                 type: MessageType.SSE,
-                sseEvent: SseEvent.SUMMARY,
-                sseData: sseData,
+                sseEvent,
+                sseData,
               } as Message)
               break
             case SseEvent.CLOSE:

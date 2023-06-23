@@ -26,10 +26,10 @@ import {
   Message,
   MessageType,
   PageChapter,
+  State,
   Summary,
-  SummaryState,
 } from './data'
-import { useSummarize, feedback } from './api'
+import { useSummarize, useTranslate, feedback } from './api'
 import { Map as ImmutableMap } from 'immutable'
 
 import log from './log'
@@ -99,17 +99,16 @@ const Panel = ({ pageUrl }: { pageUrl: string }) => {
   const iconColorActive = currentTheme.palette.action.active
   const iconColorDisabled = currentTheme.palette.action.disabled
 
-  const [toggled, setToggled] = useState(0)
+  const [summarizing, setSummarizing] = useState(0)
+  const [translating, setTranslating] = useState(0)
   const [selected, setSelected] = useState<string>('') // cid.
   const [expands, setExpands] = useState<ImmutableMap<string, boolean>>(ImmutableMap())
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null)
-
   const [playerHeight, setPlayerHeight] = useState(560) // px.
-  const [translating, setTranslating] = useState(false)
 
   const { t } = useTranslation()
   const { data, error } = useSummarize(
-    toggled,
+    summarizing,
     pageUrl,
     parseChapters(),
     checkNoTranscript(),
@@ -117,8 +116,8 @@ const Panel = ({ pageUrl }: { pageUrl: string }) => {
 
   const { state, chapters = [] } = (data || {}) as Summary
   const { name: errName, message: errMsg } = (error || {}) as Error
-  const doing = (state === SummaryState.DOING) && !error
-  const done = (state === SummaryState.DONE) && !error
+  const doing = (state === State.DOING) && !error
+  const done = (state === State.DONE) && !error
 
   const transDisabled = translating || !done
   const transIconColor = transDisabled ? iconColorDisabled : iconColorActive
@@ -132,7 +131,7 @@ const Panel = ({ pageUrl }: { pageUrl: string }) => {
     alertSeverity = 'error'
     alertTitle = errName
     alertMsg = errMsg
-  } else if (state === SummaryState.NOTHING) {
+  } else if (state === State.NOTHING) {
     showAlert = true
     alertSeverity = 'warning'
     alertTitle = t('no_transcript').toString()
@@ -192,7 +191,7 @@ const Panel = ({ pageUrl }: { pageUrl: string }) => {
   const onClose = () => {
     setSelected('') // clear.
     setExpands(expands.clear())
-    setToggled(0) // reset.
+    setSummarizing(0) // reset.
   }
 
   useEffect(() => {
@@ -212,7 +211,7 @@ const Panel = ({ pageUrl }: { pageUrl: string }) => {
 
   useEffect(() => {
     log(TAG, `useEffect, pageUrl=${pageUrl}`)
-    setToggled(0) // cancel all requests before.
+    setSummarizing(0) // cancel all requests before.
   }, [pageUrl])
 
   useEffect(() => {
@@ -316,7 +315,7 @@ const Panel = ({ pageUrl }: { pageUrl: string }) => {
                     aria-label={t('summarize').toString()}
                     disabled={doing}
                     style={{ color: doing ? iconColorDisabled : iconColorActive }} // not `sx` here.
-                    onClick={() => setToggled(toggled + 1)}
+                    onClick={() => setSummarizing(summarizing + 1)}
                   >
                     {
                       !doing &&

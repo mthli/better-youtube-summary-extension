@@ -1,34 +1,17 @@
-// https://www.deepl.com/docs-api/translate-text
-// https://en.wikipedia.org/wiki/Languages_used_on_the_Internet#Internet_users_by_language
-export enum TargetLang {
-  'EN-US' = 'English', // default.
-  'ZH' = '中文',
-  'ES' = 'Español',
-  'ID' = 'Bahasa Indonesia',
-  'PT-BR' = 'Português',
-  'FR' = 'Français',
-  'JA' = '日本語',
-  'RU' = 'Русский язык',
-  'DE' = 'Deutsch',
-  'KO' = '한국어',
+export interface Chapter {
+  cid: string,
+  vid: string,
+  slicer: string,
+  style: ChapterStyle,
+  start: number,
+  lang: string,
+  chapter: string,
+  summary?: string,
 }
 
-export enum Settings {
-  UID = 'uid',
-  OPENAI_API_KEY = 'openai_api_key',
-  TRANSLATION_TARGET_LANG = 'translation_target_lang',
-}
-
-export interface PageChapter {
-  title: string,
-  timestamp: string,
-}
-
-export enum MessageType {
-  REQUEST = 'request',
-  RESPONSE = 'response',
-  SSE = 'sse',
-  ERROR = 'error',
+export enum ChapterStyle {
+  MARKDOWN = 'markdown',
+  TEXT = 'text',
 }
 
 export interface Message {
@@ -42,34 +25,60 @@ export interface Message {
   error?: Error,
 }
 
-export enum ChapterStyle {
-  MARKDOWN = 'markdown',
-  TEXT = 'text',
+export enum MessageType {
+  REQUEST = 'request',
+  RESPONSE = 'response',
+  SSE = 'sse',
+  ERROR = 'error',
 }
 
-export interface Chapter {
-  cid: string,
-  vid: string,
-  slicer: string,
-  style: ChapterStyle,
-  start: number,
-  lang: string,
-  chapter: string,
-  summary?: string,
+export interface PageChapter {
+  title: string,
+  timestamp: string,
+}
+
+export enum Settings {
+  UID = 'uid',
+  OPENAI_API_KEY = 'openai_api_key',
+  TRANSLATION_TARGET_LANG = 'translation_target_lang',
 }
 
 export enum SseEvent {
   SUMMARY = 'summary',
+  TRANSLATION = 'translation',
   CLOSE = 'close',
 }
 
-export enum SummaryState {
+export enum State {
   NOTHING = 'nothing',
   DOING = 'doing',
   DONE = 'done',
 }
 
 export interface Summary {
-  state: SummaryState,
+  state: State,
   chapters?: Chapter[],
+  translation?: Translation[],
+}
+
+// https://en.wikipedia.org/wiki/Languages_used_on_the_Internet#Internet_users_by_language
+export enum TargetLang {
+  'EN' = 'English', // default.
+  'ZH' = '中文',
+  'ES' = 'Español',
+  'ID' = 'Bahasa Indonesia',
+  'PT' = 'Português',
+  'FR' = 'Français',
+  'JA' = '日本語',
+  'RU' = 'Русский язык',
+  'DE' = 'Deutsch',
+  'KO' = '한국어',
+}
+
+export interface Translation {
+  vid: string,
+  cid: string,
+  lang: string,
+  chapter: string,
+  summary: string,
 }

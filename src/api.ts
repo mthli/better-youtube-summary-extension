@@ -8,8 +8,9 @@ import {
   Message,
   MessageType,
   PageChapter,
+  State,
   Summary,
-  SummaryState,
+  Translation,
 } from './data'
 import log from './log'
 
@@ -73,8 +74,8 @@ export const useSummarize = (
 
   // Allow resummarize when `toggled` changed.
   return useSWRSubscription(
-    toggled ? [toggled, vid, chapters, noTranscript] : null,
-    ([_toggled, vid, chapters, noTranscript], { next }) => {
+    toggled ? ['summarize', toggled, vid, chapters, noTranscript] : null,
+    ([_tag, _toggled, vid, chapters, noTranscript], { next }) => {
       const port = summarize(vid, chapters, noTranscript, next)
       return () => {
         log(TAG, `useSummarize, disposed, vid=${vid}`)
@@ -84,9 +85,7 @@ export const useSummarize = (
     {
       loadingTimeout: 5 * 60 * 1000, // 5 mins.
       errorRetryCount: 2,
-      onError(err, key) {
-        log(TAG, `useSummarize, onError, key=${key}, err=${JSON.stringify(err)}`)
-      },
+      onError: err => log(TAG, `useSummarize, onError, vid=${vid}, err=${JSON.stringify(err)}`),
     },
   )
 }
@@ -100,7 +99,7 @@ const summarize = (
   log(TAG, `summarize, vid=${vid}`)
 
   // Let swr into loading state as soon as possible.
-  next?.(null, { state: SummaryState.DOING })
+  next?.(null, { state: State.DOING })
 
   const request: Message = {
     type: MessageType.REQUEST,
@@ -120,7 +119,7 @@ const summarize = (
   // https://stackoverflow.com/q/53939205
   let port: chrome.runtime.Port | null = null
   try {
-    port = chrome.runtime.connect({ name: `bys-${vid}` })
+    port = chrome.runtime.connect({ name: `summarize-${vid}` })
   } catch (e) {
     next?.(e as Error)
     return null
@@ -179,4 +178,93 @@ const upsert = (curr: Summary, prev?: Summary): Summary => {
     state,
     chapters,
   }
+}
+
+export const useTranslate = (toggled: number, pageUrl: string, lang: string) => {
+  const vid = parseVid(pageUrl)
+  log(TAG, `useTranslate, vid=${vid}, toggled=${toggled}`)
+
+  // Allow re-translate when `toggled` changed.
+  return useSWRSubscription(
+    toggled ? ['translate', toggled, vid, lang] : null,
+    ([_tag, _toggled, vid, lang], { next }) => {
+      const port = translate(vid, lang, next)
+      return () => {
+        log(TAG, `useTranslate, disposed, vid=${vid}`)
+        port?.disconnect()
+      }
+    },
+    {
+      loadingTimeout: 5 * 60 * 1000, // 5 mins.
+      errorRetryCount: 2,
+      onError: err => log(TAG, `useTranslate, onError, vid=${vid}, err=${JSON.stringify(err)}`),
+    },
+  )
+}
+
+const translate = (
+  vid: string,
+  lang: string,
+  next?: (error?: Error | null, data?: Summary | MutatorCallback<Summary>) => void,
+): chrome.runtime.Port | null => {
+  log(TAG, `translate, vid=${vid}`)
+
+  // Let swr into loading state as soon as possible.
+  next?.(null, { state: State.DOING })
+
+  const request: Message = {
+    type: MessageType.REQUEST,
+    requestUrl: `${BASE_URL}/api/translate/${vid}`,
+    requestInit: {
+      method: 'POST',
+      headers: {
+        'Content-Type': APPLICATION_JSON,
+      },
+      body: JSON.stringify({ lang }),
+    },
+  }
+
+  // https://stackoverflow.com/q/53939205
+  let port: chrome.runtime.Port | null = null
+  try {
+    port = chrome.runtime.connect({ name: `translate-${vid}` })
+  } catch (e) {
+    next?.(e as Error)
+    return null
+  }
+
+  port.onMessage.addListener(message => {
+    log(TAG, `translate, onMessage, message=${JSON.stringify(message)}`)
+
+    const {
+      type,
+      // responseOk,
+      responseJson,
+      // sseEvent,
+      sseData,
+      error,
+    } = message || {}
+
+    switch (type) {
+      case MessageType.RESPONSE:
+        // Don't need to check responseOk here,
+        // always `true` from server worker.
+        next?.(null, responseJson)
+        break
+      case MessageType.SSE:
+        // Don't need to check sseEvent here,
+        // always `SseEvent.TRANSLATION` from server worker.
+        next?.(null, sseData)
+        break
+      case MessageType.ERROR:
+        next?.(error as Error)
+        break
+      default:
+        next?.(new Error(JSON.stringify(message)))
+        break
+    }
+  })
+
+  port.postMessage(request)
+  return port
 }
