@@ -45,7 +45,6 @@ export enum Settings {
 
 export enum SseEvent {
   SUMMARY = 'summary',
-  TRANSLATION = 'translation',
   CLOSE = 'close',
 }
 
@@ -58,7 +57,6 @@ export enum State {
 export interface Summary {
   state: State,
   chapters?: Chapter[],
-  translation?: Translation[],
 }
 
 // https://en.wikipedia.org/wiki/Languages_used_on_the_Internet#Internet_users_by_language

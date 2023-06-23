@@ -1,7 +1,6 @@
-import UrlMatch from '@fczbkk/url-match'
-
-import useSWRSubscription from 'swr/subscription'
 import { MutatorCallback } from 'swr'
+import useSWRSubscription from 'swr/subscription'
+import UrlMatch from '@fczbkk/url-match'
 
 import {
   Chapter,
@@ -130,64 +129,6 @@ const summarize = (
   return port
 }
 
-export const useTranslate = (toggled: number, pageUrl: string, lang: string) => {
-  const vid = parseVid(pageUrl)
-  log(TAG, `useTranslate, vid=${vid}, toggled=${toggled}`)
-
-  // Allow re-translate when `toggled` changed.
-  return useSWRSubscription(
-    toggled ? ['translate', toggled, vid, lang] : null,
-    ([_tag, _toggled, vid, lang], { next }) => {
-      const port = translate(vid, lang, next)
-      return () => {
-        log(TAG, `useTranslate, disposed, vid=${vid}`)
-        port?.disconnect()
-      }
-    },
-    {
-      loadingTimeout: 5 * 60 * 1000, // 5 mins.
-      errorRetryCount: 2,
-      onError: err => log(TAG, `useTranslate, onError, vid=${vid}, err=${JSON.stringify(err)}`),
-    },
-  )
-}
-
-const translate = (
-  vid: string,
-  lang: string,
-  next?: (error?: Error | null, data?: Summary | MutatorCallback<Summary>) => void,
-): chrome.runtime.Port | null => {
-  log(TAG, `translate, vid=${vid}`)
-
-  // Let swr into loading state as soon as possible.
-  next?.(null, { state: State.DOING })
-
-  const request: Message = {
-    type: MessageType.REQUEST,
-    requestUrl: `${BASE_URL}/api/translate/${vid}`,
-    requestInit: {
-      method: 'POST',
-      headers: {
-        'Content-Type': APPLICATION_JSON,
-      },
-      body: JSON.stringify({ lang }),
-    },
-  }
-
-  // https://stackoverflow.com/q/53939205
-  let port: chrome.runtime.Port | null = null
-  try {
-    port = chrome.runtime.connect({ name: `translate-${vid}` })
-  } catch (e) {
-    next?.(e as Error)
-    return null
-  }
-
-  port.onMessage.addListener(msg => onMessage('translate', msg, next))
-  port.postMessage(request)
-  return port
-}
-
 const onMessage = (
   tag: string,
   message: Message,
@@ -225,32 +166,23 @@ const onMessage = (
 const upsert = (curr: Summary, prev?: Summary): Summary => {
   if (!prev) return curr
 
-  const {
-    chapters: prevChapters = [],
-    translation: prevTrans = [],
-  } = prev
-
-  const {
-    chapters: currChapters = [],
-    translation: currTrans = [],
-    state,
-  } = curr
+  const { chapters: prevChapters = [] } = prev
+  const { chapters: currChapters = [], state } = curr
 
   const chapterMap = new Map<string, Chapter>()
   prevChapters.forEach(c => chapterMap.set(c.cid, c))
   currChapters.forEach(c => chapterMap.set(c.cid, c))
 
-  const transMap = new Map<string, Translation>()
-  prevTrans.forEach(t => transMap.set(t.cid, t))
-  currTrans.forEach(t => transMap.set(t.cid, t))
-
-  const translation = Array.from(transMap.values())
   const chapters = Array.from(chapterMap.values())
   chapters.sort((a, b) => a.start - b.start)
 
   return {
     state,
     chapters,
-    translation,
   }
+}
+
+export const useTranslate = (toggled: number, vid: string, cid: string, lang: string) => {
+  log(TAG, `useTranslate, vid=${vid}, cid=${cid}, lang=${lang}, toggled=${toggled}`)
+  // TODO
 }
