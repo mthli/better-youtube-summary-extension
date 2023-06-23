@@ -152,6 +152,7 @@ const Panel = ({ pageUrl }: { pageUrl: string }) => {
       key={c.cid}
       ref={el => itemRefs.current.set(c.cid, el)}
       theme={currentTheme}
+      translatable={translatable}
       isLastItem={i === chapters.length - 1}
       selected={c.cid === selected}
       expanded={expands.get(c.cid, false)}

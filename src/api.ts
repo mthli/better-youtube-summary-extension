@@ -79,7 +79,7 @@ export const useSummarize = (
     {
       loadingTimeout: 5 * 60 * 1000, // 5 mins.
       errorRetryCount: 2,
-      onError: err => log(TAG, `useSummarize, onError, vid=${vid}, err=${JSON.stringify(err)}`),
+      onError: err => log(TAG, `useSummarize, onError, vid=${vid}, err=${err}`),
     },
   )
 }
@@ -145,7 +145,7 @@ const onMessage = (
       if (responseOk) {
         next?.(null, responseJson)
       } else {
-        next?.(new Error(responseJson))
+        next?.(new Error(JSON.stringify(responseJson)))
       }
       break
     case MessageType.SSE:
@@ -203,7 +203,11 @@ export const useTranslate = (toggled: boolean, vid: string, cid: string, lang: s
           const { type, responseOk, responseJson, error } = message
           switch (type) {
             case MessageType.RESPONSE:
-              responseOk ? resolve(responseJson) : reject(new Error(responseJson))
+              if (responseOk) {
+                resolve(responseJson)
+              } else {
+                reject(new Error(JSON.stringify(responseJson)))
+              }
               break
             case MessageType.ERROR:
               reject(error)
@@ -218,7 +222,7 @@ export const useTranslate = (toggled: boolean, vid: string, cid: string, lang: s
     {
       loadingTimeout: 90 * 1000, // 90s.
       errorRetryCount: 2,
-      onError: err => log(TAG, `useTranslate, onError, vid=${vid}, cid=${cid}, lang=${lang}, err=${JSON.stringify(err)}`),
+      onError: err => log(TAG, `useTranslate, onError, vid=${vid}, cid=${cid}, lang=${lang}, err=${err}`),
     },
   )
 }

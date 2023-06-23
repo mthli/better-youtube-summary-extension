@@ -13,6 +13,7 @@ import ListItemText from '@mui/material/ListItemText'
 import Typography from '@mui/material/Typography'
 import { Theme } from '@mui/material/styles'
 
+import { useTranslate } from './api'
 import { Chapter, ChapterStyle, Translation } from './data'
 import './markdown-light.css'
 import './markdown-dark.css'
@@ -43,6 +44,8 @@ const hexToRgba = (hex: string, alpha: number = 1) => {
 }
 
 const ChapterItem = forwardRef(function ChapterItem({
+  vid,
+  cid,
   style = ChapterStyle.MARKDOWN,
   start,
   chapter,
@@ -66,8 +69,13 @@ const ChapterItem = forwardRef(function ChapterItem({
 
   const { ref: buttonRef, width: buttonWidth = 0 } = useResizeObserver<HTMLDivElement>()
 
+  const { data, error, isLoading } = useTranslate(translatable, vid, cid, 'zh') // TODO
+  const { chapter: transChapter, summary: transSummary } = data || {}
+
   const count = countLines(summary)
   const padding = style === ChapterStyle.TEXT ? '8px' : 0
+  const finalChapter = transChapter || chapter
+  const finalSummary = transSummary || summary
 
   return (
     <li ref={ref}>
@@ -114,7 +122,7 @@ const ChapterItem = forwardRef(function ChapterItem({
                   }}
                   style={{ paddingRight: `${buttonWidth}px` }}
                 >
-                  {chapter}
+                  {finalChapter}
                   {
                     count > 1 &&
                     <Typography
@@ -142,7 +150,7 @@ const ChapterItem = forwardRef(function ChapterItem({
             }}
           >
             <ReactMarkdown className={`markdown-${theme.palette.mode}`}>
-              {summary}
+              {finalSummary}
             </ReactMarkdown>
           </Box>
           {!isLastItem && <Divider />}
