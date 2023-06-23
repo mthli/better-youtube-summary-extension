@@ -98,11 +98,14 @@ const Panel = ({ pageUrl }: { pageUrl: string }) => {
   const currentTheme = checkIsDarkMode(prefersDarkMode) ? darkTheme : lightTheme
   const iconColorActive = currentTheme.palette.action.active
   const iconColorDisabled = currentTheme.palette.action.disabled
+  const iconColorHighlight = currentTheme.palette.primary.main
 
   const [summarizing, setSummarizing] = useState(0)
-  const [translating, setTranslating] = useState(0)
+  const [translatable, setTranslatable] = useState(false)
+
   const [selected, setSelected] = useState<string>('') // cid.
   const [expands, setExpands] = useState<ImmutableMap<string, boolean>>(ImmutableMap())
+
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null)
   const [playerHeight, setPlayerHeight] = useState(560) // px.
 
@@ -117,7 +120,14 @@ const Panel = ({ pageUrl }: { pageUrl: string }) => {
   const { state, chapters = [] } = (data || {}) as Summary
   const doing = (state === State.DOING) && !error
   const done = (state === State.DONE) && !error
-  const transIconColor = !done ? iconColorDisabled : iconColorActive
+
+  const transDisabled = !done
+  let transIconColor = iconColorActive
+  if (transDisabled) {
+    transIconColor = iconColorDisabled
+  } else if (translatable) {
+    transIconColor = iconColorHighlight
+  }
 
   let showAlert = false
   let alertSeverity: AlertColor = 'info'
@@ -158,7 +168,7 @@ const Panel = ({ pageUrl }: { pageUrl: string }) => {
     setSelected('') // clear.
     setExpands(expands.clear())
     setSummarizing(0) // reset.
-    setTranslating(0) // reset.
+    setTranslatable(false) // reset.
   }
 
   // https://developer.mozilla.org/zh-CN/docs/Web/API/Element/scrollIntoView
@@ -211,7 +221,7 @@ const Panel = ({ pageUrl }: { pageUrl: string }) => {
   useEffect(() => {
     log(TAG, `useEffect, pageUrl=${pageUrl}`)
     setSummarizing(0) // cancel all requests before.
-    setTranslating(0) // cancel all requests before.
+    setTranslatable(false) // cancel all requests before.
   }, [pageUrl])
 
   useEffect(() => {
@@ -380,11 +390,9 @@ const Panel = ({ pageUrl }: { pageUrl: string }) => {
                   }}>
                     <IconButton
                       aria-label={t('translate').toString()}
-                      disabled={!done}
+                      disabled={transDisabled}
                       style={{ color: transIconColor }} // not `sx` here.
-                      onClick={() => {
-                        // TODO
-                      }}
+                      onClick={() => setTranslatable(!translatable)}
                     >
                       {/* SVG copied from YouTube, not perfect but ok. */}
                       <svg

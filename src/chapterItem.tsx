@@ -48,7 +48,7 @@ const ChapterItem = forwardRef(function ChapterItem({
   chapter,
   summary = '',
   theme,
-  translation,
+  translatable = false,
   isLastItem = false,
   selected = false,
   expanded = false,
@@ -56,7 +56,7 @@ const ChapterItem = forwardRef(function ChapterItem({
   onSeekTo,
 }: Chapter & {
   theme: Theme,
-  translation?: Translation,
+  translatable?: boolean,
   isLastItem?: boolean,
   selected?: boolean,
   expanded?: boolean,
@@ -65,12 +65,9 @@ const ChapterItem = forwardRef(function ChapterItem({
 }, ref: Ref<HTMLLIElement>) {
 
   const { ref: buttonRef, width: buttonWidth = 0 } = useResizeObserver<HTMLDivElement>()
-  const { chapter: transChapter, summary: transSummary } = translation || {}
 
   const count = countLines(summary)
   const padding = style === ChapterStyle.TEXT ? '8px' : 0
-  const finalChapter = transChapter || chapter // TODO
-  const finalSummary = transSummary || summary // TODO
 
   return (
     <li ref={ref}>
@@ -117,7 +114,7 @@ const ChapterItem = forwardRef(function ChapterItem({
                   }}
                   style={{ paddingRight: `${buttonWidth}px` }}
                 >
-                  {finalChapter}
+                  {chapter}
                   {
                     count > 1 &&
                     <Typography
@@ -145,7 +142,7 @@ const ChapterItem = forwardRef(function ChapterItem({
             }}
           >
             <ReactMarkdown className={`markdown-${theme.palette.mode}`}>
-              {finalSummary}
+              {summary}
             </ReactMarkdown>
           </Box>
           {!isLastItem && <Divider />}
