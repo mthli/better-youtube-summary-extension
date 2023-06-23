@@ -13,7 +13,7 @@ import ListItemText from '@mui/material/ListItemText'
 import Typography from '@mui/material/Typography'
 import { Theme } from '@mui/material/styles'
 
-import { Chapter, ChapterStyle } from './data'
+import { Chapter, ChapterStyle, Translation } from './data'
 import './markdown-light.css'
 import './markdown-dark.css'
 import './panel.css'
@@ -48,6 +48,7 @@ const ChapterItem = forwardRef(function ChapterItem({
   chapter,
   summary = '',
   theme,
+  translation,
   isLastItem = false,
   selected = false,
   expanded = false,
@@ -55,16 +56,16 @@ const ChapterItem = forwardRef(function ChapterItem({
   onSeekTo,
 }: Chapter & {
   theme: Theme,
+  translation?: Translation,
   isLastItem?: boolean,
   selected?: boolean,
   expanded?: boolean,
   onExpand?: (expand: boolean) => void,
   onSeekTo?: (start: number) => void,
 }, ref: Ref<HTMLLIElement>) {
-  const {
-    ref: buttonRef,
-    width: buttonWidth = 0,
-  } = useResizeObserver<HTMLDivElement>()
+
+  const { ref: buttonRef, width: buttonWidth = 0 } = useResizeObserver<HTMLDivElement>()
+  const { chapter: transChapter, summary: transSummary } = translation || {}
 
   const count = countLines(summary)
   const padding = style === ChapterStyle.TEXT ? '8px' : 0

@@ -106,36 +106,49 @@ const Panel = ({ pageUrl }: { pageUrl: string }) => {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null)
   const [playerHeight, setPlayerHeight] = useState(560) // px.
 
+  const { data: summaData, error: summaError } = useSummarize(summarizing, pageUrl, parseChapters(), checkNoTranscript())
+  const { data: transData, error: transError } = useTranslate(translating, pageUrl, '')
   const { t } = useTranslation()
-  const { data, error } = useSummarize(
-    summarizing,
-    pageUrl,
-    parseChapters(),
-    checkNoTranscript(),
-  )
 
-  const { state, chapters = [] } = (data || {}) as Summary
-  const { name: errName, message: errMsg } = (error || {}) as Error
-  const doing = (state === State.DOING) && !error
-  const done = (state === State.DONE) && !error
+  const { state: summaState, chapters = [] } = (summaData || {}) as Summary
+  const summaDoing = (summaState === State.DOING) && !summaError
+  const summaDone = (summaState === State.DONE) && !summaError
 
-  const transDisabled = Boolean(translating || !done)
+  const { state: transState, translation = [] } = (transData || {}) as Summary
+  const transDoing = (transState === State.DOING) && !transError
+  const transDisabled = Boolean(transDoing || !summaDone)
   const transIconColor = transDisabled ? iconColorDisabled : iconColorActive
+
+  const onClose = () => {
+    setSelected('') // clear.
+    setExpands(expands.clear())
+    setSummarizing(0) // reset.
+    setTranslating(0) // reset.
+  }
 
   let showAlert = false
   let alertSeverity: AlertColor = 'info'
   let alertTitle = ''
   let alertMsg = ''
-  if (error) {
+  let alertOnClose = onClose
+  if (summaError) {
+    const { name, message } = summaError as Error
     showAlert = true
     alertSeverity = 'error'
-    alertTitle = errName
-    alertMsg = errMsg
-  } else if (state === State.NOTHING) {
+    alertTitle = name
+    alertMsg = message
+  } else if (summaState === State.NOTHING) {
     showAlert = true
     alertSeverity = 'warning'
     alertTitle = t('no_transcript').toString()
     alertMsg = t('no_transcript_desc').toString()
+  } else if (transError) {
+    const { name, message } = transError as Error
+    showAlert = true
+    alertSeverity = 'warning'
+    alertTitle = name
+    alertMsg = message
+    alertOnClose = () => setTranslating(0) // reset.
   }
 
   const list = chapters.map((c, i) => (
@@ -188,12 +201,6 @@ const Panel = ({ pageUrl }: { pageUrl: string }) => {
     scrollIntoView(chapters[chapters.length - 1].cid)
   }
 
-  const onClose = () => {
-    setSelected('') // clear.
-    setExpands(expands.clear())
-    setSummarizing(0) // reset.
-  }
-
   useEffect(() => {
     const player = document.querySelector('video')
     log(TAG, `useEffect, init, player=${player}`)
@@ -212,6 +219,7 @@ const Panel = ({ pageUrl }: { pageUrl: string }) => {
   useEffect(() => {
     log(TAG, `useEffect, pageUrl=${pageUrl}`)
     setSummarizing(0) // cancel all requests before.
+    setTranslating(0) // cancel all requests before.
   }, [pageUrl])
 
   useEffect(() => {
@@ -231,7 +239,7 @@ const Panel = ({ pageUrl }: { pageUrl: string }) => {
           pr: '18px',
           fontSize: '1.6rem',
         }}
-        disabled={!done}
+        disabled={!summaDone}
         onClick={() => {
           setAnchorEl(null)
           feedback(pageUrl, true)
@@ -248,7 +256,7 @@ const Panel = ({ pageUrl }: { pageUrl: string }) => {
           pr: '18px',
           fontSize: '1.6rem',
         }}
-        disabled={!done}
+        disabled={!summaDone}
         onClick={() => {
           setAnchorEl(null)
           feedback(pageUrl, false)
@@ -313,16 +321,16 @@ const Panel = ({ pageUrl }: { pageUrl: string }) => {
                 >
                   <IconButton
                     aria-label={t('summarize').toString()}
-                    disabled={doing}
-                    style={{ color: doing ? iconColorDisabled : iconColorActive }} // not `sx` here.
+                    disabled={summaDoing}
+                    style={{ color: summaDoing ? iconColorDisabled : iconColorActive }} // not `sx` here.
                     onClick={() => setSummarizing(summarizing + 1)}
                   >
                     {
-                      !doing &&
+                      !summaDoing &&
                       <span className='material-symbols-outlined'>summarize</span>
                     }
                     {
-                      doing &&
+                      summaDoing &&
                       <GooSpinner
                         size={24}
                         color={currentTheme.palette.text.primary}
@@ -382,9 +390,7 @@ const Panel = ({ pageUrl }: { pageUrl: string }) => {
                       aria-label={t('translate').toString()}
                       disabled={transDisabled}
                       style={{ color: transIconColor }} // not `sx` here.
-                      onClick={() => {
-                        // TODO (Matthew Lee) translate.
-                      }}
+                      onClick={() => setTranslating(translating + 1)}
                     >
                       {
                         // SVG copied from YouTube, not perfect but ok.
@@ -460,7 +466,7 @@ const Panel = ({ pageUrl }: { pageUrl: string }) => {
                 <IconButton
                   aria-label={t('close').toString()}
                   style={{ color: iconColorActive, marginTop: '-4px' }} // not `sx` here.
-                  onClick={onClose}
+                  onClick={alertOnClose}
                 >
                   <span className='material-symbols-outlined'>close</span>
                 </IconButton>
