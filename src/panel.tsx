@@ -107,7 +107,7 @@ const Panel = ({ pageUrl }: { pageUrl: string }) => {
   const [playerHeight, setPlayerHeight] = useState(560) // px.
 
   const { data: summaData, error: summaError } = useSummarize(summarizing, pageUrl, parseChapters(), checkNoTranscript())
-  const { data: transData, error: transError } = useTranslate(translating, pageUrl, '')
+  const { data: transData, error: transError } = useTranslate(translating, pageUrl, 'zh') // TODO
   const { t } = useTranslation()
 
   const { state: summaState, chapters = [] } = (summaData || {}) as Summary
@@ -395,7 +395,7 @@ const Panel = ({ pageUrl }: { pageUrl: string }) => {
                     >
                       {
                         // SVG copied from YouTube, not perfect but ok.
-                        !translating &&
+                        !transDoing &&
                         <svg
                           viewBox='0 0 24 24'
                           width='22px'
@@ -411,7 +411,7 @@ const Panel = ({ pageUrl }: { pageUrl: string }) => {
                         </svg>
                       }
                       {
-                        translating &&
+                        transDoing &&
                         <ImpulseSpinner
                           size={24}
                           frontColor={currentTheme.palette.text.primary}

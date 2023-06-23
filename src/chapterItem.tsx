@@ -69,6 +69,8 @@ const ChapterItem = forwardRef(function ChapterItem({
 
   const count = countLines(summary)
   const padding = style === ChapterStyle.TEXT ? '8px' : 0
+  const finalChapter = transChapter || chapter // TODO
+  const finalSummary = transSummary || summary // TODO
 
   return (
     <li ref={ref}>
@@ -115,7 +117,7 @@ const ChapterItem = forwardRef(function ChapterItem({
                   }}
                   style={{ paddingRight: `${buttonWidth}px` }}
                 >
-                  {chapter}
+                  {finalChapter}
                   {
                     count > 1 &&
                     <Typography
@@ -143,7 +145,7 @@ const ChapterItem = forwardRef(function ChapterItem({
             }}
           >
             <ReactMarkdown className={`markdown-${theme.palette.mode}`}>
-              {summary}
+              {finalSummary}
             </ReactMarkdown>
           </Box>
           {!isLastItem && <Divider />}
