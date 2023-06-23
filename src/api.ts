@@ -1,4 +1,4 @@
-import { MutatorCallback } from 'swr'
+import useSWR, { MutatorCallback } from 'swr'
 import useSWRSubscription from 'swr/subscription'
 import UrlMatch from '@fczbkk/url-match'
 
@@ -40,7 +40,7 @@ export const feedback = (pageUrl: string, good: boolean) => {
   const vid = parseVid(pageUrl)
   if (!vid) return
 
-  const request: Message = {
+  chrome.runtime.sendMessage({
     type: MessageType.REQUEST,
     requestUrl: `${BASE_URL}/api/feedback/${vid}`,
     requestInit: {
@@ -53,11 +53,6 @@ export const feedback = (pageUrl: string, good: boolean) => {
         bad: !Boolean(good),
       }),
     },
-  }
-
-  chrome.runtime.sendMessage(request, message => {
-    const json = JSON.stringify(message)
-    log(TAG, `feedback, responseCallback, message=${json}`)
   })
 }
 
@@ -138,7 +133,7 @@ const onMessage = (
 
   const {
     type,
-    // responseOk,
+    responseOk,
     responseJson,
     // sseEvent,
     sseData,
@@ -147,8 +142,11 @@ const onMessage = (
 
   switch (type) {
     case MessageType.RESPONSE:
-      // Don't need to check responseOk here.
-      next?.(null, responseJson)
+      if (responseOk) {
+        next?.(null, responseJson)
+      } else {
+        next?.(new Error(responseJson))
+      }
       break
     case MessageType.SSE:
       // Don't need to check sseEvent here.
@@ -182,7 +180,45 @@ const upsert = (curr: Summary, prev?: Summary): Summary => {
   }
 }
 
-export const useTranslate = (toggled: number, vid: string, cid: string, lang: string) => {
+export const useTranslate = (toggled: boolean, vid: string, cid: string, lang: string) => {
   log(TAG, `useTranslate, vid=${vid}, cid=${cid}, lang=${lang}, toggled=${toggled}`)
-  // TODO
+
+  return useSWR(
+    toggled ? ['translate', vid, cid, lang] : null,
+    ([_tag, vid, cid, lang]) => {
+      const request: Message = {
+        type: MessageType.REQUEST,
+        requestUrl: `${BASE_URL}/api/translate/${vid}`,
+        requestInit: {
+          method: 'POST',
+          headers: {
+            'Content-Type': APPLICATION_JSON,
+          },
+          body: JSON.stringify({ cid, lang }),
+        },
+      }
+
+      return new Promise<Translation>((resolve, reject) => {
+        chrome.runtime.sendMessage(request, (message: Message) => {
+          const { type, responseOk, responseJson, error } = message
+          switch (type) {
+            case MessageType.RESPONSE:
+              responseOk ? resolve(responseJson) : reject(new Error(responseJson))
+              break
+            case MessageType.ERROR:
+              reject(error)
+              break
+            default:
+              reject(new Error(JSON.stringify(message)))
+              break
+          }
+        })
+      })
+    },
+    {
+      loadingTimeout: 90 * 1000, // 90s.
+      errorRetryCount: 2,
+      onError: err => log(TAG, `useTranslate, onError, vid=${vid}, cid=${cid}, lang=${lang}, err=${JSON.stringify(err)}`),
+    },
+  )
 }
