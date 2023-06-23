@@ -125,59 +125,9 @@ const summarize = (
     return null
   }
 
-  port.onMessage.addListener(message => {
-    log(TAG, `summarize, onMessage, message=${JSON.stringify(message)}`)
-
-    const {
-      type,
-      // responseOk,
-      responseJson,
-      // sseEvent,
-      sseData,
-      error,
-    } = message || {}
-
-    switch (type) {
-      case MessageType.RESPONSE:
-        // Don't need to check responseOk here,
-        // always `true` from server worker.
-        next?.(null, responseJson)
-        break
-      case MessageType.SSE:
-        // Don't need to check sseEvent here,
-        // always `SseEvent.SUMMARY` from server worker.
-        next?.(null, prev => upsert(sseData, prev))
-        break
-      case MessageType.ERROR:
-        next?.(error as Error)
-        break
-      default:
-        next?.(new Error(JSON.stringify(message)))
-        break
-    }
-  })
-
+  port.onMessage.addListener(msg => onMessage('summarize', msg, next))
   port.postMessage(request)
   return port
-}
-
-const upsert = (curr: Summary, prev?: Summary): Summary => {
-  if (!prev) return curr
-
-  const { chapters: prevChapters = [] } = prev
-  const { chapters: currChapters = [], state } = curr
-
-  const map = new Map<string, Chapter>()
-  prevChapters.forEach(c => map.set(c.cid, c))
-  currChapters.forEach(c => map.set(c.cid, c))
-
-  const chapters = Array.from(map.values())
-  chapters.sort((a, b) => a.start - b.start)
-
-  return {
-    state,
-    chapters,
-  }
 }
 
 export const useTranslate = (toggled: number, pageUrl: string, lang: string) => {
@@ -233,38 +183,74 @@ const translate = (
     return null
   }
 
-  port.onMessage.addListener(message => {
-    log(TAG, `translate, onMessage, message=${JSON.stringify(message)}`)
-
-    const {
-      type,
-      // responseOk,
-      responseJson,
-      // sseEvent,
-      sseData,
-      error,
-    } = message || {}
-
-    switch (type) {
-      case MessageType.RESPONSE:
-        // Don't need to check responseOk here,
-        // always `true` from server worker.
-        next?.(null, responseJson)
-        break
-      case MessageType.SSE:
-        // Don't need to check sseEvent here,
-        // always `SseEvent.TRANSLATION` from server worker.
-        next?.(null, sseData)
-        break
-      case MessageType.ERROR:
-        next?.(error as Error)
-        break
-      default:
-        next?.(new Error(JSON.stringify(message)))
-        break
-    }
-  })
-
+  port.onMessage.addListener(msg => onMessage('translate', msg, next))
   port.postMessage(request)
   return port
+}
+
+const onMessage = (
+  tag: string,
+  message: Message,
+  next?: (error?: Error | null, data?: Summary | MutatorCallback<Summary>) => void,
+) => {
+  log(TAG, `${tag}, onMessage, message=${JSON.stringify(message)}`)
+
+  const {
+    type,
+    // responseOk,
+    responseJson,
+    // sseEvent,
+    sseData,
+    error,
+  } = message || {}
+
+  switch (type) {
+    case MessageType.RESPONSE:
+      // Don't need to check responseOk here.
+      next?.(null, responseJson)
+      break
+    case MessageType.SSE:
+      // Don't need to check sseEvent here.
+      next?.(null, prev => upsert(sseData, prev))
+      break
+    case MessageType.ERROR:
+      next?.(error as Error)
+      break
+    default:
+      next?.(new Error(JSON.stringify(message)))
+      break
+  }
+}
+
+const upsert = (curr: Summary, prev?: Summary): Summary => {
+  if (!prev) return curr
+
+  const {
+    chapters: prevChapters = [],
+    translation: prevTrans = [],
+  } = prev
+
+  const {
+    chapters: currChapters = [],
+    translation: currTrans = [],
+    state,
+  } = curr
+
+  const chapterMap = new Map<string, Chapter>()
+  prevChapters.forEach(c => chapterMap.set(c.cid, c))
+  currChapters.forEach(c => chapterMap.set(c.cid, c))
+
+  const transMap = new Map<string, Translation>()
+  prevTrans.forEach(t => transMap.set(t.cid, t))
+  currTrans.forEach(t => transMap.set(t.cid, t))
+
+  const translation = Array.from(transMap.values())
+  const chapters = Array.from(chapterMap.values())
+  chapters.sort((a, b) => a.start - b.start)
+
+  return {
+    state,
+    chapters,
+    translation,
+  }
 }
