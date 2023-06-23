@@ -119,7 +119,7 @@ const Panel = ({ pageUrl }: { pageUrl: string }) => {
   const doing = (state === State.DOING) && !error
   const done = (state === State.DONE) && !error
 
-  const transDisabled = translating || !done
+  const transDisabled = Boolean(translating || !done)
   const transIconColor = transDisabled ? iconColorDisabled : iconColorActive
 
   let showAlert = false
