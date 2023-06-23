@@ -56,6 +56,17 @@ const checkNoTranscript = (): boolean => {
   return parseFloat(opacity) < 1.0
 }
 
+// https://stackoverflow.com/a/62461987
+const openOptionsPage = () => {
+  chrome.runtime.sendMessage({
+    type: MessageType.REQUEST,
+    requestUrl: chrome.runtime.getURL('options.html'),
+  } as Message, message => {
+    const json = JSON.stringify(message)
+    log(TAG, `openOptionsPage, responseCallback, message=${json}`)
+  })
+}
+
 // https://stackoverflow.com/a/75704708
 const parseChapters = (): PageChapter[] => {
   const elements = Array.from(
@@ -79,17 +90,6 @@ const parseChapters = (): PageChapter[] => {
   return [
     ...new Map(filtered.map(c => [c.timestamp, c])).values(),
   ] as PageChapter[]
-}
-
-// https://stackoverflow.com/a/62461987
-const openOptionsPage = () => {
-  chrome.runtime.sendMessage({
-    type: MessageType.REQUEST,
-    requestUrl: chrome.runtime.getURL('options.html'),
-  } as Message, message => {
-    const json = JSON.stringify(message)
-    log(TAG, `openOptionsPage, responseCallback, message=${json}`)
-  })
 }
 
 const Panel = ({ pageUrl }: { pageUrl: string }) => {
@@ -157,6 +157,7 @@ const Panel = ({ pageUrl }: { pageUrl: string }) => {
       key={c.cid}
       ref={el => itemRefs.current.set(c.cid, el)}
       theme={currentTheme}
+      translation={translation.find(t => t.cid === c.cid)}
       isLastItem={i === chapters.length - 1}
       selected={c.cid === selected}
       expanded={expands.get(c.cid, false)}
