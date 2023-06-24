@@ -289,10 +289,7 @@ const Panel = ({ pageUrl }: { pageUrl: string }) => {
     >
       <MenuItem
         key={'good'}
-        sx={{
-          pr: '18px',
-          fontSize: '1.6rem',
-        }}
+        sx={{ pr: '18px' }}
         disabled={!done}
         onClick={() => {
           setAnchorEl(null)
@@ -306,10 +303,7 @@ const Panel = ({ pageUrl }: { pageUrl: string }) => {
       </MenuItem>
       <MenuItem
         key={'bad'}
-        sx={{
-          pr: '18px',
-          fontSize: '1.6rem',
-        }}
+        sx={{ pr: '18px' }}
         disabled={!done}
         onClick={() => {
           setAnchorEl(null)
@@ -323,10 +317,7 @@ const Panel = ({ pageUrl }: { pageUrl: string }) => {
       </MenuItem>
       <MenuItem
         key={'settings'}
-        sx={{
-          pr: '18px',
-          fontSize: '1.6rem',
-        }}
+        sx={{ pr: '18px' }}
         onClick={() => {
           setAnchorEl(null)
           openOptionsPage()

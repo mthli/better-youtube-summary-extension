@@ -2,6 +2,9 @@ import { createTheme } from '@mui/material/styles'
 
 // YouTube Light.
 export const lightTheme = createTheme({
+  typography: {
+    htmlFontSize: 10, // px.
+  },
   palette: {
     mode: 'light',
     primary: {
@@ -32,6 +35,9 @@ export const lightTheme = createTheme({
 
 // YouTube Dark.
 export const darkTheme = createTheme({
+  typography: {
+    htmlFontSize: 10, // px.
+  },
   palette: {
     mode: 'dark',
     primary: {

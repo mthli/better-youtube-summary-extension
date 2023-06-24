@@ -122,7 +122,6 @@ const ChapterItem = forwardRef(function ChapterItem({
                 <ListItemText
                   primaryTypographyProps={{
                     sx: {
-                      fontSize: '1.6rem',
                       fontWeight: expanded ? 600 : 400,
                     }
                   }}
@@ -135,7 +134,6 @@ const ChapterItem = forwardRef(function ChapterItem({
                       variant='body1'
                       sx={{
                         display: 'inline',
-                        fontSize: '1.6rem',
                         color: 'text.primary',
                         opacity: 0.3,
                       }}
