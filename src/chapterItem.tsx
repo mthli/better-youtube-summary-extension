@@ -14,11 +14,14 @@ import Typography from '@mui/material/Typography'
 import { Theme } from '@mui/material/styles'
 
 import { useTranslate } from './api'
-import { Chapter, ChapterStyle, Translation } from './data'
+import { Chapter, ChapterStyle } from './data'
 import './markdown-light.css'
 import './markdown-dark.css'
 import './panel.css'
 import './i18n'
+
+// https://github.com/vinta/pangu.js
+const pangu = require('pangu')
 
 const formatSeconds = (seconds: number): string => {
   const pad = (num: number, size: number): string => ('000' + num).slice(size * -1)
@@ -74,8 +77,8 @@ const ChapterItem = forwardRef(function ChapterItem({
 
   const count = countLines(summary)
   const padding = style === ChapterStyle.TEXT ? '8px' : 0
-  const finalChapter = transChapter || chapter
-  const finalSummary = transSummary || summary
+  const finalChapter = pangu.spacing(transChapter || chapter)
+  const finalSummary = pangu.spacing(transSummary || summary)
 
   return (
     <li ref={ref}>
