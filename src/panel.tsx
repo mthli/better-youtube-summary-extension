@@ -26,8 +26,10 @@ import {
   Message,
   MessageType,
   PageChapter,
+  Settings,
   State,
   Summary,
+  TargetLang,
 } from './data'
 import { useSummarize, feedback } from './api'
 import { Map as ImmutableMap } from 'immutable'
@@ -100,9 +102,11 @@ const Panel = ({ pageUrl }: { pageUrl: string }) => {
   const iconColorDisabled = currentTheme.palette.action.disabled
   const iconColorHighlight = currentTheme.palette.primary.main
 
-  const [summarizing, setSummarizing] = useState(0)
+  const targetLangkeys = Object.keys(TargetLang)
+  const [targetLang, setTargetLang] = useState(targetLangkeys[0])
   const [translatable, setTranslatable] = useState(false)
 
+  const [summarizing, setSummarizing] = useState(0)
   const [selected, setSelected] = useState<string>('') // cid.
   const [expands, setExpands] = useState<ImmutableMap<string, boolean>>(ImmutableMap())
 
@@ -152,6 +156,7 @@ const Panel = ({ pageUrl }: { pageUrl: string }) => {
       key={c.cid}
       ref={el => itemRefs.current.set(c.cid, el)}
       theme={currentTheme}
+      targetLang={targetLang}
       translatable={translatable}
       isLastItem={i === chapters.length - 1}
       selected={c.cid === selected}
@@ -205,6 +210,31 @@ const Panel = ({ pageUrl }: { pageUrl: string }) => {
   }
 
   useEffect(() => {
+    chrome.storage.sync.get([Settings.TRANSLATION_TARGET_LANG], res => {
+      const { [Settings.TRANSLATION_TARGET_LANG]: lang } = res
+      log(TAG, `useEffect, init, ${Settings.TRANSLATION_TARGET_LANG}=${lang}`)
+      if (targetLangkeys.includes(lang)) {
+        setTargetLang(lang)
+      } else {
+        setTargetLang(targetLangkeys[0])
+      }
+    })
+
+    // @ts-ignore
+    const listener = (changes, areaName) => {
+      if (areaName !== 'sync') return
+      // @ts-ignore
+      for (const [key, { oldValue, newValue }] of Object.entries(changes)) {
+        if (key !== Settings.TRANSLATION_TARGET_LANG) continue
+        log(TAG, `storage.onChanged, key=${key}, oldValue=${oldValue}, newValue=${newValue}`)
+        if (targetLangkeys.includes(newValue)) {
+          setTargetLang(newValue)
+        } else {
+          setTargetLang(targetLangkeys[0])
+        }
+      }
+    }
+
     const player = document.querySelector('video')
     log(TAG, `useEffect, init, player=${player}`)
 
@@ -216,7 +246,12 @@ const Panel = ({ pageUrl }: { pageUrl: string }) => {
     })
 
     if (player) playerObserver.observe(player)
-    return () => playerObserver.disconnect()
+    chrome.storage.onChanged.addListener(listener)
+
+    return () => {
+      playerObserver.disconnect()
+      chrome.storage.onChanged.removeListener(listener)
+    }
   }, [])
 
   useEffect(() => {

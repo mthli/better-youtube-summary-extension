@@ -32,7 +32,7 @@ const App = () => {
   const currentTheme = prefersDarkMode ? darkTheme : lightTheme
 
   const targetLangkeys = Object.keys(TargetLang)
-  const [targetLangKey, setTargetLangKey] = useState(targetLangkeys[0])
+  const [targetLang, setTargetLang] = useState(targetLangkeys[0])
   const [openAiApiKey, setOpenAiApiKey] = useState('')
 
   const { t } = useTranslation()
@@ -48,13 +48,13 @@ const App = () => {
         [Settings.TRANSLATION_TARGET_LANG]: lang,
       } = res
 
-      log(TAG, `useEffect, init, OPENAI_API_KEY=${key}, TRANSLATION_TARGET_LANG=${lang}`)
+      log(TAG, `useEffect, init, ${Settings.OPENAI_API_KEY}=${key}, ${Settings.TRANSLATION_TARGET_LANG}=${lang}`)
       setOpenAiApiKey(key)
 
       if (targetLangkeys.includes(lang)) {
-        setTargetLangKey(lang)
+        setTargetLang(lang)
       } else {
-        setTargetLangKey(targetLangkeys[0])
+        setTargetLang(targetLangkeys[0])
       }
     })
   }, [])
@@ -124,11 +124,11 @@ const App = () => {
                 width: '180px',
                 height: '32px',
               }}
-              value={targetLangKey}
+              value={targetLang}
               onChange={({ target: { value: key } }) => {
                 // Don't useEffect for `targetLangKey` here.
                 chrome.storage.sync.set({ [Settings.TRANSLATION_TARGET_LANG]: key })
-                setTargetLangKey(key)
+                setTargetLang(key)
               }}
             >
               {
