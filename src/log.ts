@@ -1,4 +1,4 @@
-const ENABLED = true
+const ENABLED = false
 
 const log = (tag: string, message: string) => {
   if (ENABLED) {

@@ -4,4 +4,6 @@ dist/
 tmp/
 
 # Others
-.DS_Store
+*.DS_Store
+*.crx
+*.zip
