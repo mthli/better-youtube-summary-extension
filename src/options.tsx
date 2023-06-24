@@ -48,8 +48,10 @@ const App = () => {
         [Settings.TRANSLATION_TARGET_LANG]: lang,
       } = res
 
+      // A component is changing a controlled input to be uncontrolled.
+      // This is likely caused by the value changing from a defined to undefined, which should not happen.
       log(TAG, `useEffect, init, ${Settings.OPENAI_API_KEY}=${key}, ${Settings.TRANSLATION_TARGET_LANG}=${lang}`)
-      setOpenAiApiKey(key)
+      setOpenAiApiKey(key ?? '')
 
       if (targetLangkeys.includes(lang)) {
         setTargetLang(lang)
