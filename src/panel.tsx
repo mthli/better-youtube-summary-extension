@@ -428,7 +428,14 @@ const Panel = ({ pageUrl }: { pageUrl: string }) => {
                       aria-label={t('translate').toString()}
                       disabled={transDisabled}
                       style={{ color: transIconColor }} // not `sx` here.
-                      onClick={() => setTranslatable(!translatable)}
+                      onClick={() => {
+                        const lang = chapters.length > 0 ? chapters[0].lang : targetLangkeys[0]
+                        if (lang === targetLang) {
+                          openOptionsPage()
+                        } else {
+                          setTranslatable(!translatable)
+                        }
+                      }}
                     >
                       {/* SVG copied from YouTube, not perfect but ok. */}
                       <svg

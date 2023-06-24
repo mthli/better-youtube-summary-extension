@@ -61,16 +61,16 @@ export interface Summary {
 
 // https://en.wikipedia.org/wiki/Languages_used_on_the_Internet#Internet_users_by_language
 export enum TargetLang {
-  'EN' = 'English', // default.
-  'ZH' = '中文',
-  'ES' = 'Español',
-  'ID' = 'Bahasa Indonesia',
-  'PT' = 'Português',
-  'FR' = 'Français',
-  'JA' = '日本語',
-  'RU' = 'Русский язык',
-  'DE' = 'Deutsch',
-  'KO' = '한국어',
+  'en' = 'English', // default.
+  'zh' = '中文',
+  'es' = 'Español',
+  'id' = 'Bahasa Indonesia',
+  'pt' = 'Português',
+  'fr' = 'Français',
+  'ja' = '日本語',
+  'ru' = 'Русский язык',
+  'de' = 'Deutsch',
+  'ko' = '한국어',
 }
 
 export interface Translation {

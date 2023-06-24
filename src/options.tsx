@@ -171,7 +171,7 @@ const App = () => {
                 style: {
                   paddingTop: '4px',
                   paddingBottom: '4px',
-                }
+                },
               }}
               value={openAiApiKey}
               onChange={({ target: { value = '' } = {} }) => {
