@@ -74,8 +74,8 @@ const ChapterItem = forwardRef(function ChapterItem({
 
   const { ref: buttonRef, width: buttonWidth = 0 } = useResizeObserver<HTMLDivElement>()
 
-  // TODO
-  const { data, error, isLoading } = useTranslate(translatable, vid, cid, targetLang)
+  // FIXME (Matthew Lee) ignore loading and error for now.
+  const { data, /* error, isLoading */ } = useTranslate(translatable, vid, cid, targetLang)
   const { chapter: transChapter, summary: transSummary } = data || {}
 
   const count = countLines(summary)
