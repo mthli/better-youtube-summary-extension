@@ -53,9 +53,11 @@ const App = () => {
 
       if (targetLangkeys.includes(lang)) {
         setTargetLang(lang)
-      } else {
-        setTargetLang(targetLangkeys[0])
+        return
       }
+
+      // If no settings yet.
+      chrome.storage.sync.set({ [Settings.TRANSLATION_TARGET_LANG]: targetLang })
     })
   }, [])
 

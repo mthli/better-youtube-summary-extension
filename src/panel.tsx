@@ -58,6 +58,22 @@ const checkNoTranscript = (): boolean => {
   return parseFloat(opacity) < 1.0
 }
 
+const initTargetLang = (): string => {
+  const keys = Object.keys(TargetLang)
+  const lang = document
+    .documentElement
+    .attributes
+    .getNamedItem('lang')
+    ?.textContent
+    ?.trim() ?? ''
+
+  for (const key of keys) {
+    if (lang.startsWith(key)) return key
+  }
+
+  return keys[0] // default.
+}
+
 // https://stackoverflow.com/a/62461987
 const openOptionsPage = () => {
   chrome.runtime.sendMessage({
@@ -101,12 +117,12 @@ const Panel = ({ pageUrl }: { pageUrl: string }) => {
   const iconColorActive = currentTheme.palette.action.active
   const iconColorDisabled = currentTheme.palette.action.disabled
   const iconColorHighlight = currentTheme.palette.primary.main
-
   const targetLangkeys = Object.keys(TargetLang)
-  const [targetLang, setTargetLang] = useState(targetLangkeys[0])
-  const [translatable, setTranslatable] = useState(false)
 
   const [summarizing, setSummarizing] = useState(0)
+  const [translatable, setTranslatable] = useState(false)
+  const [targetLang, setTargetLang] = useState(initTargetLang())
+
   const [selected, setSelected] = useState<string>('') // cid.
   const [expands, setExpands] = useState<ImmutableMap<string, boolean>>(ImmutableMap())
 
@@ -213,25 +229,25 @@ const Panel = ({ pageUrl }: { pageUrl: string }) => {
     chrome.storage.sync.get([Settings.TRANSLATION_TARGET_LANG], res => {
       const { [Settings.TRANSLATION_TARGET_LANG]: lang } = res
       log(TAG, `useEffect, init, ${Settings.TRANSLATION_TARGET_LANG}=${lang}`)
+
       if (targetLangkeys.includes(lang)) {
         setTargetLang(lang)
-      } else {
-        setTargetLang(targetLangkeys[0])
+        return
       }
+
+      // If no settings yet.
+      chrome.storage.sync.set({ [Settings.TRANSLATION_TARGET_LANG]: targetLang })
     })
 
     // @ts-ignore
     const listener = (changes, areaName) => {
       if (areaName !== 'sync') return
+
       // @ts-ignore
       for (const [key, { oldValue, newValue }] of Object.entries(changes)) {
         if (key !== Settings.TRANSLATION_TARGET_LANG) continue
         log(TAG, `storage.onChanged, key=${key}, oldValue=${oldValue}, newValue=${newValue}`)
-        if (targetLangkeys.includes(newValue)) {
-          setTargetLang(newValue)
-        } else {
-          setTargetLang(targetLangkeys[0])
-        }
+        setTargetLang(newValue)
       }
     }
 
@@ -430,7 +446,7 @@ const Panel = ({ pageUrl }: { pageUrl: string }) => {
                       style={{ color: transIconColor }} // not `sx` here.
                       onClick={() => {
                         const lang = chapters.length > 0 ? chapters[0].lang : targetLangkeys[0]
-                        if (lang === targetLang) {
+                        if (lang === targetLang || !targetLang) {
                           openOptionsPage()
                         } else {
                           setTranslatable(!translatable)
