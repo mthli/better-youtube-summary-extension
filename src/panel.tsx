@@ -23,6 +23,7 @@ import ChapterItem from './chapterItem'
 import { GooSpinner } from 'react-spinners-kit'
 
 import {
+  Chapter,
   Message,
   MessageType,
   PageChapter,
@@ -34,11 +35,27 @@ import {
 import { useSummarize, feedback } from './api'
 import { Map as ImmutableMap } from 'immutable'
 
+import copy from 'copy-to-clipboard'
 import log from './log'
 import './panel.css'
 import './i18n'
 
+// https://github.com/vinta/pangu.js
+const pangu = require('pangu')
+
 const TAG = 'panel'
+
+const buildCopyText = (chapters: Chapter[]): string => {
+  let text = ''
+
+  for (const c of chapters) {
+    const title = `# ${pangu.spacing(c.chapter)}`
+    const content = pangu.spacing(c.summary ?? '')
+    text += `# ${title}\n\n${content}\n\n`
+  }
+
+  return text.trim()
+}
 
 const checkIsDarkMode = (prefersDarkMode: boolean): boolean => {
   // Follow the System Preferences.
@@ -433,9 +450,7 @@ const Panel = ({ pageUrl }: { pageUrl: string }) => {
                       marginRight: '8px',
                       color: done ? iconColorActive : iconColorDisabled,
                     }}
-                    onClick={() => {
-                      // TODO
-                    }}
+                    onClick={() => copy(buildCopyText(chapters))}
                   >
                     <span className='material-symbols-outlined'>content_copy</span>
                   </IconButton>
