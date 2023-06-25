@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client'
 import { useTranslation } from 'react-i18next'
 
 import Box from '@mui/material/Box'
+import Checkbox from '@mui/material/Checkbox'
 import Container from '@mui/material/Container'
 import List from '@mui/material/List'
 import ListItem from '@mui/material/ListItem'
@@ -19,10 +20,9 @@ import { ThemeProvider } from '@mui/material/styles'
 import { lightTheme, darkTheme } from './theme'
 
 import { Settings, TargetLang } from './data'
-import log from './log'
 import './i18n'
 
-const TAG = 'options'
+// const TAG = 'options'
 
 const manifest = chrome.runtime.getManifest()
 const version = `v${manifest.version}`
@@ -34,6 +34,7 @@ const App = () => {
   const targetLangkeys = Object.keys(TargetLang)
   const [targetLang, setTargetLang] = useState(targetLangkeys[0])
   const [openAiApiKey, setOpenAiApiKey] = useState('')
+  const [copyWithTimestamps, setCopyWithTimestamps] = useState(false)
 
   const { t } = useTranslation()
   const title = t('title').toString()
@@ -42,16 +43,18 @@ const App = () => {
     chrome.storage.sync.get([
       Settings.OPENAI_API_KEY,
       Settings.TRANSLATION_TARGET_LANG,
+      Settings.COPY_WITH_TIMESTAMPS,
     ], res => {
       const {
         [Settings.OPENAI_API_KEY]: key,
         [Settings.TRANSLATION_TARGET_LANG]: lang,
+        [Settings.COPY_WITH_TIMESTAMPS]: copy,
       } = res
 
       // A component is changing a controlled input to be uncontrolled.
       // This is likely caused by the value changing from a defined to undefined, which should not happen.
-      log(TAG, `useEffect, init, ${Settings.OPENAI_API_KEY}=${key}, ${Settings.TRANSLATION_TARGET_LANG}=${lang}`)
       setOpenAiApiKey(key ?? '')
+      setCopyWithTimestamps(Boolean(copy))
 
       if (targetLangkeys.includes(lang)) {
         setTargetLang(lang)
@@ -182,6 +185,32 @@ const App = () => {
                 // Don't useEffect for `openAiApiKey` here.
                 chrome.storage.sync.set({ [Settings.OPENAI_API_KEY]: value.trim() })
                 setOpenAiApiKey(value)
+              }}
+            />
+          </ListItem>
+          <ListItem
+            divider
+            disablePadding
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              width: '100%',
+              pt: '3px', // trick.
+              pb: '3px', // trick.
+              pl: '16px',
+              pr: '8px',
+            }}
+          >
+            <ListItemText>
+              {t('copy_with_timestamps').toString()}
+            </ListItemText>
+            <Checkbox
+              checked={copyWithTimestamps}
+              onChange={({ target: { checked } }) => {
+                // Don't useEffect for `copyWithTimestamps` here.
+                chrome.storage.sync.set({ [Settings.COPY_WITH_TIMESTAMPS]: checked })
+                setCopyWithTimestamps(checked)
               }}
             />
           </ListItem>

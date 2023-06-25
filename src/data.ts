@@ -41,6 +41,7 @@ export enum Settings {
   UID = 'uid',
   OPENAI_API_KEY = 'openai_api_key',
   TRANSLATION_TARGET_LANG = 'translation_target_lang',
+  COPY_WITH_TIMESTAMPS = 'copy_with_timestamps',
 }
 
 export enum SseEvent {

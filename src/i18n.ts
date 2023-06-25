@@ -10,6 +10,7 @@ const resources = {
 
       'translation': 'Set Translation Language',
       'openai': 'I want to use my OpenAI API Key',
+      'copy_with_timestamps': 'Copy with Timestamps',
       'twitter': 'Follow on Twitter',
       'telegram': 'Join Telegram Group',
       'gmail': 'Feedback by Email',
@@ -37,6 +38,7 @@ const resources = {
 
       'translation': '设置翻译语言',
       'openai': '我想用自己的 OpenAI API Key',
+      'copy_with_timestamps': '复制时间标记',
       'twitter': '在推特上关注',
       'telegram': '加入电报群组',
       'gmail': '通过邮件反馈',
