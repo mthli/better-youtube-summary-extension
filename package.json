@@ -21,6 +21,7 @@
     "@fczbkk/url-match": "^3.5.0",
     "@microsoft/fetch-event-source": "^2.0.1",
     "@mui/material": "^5.13.5",
+    "copy-to-clipboard": "^3.3.3",
     "i18next": "^22.5.1",
     "i18next-browser-languagedetector": "^7.0.2",
     "immutable": "^4.3.0",
