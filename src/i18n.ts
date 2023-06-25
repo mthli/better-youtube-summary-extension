@@ -16,6 +16,7 @@ const resources = {
 
       'bad': 'Bad',
       'close': 'Close',
+      'copy': 'Copy',
       'good': 'Good',
       'more': 'More',
       'optional': 'Optional',
@@ -42,6 +43,7 @@ const resources = {
 
       'bad': '糟糕',
       'close': '关闭',
+      'copy': '复制',
       'good': '不错',
       'more': '更多',
       'optional': '可选',

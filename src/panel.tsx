@@ -20,7 +20,7 @@ import { ThemeProvider } from '@mui/material/styles'
 import { lightTheme, darkTheme } from './theme'
 
 import ChapterItem from './chapterItem'
-import { GooSpinner, ImpulseSpinner } from 'react-spinners-kit'
+import { GooSpinner } from 'react-spinners-kit'
 
 import {
   Message,
@@ -423,6 +423,24 @@ const Panel = ({ pageUrl }: { pageUrl: string }) => {
               }
             </ButtonGroup>
             <ButtonGroup>
+              {
+                list.length > 0 &&
+                <Tooltip title={t('copy').toString()}>
+                  <IconButton
+                    aria-label={t('copy').toString()}
+                    disabled={!done}
+                    style={{ // not `sx` here.
+                      marginRight: '8px',
+                      color: done ? iconColorActive : iconColorDisabled,
+                    }}
+                    onClick={() => {
+                      // TODO
+                    }}
+                  >
+                    <span className='material-symbols-outlined'>content_copy</span>
+                  </IconButton>
+                </Tooltip>
+              }
               {
                 list.length > 0 &&
                 <Tooltip title={t('translate').toString()}>
