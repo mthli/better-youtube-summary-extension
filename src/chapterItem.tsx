@@ -15,6 +15,7 @@ import { Theme } from '@mui/material/styles'
 
 import { useTranslate } from './api'
 import { Chapter, ChapterStyle } from './data'
+import { countLines, formatSeconds, hexToRgba } from './utils'
 import './markdown-light.css'
 import './markdown-dark.css'
 import './panel.css'
@@ -22,29 +23,6 @@ import './i18n'
 
 // https://github.com/vinta/pangu.js
 const pangu = require('pangu')
-
-const formatSeconds = (seconds: number): string => {
-  const pad = (num: number, size: number): string => ('000' + num).slice(size * -1)
-
-  const h = Math.floor(seconds / 60 / 60)
-  const m = Math.floor(seconds / 60) % 60
-  const s = Math.floor(seconds % 60)
-
-  let res = pad(m, (h > 0 || m >= 10) ? 2 : 1) + ':' + pad(s, 2)
-  if (h > 0) res = pad(h, h >= 10 ? 2 : 1) + ':' + res
-  return res
-}
-
-// https://stackoverflow.com/a/8488787
-const countLines = (str?: string | null): number => {
-  return str ? str.trim().split(/\r\n|\r|\n/).length : 0
-}
-
-const hexToRgba = (hex: string, alpha: number = 1) => {
-  // @ts-ignore
-  const [r, g, b] = hex.match(/\w\w/g).map(x => parseInt(x, 16))
-  return `rgba(${r},${g},${b},${alpha})`
-}
 
 const ChapterItem = forwardRef(function ChapterItem({
   vid,

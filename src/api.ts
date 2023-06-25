@@ -1,6 +1,5 @@
 import useSWR, { MutatorCallback } from 'swr'
 import useSWRSubscription from 'swr/subscription'
-import UrlMatch from '@fczbkk/url-match'
 
 import {
   Chapter,
@@ -12,29 +11,11 @@ import {
   Translation,
 } from './data'
 import log from './log'
+import { parseVid } from './utils'
 
 const TAG = 'api'
 export const BASE_URL = 'https://bys.mthli.com'
 export const APPLICATION_JSON = 'application/json'
-
-export const parseVid = (pageUrl: string): string => {
-  // log(TAG, `parseVid, pageUrl=${pageUrl}`)
-
-  // https://github.com/fczbkk/UrlMatch
-  const pageUrlMatch = new UrlMatch([
-    'https://*.youtube.com/watch*?v=*',
-  ])
-
-  const match = pageUrlMatch.test(pageUrl)
-  if (!match) return ''
-
-  const url = new URL(pageUrl)
-  const params = new URLSearchParams(url.search)
-  const vid = params.get('v') ?? ''
-  if (!vid) return ''
-
-  return vid.trim()
-}
 
 export const feedback = (pageUrl: string, good: boolean) => {
   const vid = parseVid(pageUrl)

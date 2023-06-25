@@ -4,8 +4,8 @@ import { createRoot } from 'react-dom/client'
 
 import Panel from './panel'
 
-import { parseVid } from './api'
 import log from './log'
+import { parseVid } from './utils'
 
 // Insert as soon as possible.
 const link = document.createElement('link')
