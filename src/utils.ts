@@ -3,11 +3,12 @@ import copy from 'copy-to-clipboard'
 
 import { Chapter } from './data'
 
-// https://github.com/vinta/pangu.js
-const pangu = require('pangu')
-
 export const copyChapters = (chapters: Chapter[]) => {
   let text = ''
+
+  // FIXME (Matthew Lee) window not defined.
+  // https://github.com/vinta/pangu.js
+  const pangu = require('pangu')
 
   for (const c of chapters) {
     const title = `# ${pangu.spacing(c.chapter)}`
