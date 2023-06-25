@@ -3,7 +3,7 @@ import copy from 'copy-to-clipboard'
 
 import { Chapter } from './data'
 
-export const copyChapters = (chapters: Chapter[]) => {
+export const copyChapters = (chapters: Chapter[], copyWithTimestamps: boolean = false) => {
   let text = ''
 
   // FIXME (Matthew Lee) window not defined.
@@ -11,8 +11,12 @@ export const copyChapters = (chapters: Chapter[]) => {
   const pangu = require('pangu')
 
   for (const c of chapters) {
-    const title = `# ${pangu.spacing(c.chapter)}`
-    const content = pangu.spacing(c.summary ?? '')
+    let title = `# ${pangu.spacing(c.chapter).trim()}`
+    if (copyWithTimestamps) {
+      title = `${title} - ${formatSeconds(c.start)}`
+    }
+
+    const content = pangu.spacing(c.summary ?? '').trim()
     text += `# ${title}\n\n${content}\n\n`
   }
 

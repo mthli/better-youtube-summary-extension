@@ -123,6 +123,7 @@ const Panel = ({ pageUrl }: { pageUrl: string }) => {
   const [summarizing, setSummarizing] = useState(0)
   const [translatable, setTranslatable] = useState(false)
   const [targetLang, setTargetLang] = useState(initTargetLang())
+  const [copyWithTimestamps, setCopyWithTimestamps] = useState(false)
 
   const [selected, setSelected] = useState<string>('') // cid.
   const [expands, setExpands] = useState<ImmutableMap<string, boolean>>(ImmutableMap())
@@ -227,9 +228,16 @@ const Panel = ({ pageUrl }: { pageUrl: string }) => {
   }
 
   useEffect(() => {
-    chrome.storage.sync.get([Settings.TRANSLATION_TARGET_LANG], res => {
-      const { [Settings.TRANSLATION_TARGET_LANG]: lang } = res
-      log(TAG, `useEffect, init, ${Settings.TRANSLATION_TARGET_LANG}=${lang}`)
+    chrome.storage.sync.get([
+      Settings.TRANSLATION_TARGET_LANG,
+      Settings.COPY_WITH_TIMESTAMPS,
+    ], res => {
+      const {
+        [Settings.TRANSLATION_TARGET_LANG]: lang,
+        [Settings.COPY_WITH_TIMESTAMPS]: copy,
+      } = res
+
+      setCopyWithTimestamps(Boolean(copy))
 
       if (targetLangkeys.includes(lang)) {
         setTargetLang(lang)
@@ -246,9 +254,12 @@ const Panel = ({ pageUrl }: { pageUrl: string }) => {
 
       // @ts-ignore
       for (const [key, { oldValue, newValue }] of Object.entries(changes)) {
-        if (key !== Settings.TRANSLATION_TARGET_LANG) continue
         log(TAG, `storage.onChanged, key=${key}, oldValue=${oldValue}, newValue=${newValue}`)
-        setTargetLang(newValue)
+        if (key === Settings.TRANSLATION_TARGET_LANG) {
+          setTargetLang(newValue)
+        } else if (key === Settings.COPY_WITH_TIMESTAMPS) {
+          setCopyWithTimestamps(newValue)
+        }
       }
     }
 
@@ -434,7 +445,7 @@ const Panel = ({ pageUrl }: { pageUrl: string }) => {
                       marginRight: '8px',
                       color: done ? iconColorActive : iconColorDisabled,
                     }}
-                    onClick={() => copyChapters(chapters)}
+                    onClick={() => copyChapters(chapters, copyWithTimestamps)}
                   >
                     <span className='material-symbols-outlined'>content_copy</span>
                   </IconButton>
