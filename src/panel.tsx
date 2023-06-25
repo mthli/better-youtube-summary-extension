@@ -497,8 +497,9 @@ const Panel = ({ pageUrl }: { pageUrl: string }) => {
               display: 'flex',
               alignItems: 'center',
               borderRadius: 0,
-              pt: 0,
-              pb: 0,
+              paddingTop: 0,
+              paddingBottom: 0,
+              fontSize: '1.2rem',
             }}
             icon={false}
             action={
@@ -517,6 +518,7 @@ const Panel = ({ pageUrl }: { pageUrl: string }) => {
               sx={{
                 marginTop: 0,
                 marginBottom: '4px',
+                fontSize: '1.4rem',
               }}
             >
               {alertTitle}
