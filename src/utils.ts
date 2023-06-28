@@ -1,5 +1,6 @@
 import UrlMatch from '@fczbkk/url-match'
 import copy from 'copy-to-clipboard'
+import browser from 'webextension-polyfill'
 
 import { Chapter } from './data'
 
@@ -47,6 +48,12 @@ export const hexToRgba = (hex: string, alpha: number = 1) => {
   const [r, g, b] = hex.match(/\w\w/g).map(x => parseInt(x, 16))
   return `rgba(${r},${g},${b},${alpha})`
 }
+
+// https://stackoverflow.com/a/63964511
+export const isChrome = (): boolean => browser.runtime.getURL('').startsWith('chrome-extension://')
+
+// https://stackoverflow.com/a/63964511
+export const isFirefox = (): boolean => browser.runtime.getURL('').startsWith('moz-extension://')
 
 export const parseVid = (pageUrl: string): string => {
   // https://github.com/fczbkk/UrlMatch

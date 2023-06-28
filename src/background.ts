@@ -7,6 +7,7 @@ import {
 
 import { APPLICATION_JSON, BASE_URL } from './api'
 import { Message, MessageType, Settings, SseEvent } from './data'
+import { isChrome } from './utils'
 
 import browser from 'webextension-polyfill'
 import log from './log'
@@ -17,56 +18,57 @@ const manifest = browser.runtime.getManifest()
 // Server worker `document` is undefined,
 // but `fetchEventSource` need it,
 // so we mock it.
-//
-// @ts-ignore
-global.document = {
-  hidden: false,
-
+if (isChrome()) {
   // @ts-ignore
-  addEventListener: (type, listener, options) => {
-    try {
-      global.addEventListener(type, listener, options)
-    } catch (e) {
-      log(TAG, `addEventListener, catch, type=${type}, e=${e}`)
-      // DO NOTHING.
-    }
-  },
+  global.document = {
+    hidden: false,
 
-  // @ts-ignore
-  removeEventListener: (type, listener, options) => {
-    try {
-      global.removeEventListener(type, listener, options)
-    } catch (e) {
-      log(TAG, `removeEventListener, catch, type=${type}, e=${e}`)
-      // DO NOTHING.
-    }
-  },
+    // @ts-ignore
+    addEventListener: (type, listener, options) => {
+      try {
+        global.addEventListener(type, listener, options)
+      } catch (e) {
+        log(TAG, `addEventListener, catch, type=${type}, e=${e}`)
+        // DO NOTHING.
+      }
+    },
+
+    // @ts-ignore
+    removeEventListener: (type, listener, options) => {
+      try {
+        global.removeEventListener(type, listener, options)
+      } catch (e) {
+        log(TAG, `removeEventListener, catch, type=${type}, e=${e}`)
+        // DO NOTHING.
+      }
+    },
+  }
 }
 
 // Server worker `document` is undefined,
 // but `fetchEventSource` need it,
 // so we mock it.
-//
-// @ts-ignore
-global.window = {
-  // @ts-ignore
-  setTimeout: (callback, ms, ...args) => {
-    try {
-      global.setTimeout(callback, ms, args)
-    } catch (e) {
-      log(TAG, `setTimeout catch, e=${e}`)
-      // DO NOTHING.
-    }
-  },
+if (isChrome()) {
+  global.window = {
+    // @ts-ignore
+    setTimeout: (callback, ms, ...args) => {
+      try {
+        global.setTimeout(callback, ms, args)
+      } catch (e) {
+        log(TAG, `setTimeout catch, e=${e}`)
+        // DO NOTHING.
+      }
+    },
 
-  clearTimeout: timeoutId => {
-    try {
-      global.clearTimeout(timeoutId)
-    } catch (e) {
-      log(TAG, `clearTimeout catch, e=${e}`)
-      // DO NOTHING.
-    }
-  },
+    clearTimeout: timeoutId => {
+      try {
+        global.clearTimeout(timeoutId)
+      } catch (e) {
+        log(TAG, `clearTimeout catch, e=${e}`)
+        // DO NOTHING.
+      }
+    },
+  }
 }
 
 // https://github.com/Azure/fetch-event-source
@@ -143,8 +145,8 @@ browser.runtime.onMessage.addListener((message: Message, sender, sendResponse) =
     return true
   }
 
-  // https://stackoverflow.com/a/62461987
-  if (requestUrl.startsWith('chrome-extension://')) {
+  // 'chrome-extension://' or 'moz-extension://'
+  if (requestUrl.includes('-extension://')) {
     browser.tabs.create({ url: requestUrl })
 
     // @ts-ignore
