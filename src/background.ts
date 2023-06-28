@@ -167,7 +167,8 @@ browser.runtime.onMessage.addListener((message: Message, sender, sendResponse) =
           ...headers,
           'uid': uid,
           'openai-api-key': key, // don't use underscore here because of nginx.
-          'crx-version': manifest.version,
+          'browser': isChrome() ? 'chrome' : 'firefox',
+          'ext-version': manifest.version,
         }
       }
     })
@@ -322,7 +323,8 @@ browser.runtime.onConnect.addListener(port => {
             ...headers,
             'uid': uid,
             'openai-api-key': key, // don't use underscore here because of nginx.
-            'crx-version': manifest.version,
+            'browser': isChrome() ? 'chrome' : 'firefox',
+            'ext-version': manifest.version,
           },
           ...sseInit,
         }
