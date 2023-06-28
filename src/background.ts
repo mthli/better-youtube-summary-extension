@@ -7,6 +7,8 @@ import {
 
 import { APPLICATION_JSON, BASE_URL } from './api'
 import { Message, MessageType, Settings, SseEvent } from './data'
+
+import browser from 'webextension-polyfill'
 import log from './log'
 
 const TAG = 'background'

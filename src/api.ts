@@ -10,10 +10,13 @@ import {
   Summary,
   Translation,
 } from './data'
+
+import browser from 'webextension-polyfill'
 import log from './log'
 import { parseVid } from './utils'
 
 const TAG = 'api'
+
 export const BASE_URL = 'https://bys.mthli.com'
 export const APPLICATION_JSON = 'application/json'
 

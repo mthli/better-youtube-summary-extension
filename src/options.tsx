@@ -20,6 +20,8 @@ import { ThemeProvider } from '@mui/material/styles'
 import { lightTheme, darkTheme } from './theme'
 
 import { Settings, TargetLang } from './data'
+
+import browser from 'webextension-polyfill'
 import './i18n'
 
 // const TAG = 'options'

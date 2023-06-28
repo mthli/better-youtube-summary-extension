@@ -35,6 +35,7 @@ import { copyChapters } from './utils'
 import { useSummarize, feedback } from './api'
 import { Map as ImmutableMap } from 'immutable'
 
+import browser from 'webextension-polyfill'
 import log from './log'
 import './panel.css'
 import './i18n'
