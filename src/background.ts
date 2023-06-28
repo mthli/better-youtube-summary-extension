@@ -12,19 +12,7 @@ import browser from 'webextension-polyfill'
 import log from './log'
 
 const TAG = 'background'
-const manifest = chrome.runtime.getManifest()
-
-/*
-// One of: 'install', 'update', 'chrome_update', or 'shared_module_update'.
-chrome.runtime.onInstalled.addListener(({ reason }) => {
-  // If is first installed or updated to a new version, jump to options page.
-  if (reason === 'install' || reason === 'update') {
-    chrome.tabs.create({
-      url: chrome.runtime.getURL('options.html'),
-    })
-  }
-})
-*/
+const manifest = browser.runtime.getManifest()
 
 // Server worker `document` is undefined,
 // but `fetchEventSource` need it,
@@ -104,13 +92,13 @@ const throwInvalidRequest = (send: (message?: any) => void, message: Message) =>
 }
 
 const getOpenAiApiKey = async (): Promise<string> => {
-  const res = await chrome.storage.sync.get(Settings.OPENAI_API_KEY)
+  const res = await browser.storage.sync.get(Settings.OPENAI_API_KEY)
   const { [Settings.OPENAI_API_KEY]: key }: { [Settings.OPENAI_API_KEY]?: string } = res
   return key ? key.trim() : ''
 }
 
 const getUid = async (): Promise<string> => {
-  const res = await chrome.storage.sync.get(Settings.UID)
+  const res = await browser.storage.sync.get(Settings.UID)
   const { [Settings.UID]: uid }: { [Settings.UID]?: string } = res
   return uid ? uid.trim() : ''
 }
@@ -133,15 +121,15 @@ const getOrGenerateUid = async (): Promise<string> => {
     throw new Error('generate uid from server failed')
   }
 
-  await chrome.storage.sync.set({ [Settings.UID]: finalUid })
+  await browser.storage.sync.set({ [Settings.UID]: finalUid })
   return finalUid
 }
 
-chrome.runtime.onMessage.addListener((message: Message, sender, sendResponse) => {
+browser.runtime.onMessage.addListener((message: Message, sender, sendResponse) => {
   log(TAG, `runtime, onMessage, senderId=${sender.id}`)
 
   // Filter our extension messages.
-  if (sender.id !== chrome.runtime.id) {
+  if (sender.id !== browser.runtime.id) {
     throwInvalidSender(sendResponse, sender.id)
     return true
   }
@@ -157,11 +145,14 @@ chrome.runtime.onMessage.addListener((message: Message, sender, sendResponse) =>
 
   // https://stackoverflow.com/a/62461987
   if (requestUrl.startsWith('chrome-extension://')) {
-    chrome.tabs.create({ url: requestUrl })
+    browser.tabs.create({ url: requestUrl })
+
+    // @ts-ignore
     sendResponse({
       type: MessageType.RESPONSE,
       responseOk: true,
     } as Message)
+
     return true
   }
 
@@ -182,6 +173,8 @@ chrome.runtime.onMessage.addListener((message: Message, sender, sendResponse) =>
     .then(async (response: Response) => { // response can't be stringify.
       const json = await response.json()
       log(TAG, `fetch, then, ok=${response.ok}, json=${JSON.stringify(json)}`)
+
+      // @ts-ignore
       sendResponse({
         type: MessageType.RESPONSE,
         responseOk: response.ok,
@@ -190,6 +183,8 @@ chrome.runtime.onMessage.addListener((message: Message, sender, sendResponse) =>
     })
     .catch((error: Error) => { // error can't be stringify.
       log(TAG, `fetch, catch, error=${error}`)
+
+      // @ts-ignore
       sendResponse({
         type: MessageType.ERROR,
         error: {
@@ -204,13 +199,13 @@ chrome.runtime.onMessage.addListener((message: Message, sender, sendResponse) =>
   return true
 })
 
-chrome.runtime.onConnect.addListener(port => {
+browser.runtime.onConnect.addListener(port => {
   port.onMessage.addListener((message, port) => {
     const { name, sender: { id: senderId } = {} } = port
     log(TAG, `port, onMessage, port=${name}`)
 
     // Filter our extension messages.
-    if (senderId !== chrome.runtime.id) {
+    if (senderId !== browser.runtime.id) {
       throwInvalidSender(port.postMessage, senderId)
       return true
     }

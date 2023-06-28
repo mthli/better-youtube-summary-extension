@@ -6,7 +6,7 @@
   margin: 0;
   color: #1F2328;
   background-color: #ffffff;
-  font-family: -apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji";
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
   font-size: 16px;
   line-height: 1.5;
   word-wrap: break-word;
@@ -72,7 +72,7 @@
   font-weight: 600;
   padding-bottom: .3em;
   font-size: 2em;
-  border-bottom: 1px solid hsla(210,18%,87%,1);
+  border-bottom: 1px solid hsla(210, 18%, 87%, 1);
 }
 
 .markdown-light mark {
@@ -123,7 +123,7 @@
   box-sizing: content-box;
   overflow: hidden;
   background: transparent;
-  border-bottom: 1px solid hsla(210,18%,87%,1);
+  border-bottom: 1px solid hsla(210, 18%, 87%, 1);
   height: .25em;
   padding: 0;
   margin: 24px 0;
@@ -143,6 +143,7 @@
 .markdown-light [type=button],
 .markdown-light [type=reset],
 .markdown-light [type=submit] {
+  appearance: button;
   -webkit-appearance: button;
 }
 
@@ -251,15 +252,15 @@
 .markdown-light kbd {
   display: inline-block;
   padding: 3px 5px;
-  font: 11px ui-monospace,SFMono-Regular,SF Mono,Menlo,Consolas,Liberation Mono,monospace;
+  font: 11px ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas, Liberation Mono, monospace;
   line-height: 10px;
   color: #1F2328;
   vertical-align: middle;
   background-color: #f6f8fa;
-  border: solid 1px rgba(175,184,193,0.2);
-  border-bottom-color: rgba(175,184,193,0.2);
+  border: solid 1px rgba(175, 184, 193, 0.2);
+  border-bottom-color: rgba(175, 184, 193, 0.2);
   border-radius: 6px;
-  box-shadow: inset 0 -1px 0 rgba(175,184,193,0.2);
+  box-shadow: inset 0 -1px 0 rgba(175, 184, 193, 0.2);
 }
 
 .markdown-light h1,
@@ -278,7 +279,7 @@
   font-weight: 600;
   padding-bottom: .3em;
   font-size: 1.5em;
-  border-bottom: 1px solid hsla(210,18%,87%,1);
+  border-bottom: 1px solid hsla(210, 18%, 87%, 1);
 }
 
 .markdown-light h3 {
@@ -340,14 +341,14 @@
 .markdown-light tt,
 .markdown-light code,
 .markdown-light samp {
-  font-family: ui-monospace,SFMono-Regular,SF Mono,Menlo,Consolas,Liberation Mono,monospace;
+  font-family: ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas, Liberation Mono, monospace;
   font-size: 12px;
 }
 
 .markdown-light pre {
   margin-top: 0;
   margin-bottom: 0;
-  font-family: ui-monospace,SFMono-Regular,SF Mono,Menlo,Consolas,Liberation Mono,monospace;
+  font-family: ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas, Liberation Mono, monospace;
   font-size: 12px;
   word-wrap: normal;
 }
@@ -573,7 +574,7 @@
 
 .markdown-light table tr {
   background-color: #ffffff;
-  border-top: 1px solid hsla(210,18%,87%,1);
+  border-top: 1px solid hsla(210, 18%, 87%, 1);
 }
 
 .markdown-light table tr:nth-child(2n) {
@@ -692,7 +693,7 @@
   margin: 0;
   font-size: 85%;
   white-space: break-spaces;
-  background-color: rgba(175,184,193,0.2);
+  background-color: rgba(175, 184, 193, 0.2);
   border-radius: 6px;
 }
 
@@ -971,7 +972,7 @@
 .markdown-light g-emoji {
   display: inline-block;
   min-width: 1ch;
-  font-family: "Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
+  font-family: "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
   font-size: 1em;
   font-style: normal !important;
   font-weight: 400;

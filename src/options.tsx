@@ -26,7 +26,7 @@ import './i18n'
 
 // const TAG = 'options'
 
-const manifest = chrome.runtime.getManifest()
+const manifest = browser.runtime.getManifest()
 const version = `v${manifest.version}`
 
 const App = () => {
@@ -42,30 +42,30 @@ const App = () => {
   const title = t('title').toString()
 
   useEffect(() => {
-    chrome.storage.sync.get([
-      Settings.OPENAI_API_KEY,
-      Settings.TRANSLATION_TARGET_LANG,
-      Settings.COPY_WITH_TIMESTAMPS,
-    ], res => {
-      const {
+    browser.storage.sync
+      .get([
+        Settings.OPENAI_API_KEY,
+        Settings.TRANSLATION_TARGET_LANG,
+        Settings.COPY_WITH_TIMESTAMPS,
+      ])
+      .then(({
         [Settings.OPENAI_API_KEY]: key,
         [Settings.TRANSLATION_TARGET_LANG]: lang,
         [Settings.COPY_WITH_TIMESTAMPS]: copy,
-      } = res
+      }) => {
+        // A component is changing a controlled input to be uncontrolled.
+        // This is likely caused by the value changing from a defined to undefined, which should not happen.
+        setOpenAiApiKey(key ?? '')
+        setCopyWithTimestamps(Boolean(copy))
 
-      // A component is changing a controlled input to be uncontrolled.
-      // This is likely caused by the value changing from a defined to undefined, which should not happen.
-      setOpenAiApiKey(key ?? '')
-      setCopyWithTimestamps(Boolean(copy))
+        if (targetLangkeys.includes(lang)) {
+          setTargetLang(lang)
+          return
+        }
 
-      if (targetLangkeys.includes(lang)) {
-        setTargetLang(lang)
-        return
-      }
-
-      // If no settings yet.
-      chrome.storage.sync.set({ [Settings.TRANSLATION_TARGET_LANG]: targetLang })
-    })
+        // If no settings yet.
+        browser.storage.sync.set({ [Settings.TRANSLATION_TARGET_LANG]: targetLang })
+      })
   }, [])
 
   return (
@@ -136,7 +136,7 @@ const App = () => {
               value={targetLang}
               onChange={({ target: { value: key } }) => {
                 // Don't useEffect for `targetLangKey` here.
-                chrome.storage.sync.set({ [Settings.TRANSLATION_TARGET_LANG]: key })
+                browser.storage.sync.set({ [Settings.TRANSLATION_TARGET_LANG]: key })
                 setTargetLang(key)
               }}
             >
@@ -185,7 +185,7 @@ const App = () => {
               value={openAiApiKey}
               onChange={({ target: { value = '' } = {} }) => {
                 // Don't useEffect for `openAiApiKey` here.
-                chrome.storage.sync.set({ [Settings.OPENAI_API_KEY]: value.trim() })
+                browser.storage.sync.set({ [Settings.OPENAI_API_KEY]: value.trim() })
                 setOpenAiApiKey(value)
               }}
             />
@@ -211,7 +211,7 @@ const App = () => {
               checked={copyWithTimestamps}
               onChange={({ target: { checked } }) => {
                 // Don't useEffect for `copyWithTimestamps` here.
-                chrome.storage.sync.set({ [Settings.COPY_WITH_TIMESTAMPS]: checked })
+                browser.storage.sync.set({ [Settings.COPY_WITH_TIMESTAMPS]: checked })
                 setCopyWithTimestamps(checked)
               }}
             />

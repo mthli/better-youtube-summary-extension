@@ -78,13 +78,10 @@ const initTargetLang = (): string => {
 
 // https://stackoverflow.com/a/62461987
 const openOptionsPage = () => {
-  chrome.runtime.sendMessage({
+  browser.runtime.sendMessage({
     type: MessageType.REQUEST,
-    requestUrl: chrome.runtime.getURL('options.html'),
-  } as Message, message => {
-    const json = JSON.stringify(message)
-    log(TAG, `openOptionsPage, responseCallback, message=${json}`)
-  })
+    requestUrl: browser.runtime.getURL('options.html'),
+  } as Message)
 }
 
 // https://stackoverflow.com/a/75704708
@@ -229,25 +226,25 @@ const Panel = ({ pageUrl }: { pageUrl: string }) => {
   }
 
   useEffect(() => {
-    chrome.storage.sync.get([
-      Settings.TRANSLATION_TARGET_LANG,
-      Settings.COPY_WITH_TIMESTAMPS,
-    ], res => {
-      const {
+    browser.storage.sync
+      .get([
+        Settings.TRANSLATION_TARGET_LANG,
+        Settings.COPY_WITH_TIMESTAMPS,
+      ])
+      .then(({
         [Settings.TRANSLATION_TARGET_LANG]: lang,
         [Settings.COPY_WITH_TIMESTAMPS]: copy,
-      } = res
+      }) => {
+        setCopyWithTimestamps(Boolean(copy))
 
-      setCopyWithTimestamps(Boolean(copy))
+        if (targetLangkeys.includes(lang)) {
+          setTargetLang(lang)
+          return
+        }
 
-      if (targetLangkeys.includes(lang)) {
-        setTargetLang(lang)
-        return
-      }
-
-      // If no settings yet.
-      chrome.storage.sync.set({ [Settings.TRANSLATION_TARGET_LANG]: targetLang })
-    })
+        // If no settings yet.
+        browser.storage.sync.set({ [Settings.TRANSLATION_TARGET_LANG]: targetLang })
+      })
 
     // @ts-ignore
     const listener = (changes, areaName) => {
@@ -275,11 +272,11 @@ const Panel = ({ pageUrl }: { pageUrl: string }) => {
     })
 
     if (player) playerObserver.observe(player)
-    chrome.storage.onChanged.addListener(listener)
+    browser.storage.onChanged.addListener(listener)
 
     return () => {
       playerObserver.disconnect()
-      chrome.storage.onChanged.removeListener(listener)
+      browser.storage.onChanged.removeListener(listener)
     }
   }, [])
 
