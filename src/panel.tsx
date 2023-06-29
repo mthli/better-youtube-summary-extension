@@ -293,7 +293,11 @@ const Panel = ({ pageUrl }: { pageUrl: string }) => {
 
   const menu = (
     <Menu
-      anchorEl={anchorEl}
+      anchorReference='anchorPosition'
+      anchorPosition={{
+        top: (anchorEl?.getBoundingClientRect()?.top ?? 0) - 2,
+        left: (anchorEl?.getBoundingClientRect()?.left ?? 0) - 56,
+      }}
       open={Boolean(anchorEl)}
       onClose={() => setAnchorEl(null)}
     >
