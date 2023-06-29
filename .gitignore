@@ -4,6 +4,7 @@ dist/
 tmp/
 
 # Others
+web-ext-artifacts/
 *.DS_Store
 *.crx
 *.zip

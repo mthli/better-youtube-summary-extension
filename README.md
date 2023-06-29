@@ -2,7 +2,29 @@
 
 Literally Better YouTube Summary 🎯
 
-**UNDER DEVELOPMENT.**
+## Build
+
+First install all dependencies:
+
+```bash
+# node version is v20.3.0, npm version is 9.6.7
+npm i
+```
+
+If build for development:
+
+```bash
+npm run clean # optional.
+npm run watch
+```
+
+If build for production:
+
+```bash
+npm run clean # optional.
+npm run build
+npm run build:firefox
+```
 
 ## License
 
