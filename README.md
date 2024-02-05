@@ -2,6 +2,16 @@
 
 Literally Better YouTube Summary 🎯
 
+[![Better YouTube Summary Extension Showcase](https://res.cloudinary.com/marcomontalbano/image/upload/v1707146334/video_to_markdown/images/youtube--NyhrKImPSDQ-c05b58ac6eb4c4700831b2b3070cd403.jpg)](https://www.youtube.com/watch?v=NyhrKImPSDQ "Better YouTube Summary Extension Showcase")
+
+**This extension is no longer maintained,**
+
+because OpenAI banned my account due to "accessing the API from an [unsupported location](https://platform.openai.com/docs/supported-countries)" 👎
+
+The backend implementation can be found in [mthli/better-youtube-summary-server](https://github.com/mthli/better-youtube-summary-server).
+
+If you want to deploy it yourself, please replace the `bys.mthli.com` with your own domain.
+
 ## Build
 
 First install all dependencies:
